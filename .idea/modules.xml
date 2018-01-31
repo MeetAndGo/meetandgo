@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/MeetAndGo.iml" filepath="$PROJECT_DIR$/MeetAndGo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://C:\Users\pgeogheg\StudioProjects\meetandgo\app\app.iml" filepath="C:\Users\pgeogheg\StudioProjects\meetandgo\app\app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/meetandgo.iml" filepath="$PROJECT_DIR$/meetandgo.iml" />
     </modules>
   </component>
 </project>
