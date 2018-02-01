@@ -15,7 +15,6 @@ import com.google.firebase.database.*;
 public class FireApp extends Application {
     public void onCreate(){
         super.onCreate();
-       // Fireb
         Firebase.setAndroidContext(this);
     }
 }

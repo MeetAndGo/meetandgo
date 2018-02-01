@@ -1,5 +1,6 @@
 package com.meetandgo.meetandgo;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -34,17 +35,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 123;
     private FirebaseAuth mAuth;
     private String uid;
     private boolean exists = false;
-
-    List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
-                                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
-
     private Button btn_signout;
 
     @Override
@@ -76,16 +71,42 @@ public class MainActivity extends AppCompatActivity{
                         .signOut((FragmentActivity) view.getContext())
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             public void onComplete(@NonNull Task<Void> task) {
-                                startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), RC_SIGN_IN);
+                                Intent bootActivityIntent = new Intent(MainActivity.this, BootActivity.class);
+                                MainActivity.this.startActivity(bootActivityIntent);
                             }
                         });
             }
         });
 
+        // TODO: Set database stuff in other method
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        uid = user.getUid();
+        Log.e("Database", "uid:" + uid);
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //Check if user already exists
+        DatabaseReference myRef = database.getReference("users");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.hasChild(uid)) {
+                    exists = true;
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), RC_SIGN_IN);
+            }
+        });
+
+        //Add user to database
+        if (!exists) {
+            User newuser = new User(user.getDisplayName(), user.getEmail(), 0.0, null);
+            myRef.child(uid).push().setValue(newuser);
+        }
     }
+
 
     // TODO: Delete on release version
     private void get_debug_keyhash() {
@@ -99,52 +120,9 @@ public class MainActivity extends AppCompatActivity{
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException e) {
-
+            Log.e("Debug", "get_debug_keyhash() error: Package Manager name not found");
         } catch (NoSuchAlgorithmException e) {
-
+            Log.e("Debug", "get_debug_keyhash() error: No such algorithm");
         }
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                uid = user.getUid();
-                Log.e("Database","uid:"+uid);
-                // Write a message to the database
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                //Check if user already exists
-                DatabaseReference myRef = database.getReference("users");
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        if (snapshot.hasChild(uid)) {
-                            exists = true;
-                        }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-                //Add user to database
-                if(!exists) {
-                    User newuser = new User(user.getDisplayName(), user.getEmail(), 0.0, null);
-                    myRef.child(uid).push().setValue(newuser);
-                }
-                // ...
-                //startActivity();
-            } else {
-               Log.d("Authentication", "Sign in failed.");
-            }
-        }
-    }
-
 }
