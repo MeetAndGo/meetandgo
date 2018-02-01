@@ -38,8 +38,11 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
+    private DatabaseReference myRef;
     private String uid;
     private boolean exists = false;
+
     private Button btn_signout;
 
     @Override
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         // Update UI
         //gilLog.d("Authentication", "CurrentUser" + currentUser.getEmail());
+
     }
 
 
@@ -79,34 +83,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // TODO: Set database stuff in other method
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         uid = user.getUid();
-        Log.e("Database", "uid:" + uid);
+        Log.e("Database","uid:"+uid);
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         //Check if user already exists
-        DatabaseReference myRef = database.getReference("users");
+        myRef = database.getReference("users");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+
                 if (snapshot.hasChild(uid)) {
+                    Log.e("Snapshot", "True");
                     exists = true;
+                    addUser();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
 
-        //Add user to database
-        if (!exists) {
-            User newuser = new User(user.getDisplayName(), user.getEmail(), 0.0, null);
-            myRef.child(uid).push().setValue(newuser);
-        }
+        // ...
+        //startActivity();
+        Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
+        startActivity(myIntent);
     }
-
 
     // TODO: Delete on release version
     private void get_debug_keyhash() {
@@ -123,6 +127,14 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Debug", "get_debug_keyhash() error: Package Manager name not found");
         } catch (NoSuchAlgorithmException e) {
             Log.e("Debug", "get_debug_keyhash() error: No such algorithm");
+        }
+    }
+
+    protected void addUser()
+    {
+        if(!exists) {
+            User newuser = new User(user.getDisplayName(), user.getEmail(), 0.0, null);
+            myRef.child(uid).push().setValue(newuser);
         }
     }
 }
