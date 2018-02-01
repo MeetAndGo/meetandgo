@@ -6,7 +6,6 @@ import android.location.Location;
  * Created by gilmarma on 1/31/2018.
  */
 public class User {
-
         public String full_name;
         public String email;
         public double rating;

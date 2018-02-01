@@ -116,10 +116,9 @@ public class MainActivity extends AppCompatActivity{
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 uid = user.getUid();
-
+                Log.e("Database","uid:"+uid);
                 // Write a message to the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-
                 //Check if user already exists
                 DatabaseReference myRef = database.getReference("users");
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -129,7 +128,6 @@ public class MainActivity extends AppCompatActivity{
                             exists = true;
                         }
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
@@ -138,13 +136,9 @@ public class MainActivity extends AppCompatActivity{
 
                 //Add user to database
                 if(!exists) {
-                    Map<String, User> users = new HashMap<>();
-                    users.put(uid, new User(user.getDisplayName(), user.getEmail(), 0.0, null));
-                    myRef.setValue(users);
+                    User newuser = new User(user.getDisplayName(), user.getEmail(), 0.0, null);
+                    myRef.child(uid).push().setValue(newuser);
                 }
-
-
-
                 // ...
                 //startActivity();
             } else {
