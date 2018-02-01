@@ -6,4 +6,19 @@
     <string name="sign_out">Sign Out</string>
     <string name="google_maps_key">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
     <string name="title_activity_maps">Map</string>
+    <string name="menu">Menu1</string>
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="navigation_sign_out">Sign Out</string>
 </resources>

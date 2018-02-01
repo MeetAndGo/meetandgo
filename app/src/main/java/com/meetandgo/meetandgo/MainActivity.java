@@ -6,13 +6,25 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.firebase.client.Firebase;
 import com.firebase.ui.auth.AuthUI;
@@ -27,6 +39,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -45,11 +59,20 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btn_signout;
 
+    private String[] mPlanetTitles;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private Toolbar mToolbar;
+    private View mheaderLayout;
+    private TextView mTextViewUserName;
+    private TextView mTextViewUserEmail;
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
         // Update UI
         //gilLog.d("Authentication", "CurrentUser" + currentUser.getEmail());
 
@@ -67,23 +90,58 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        btn_signout = findViewById(R.id.btn_signout); //link button to the button created in layout
-        btn_signout.setOnClickListener(new View.OnClickListener() {
+        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        NavigationView navView = (NavigationView) findViewById(R.id.navigation);
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                AuthUI.getInstance()
-                        .signOut((FragmentActivity) view.getContext())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Intent bootActivityIntent = new Intent(MainActivity.this, BootActivity.class);
-                                MainActivity.this.startActivity(bootActivityIntent);
-                            }
-                        });
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                Log.d("MenuItemClicked", "MenuItem: " + menuItem.getTitle());
+                if(menuItem.getItemId() == R.id.navigation_sign_out) sign_out();
+                return false;
             }
         });
 
+        mheaderLayout =   navView.getHeaderView(0);
+        mTextViewUserName = mheaderLayout.findViewById(R.id.user_name);
+        mTextViewUserEmail = mheaderLayout.findViewById(R.id.user_email);
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                mDrawerLayout,         /* DrawerLayout object */
+                R.string.drawer_open,  /* "open drawer" description */
+                R.string.drawer_close  /* "close drawer" description */
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle("Helou people");
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setTitle("Open Navigation");
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+
+        mDrawerToggle.syncState();
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+
         // TODO: Set database stuff in other method
         user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        mTextViewUserName.setText(user.getDisplayName());
+        mTextViewUserEmail.setText(user.getEmail());
         uid = user.getUid();
         Log.e("Database","uid:"+uid);
         // Write a message to the database
@@ -108,8 +166,19 @@ public class MainActivity extends AppCompatActivity {
 
         // ...
         //startActivity();
-        Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
-        startActivity(myIntent);
+        //Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
+        //startActivity(myIntent);
+    }
+
+    private void sign_out() {
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent bootActivityIntent = new Intent(MainActivity.this, BootActivity.class);
+                        MainActivity.this.startActivity(bootActivityIntent);
+                    }
+                });
     }
 
     // TODO: Delete on release version
@@ -130,11 +199,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void addUser()
-    {
+    protected void addUser()    {
         if(!exists) {
             User newuser = new User(user.getDisplayName(), user.getEmail(), 0.0, null);
             myRef.child(uid).push().setValue(newuser);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(mDrawerToggle.onOptionsItemSelected(item)){
+            if (mDrawerLayout.isDrawerOpen(Gravity.START)) mDrawerLayout.closeDrawer(Gravity.START);
+            else mDrawerLayout.openDrawer(Gravity.START);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
