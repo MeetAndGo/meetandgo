@@ -4,11 +4,6 @@
 
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality. 
-    -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -22,13 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- Boot Activity: Handles the logic organization of the app -->
-        <activity android:name=".BootActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -36,14 +24,17 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <!-- Boot Activity: Handles the logic organization of the app -->
+        <activity android:name=".BootActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <!-- Main Activity: TODO: To be defined -->
         <activity android:name=".MainActivity"></activity>
 
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"
-            android:parentActivityName=".MainActivity">
-        </activity>
     </application>
 
 </manifest>

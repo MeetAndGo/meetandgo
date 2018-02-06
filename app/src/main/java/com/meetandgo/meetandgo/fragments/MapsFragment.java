@@ -1,22 +1,21 @@
-package com.meetandgo.meetandgo;
+package com.meetandgo.meetandgo.fragments;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.Manifest;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.facebook.places.Places;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,15 +27,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.Logger;
+import com.meetandgo.meetandgo.R;
 
-public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLocationButtonClickListener,
+public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener, OnMapReadyCallback {
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private LatLng DEFAULT_LOCATION = new LatLng(53.341563, -6.253010);
     private static final int DEFAULT_ZOOM = 13;
-    private static final String TAG = "MapsActivity";
+    private static final String TAG = "MapsFragment";
 
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
@@ -50,8 +49,14 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
     private Location mLastKnownMarkerLocation;
     private Marker mDestination;
 
+    public static Fragment newInstance() {
+        MapsFragment fragment = new MapsFragment();
+        return fragment;
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
@@ -62,23 +67,33 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
             mLastKnownMarkerLocation.setLongitude(DEFAULT_LOCATION.longitude);
 
         }
-        setContentView(R.layout.activity_maps);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_maps, container, false);
         askForLocationPermission();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        SupportMapFragment mapFragment = new SupportMapFragment();
+        transaction.add(R.id.map, mapFragment);
+        transaction.commit();
 
+        mapFragment.getMapAsync(this);
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        return view;
     }
 
     private void askForLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                 // Show an explanation to the user *asynchronously* -- don't block
@@ -89,7 +104,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
 
                 // No explanation needed, we can request the permission.
 
-                ActivityCompat.requestPermissions(this,
+                ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
@@ -119,8 +134,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
 
         // Check if we have location permission and if not -> ask for it
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             askForLocationPermission();
             return;
         } else mLocationPermissionGranted = true;
@@ -137,7 +152,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
     }
 
     private void putMarkerOnLocation(LatLng latLng) {
-        if(mDestination!=null) mDestination.remove();
+        if (mDestination != null) mDestination.remove();
         mDestination = mMap.addMarker(new MarkerOptions().position(latLng));
         mLastKnownMarkerLocation = new Location("");
         mLastKnownMarkerLocation.setLongitude(latLng.longitude);
@@ -147,7 +162,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
 
     }
 
@@ -167,7 +182,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         mMap.setMyLocationEnabled(true);
                         Log.d(TAG, "We do have permission to get device location.");
                         mLocationPermissionGranted = true;
@@ -194,7 +209,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
             if (mLocationPermissionGranted) {
                 Log.d(TAG, "Permission has been granted");
                 Task locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener(this, new OnCompleteListener() {
+                locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
                         Log.d(TAG, "OnComplete");
@@ -220,7 +235,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         if (mMap != null) {
             outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
             outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
