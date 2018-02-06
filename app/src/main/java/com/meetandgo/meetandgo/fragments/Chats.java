@@ -1,5 +1,7 @@
 package com.meetandgo.meetandgo.fragments;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,31 +10,22 @@ import android.view.ViewGroup;
 
 import com.meetandgo.meetandgo.R;
 
-public class BlankFragment extends android.support.v4.app.Fragment {
+public class Chats extends Fragment {
 
-    private View mView;
-
-    public BlankFragment() {}
-
-    public static Fragment newInstance() {
-        BlankFragment fragment = new BlankFragment();
-        return fragment;
+    public Chats() {
+        // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public static Fragment newInstance() {
+        Chats fragment = new Chats();
+        return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_blank, container, false);
-        return mView;
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_chats, container, false);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
 }

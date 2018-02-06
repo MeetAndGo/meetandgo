@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.meetandgo.meetandgo">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -34,7 +33,6 @@
 
         <!-- Main Activity: TODO: To be defined -->
         <activity android:name=".MainActivity"></activity>
-
     </application>
 
 </manifest>

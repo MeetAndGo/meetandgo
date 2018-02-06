@@ -32,7 +32,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.meetandgo.meetandgo.fragments.BlankFragment;
+import com.meetandgo.meetandgo.fragments.Chats;
+import com.meetandgo.meetandgo.fragments.Commute;
+import com.meetandgo.meetandgo.fragments.JourneyHistory;
+import com.meetandgo.meetandgo.fragments.MapsFragment;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private View mheaderLayout;
     private TextView mTextViewUserName;
     private TextView mTextViewUserEmail;
+    private NavigationView navView;
 
     @Override
     public void onStart() {
@@ -81,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
-        NavigationView navView = (NavigationView) findViewById(R.id.navigation);
+        navView = (NavigationView) findViewById(R.id.navigation);
+
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -89,7 +94,25 @@ public class MainActivity extends AppCompatActivity {
 
                 Fragment fragment = null;
                 Class fragmentClass;
-                fragmentClass = BlankFragment.class;
+
+                switch(menuItem.getItemId()) {
+                    case R.id.menu_item_1:
+                        fragmentClass = MapsFragment.class;
+                        break;
+                    case R.id.menu_item_2:
+                        fragmentClass = Chats.class;
+                        break;
+                    case R.id.menu_item_3:
+                        fragmentClass = Commute.class;
+                        break;
+                    case R.id.menu_item_4:
+                        fragmentClass = JourneyHistory.class;
+                        break;
+                    case R.id.navigation_sign_out:
+                        sign_out();
+                    default:
+                        fragmentClass = MapsFragment.class;
+                }
 
                 try {
                     fragment = (Fragment) fragmentClass.newInstance();
@@ -101,15 +124,18 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
                 // Highlight the selected item has been done by NavigationView
+                int size = navView.getMenu().size();
+                for (int i = 0; i < size; i++) {
+                    navView.getMenu().getItem(i).setChecked(false);
+                }
+
                 menuItem.setChecked(true);
                 // Set action bar title
                 setTitle(menuItem.getTitle());
                 // Close the navigation drawer
                 mDrawerLayout.closeDrawers();
 
-
-                if(menuItem.getItemId() == R.id.navigation_sign_out) sign_out();
-                return false;
+                return true;
             }
         });
 
@@ -178,11 +204,6 @@ public class MainActivity extends AppCompatActivity {
         //startActivity();
         //Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
         //startActivity(myIntent);
-    }
-
-    private void startMapActivity() {
-        Intent mapActivityIntent = new Intent(MainActivity.this, MapsActivity.class);
-        MainActivity.this.startActivity(mapActivityIntent);
     }
 
     private void sign_out() {
