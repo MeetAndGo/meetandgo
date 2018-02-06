@@ -170,6 +170,11 @@ public class MainActivity extends AppCompatActivity {
         //startActivity(myIntent);
     }
 
+    private void startMapActivity() {
+        Intent mapActivityIntent = new Intent(MainActivity.this, MapsActivity.class);
+        MainActivity.this.startActivity(mapActivityIntent);
+    }
+
     private void sign_out() {
         AuthUI.getInstance()
                 .signOut(this)

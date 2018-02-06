@@ -18,7 +18,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_item_1"
         android:icon="@drawable/ic_search_black_48dp"
-        android:title="@string/menu"
+        android:title="@string/map_menu"
         app:showAsAction="ifRoom|withText" />
     <item android:id="@+id/menu_item_2"
         android:icon="@drawable/ic_search_black_48dp"
