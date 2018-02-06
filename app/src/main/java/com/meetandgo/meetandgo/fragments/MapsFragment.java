@@ -41,7 +41,6 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
     private static final String KEY_LOCATION = "location";
     private static final String KEY_MARKER_LOCATION = "marker_location";
 
-
     private GoogleMap mMap;
     private boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
