@@ -1,7 +1,5 @@
 package com.meetandgo.meetandgo.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,14 +8,14 @@ import android.view.ViewGroup;
 
 import com.meetandgo.meetandgo.R;
 
-public class Commute extends Fragment {
+public class ChatsFragment extends Fragment {
 
-    public Commute() {
-        // Required empty public constructor
-    }
+    private static final String TAG = "ChatsFragment";
+
+    public ChatsFragment() {}
 
     public static Fragment newInstance() {
-        Commute fragment = new Commute();
+        ChatsFragment fragment = new ChatsFragment();
         return fragment;
     }
 
@@ -25,7 +23,7 @@ public class Commute extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_commute, container, false);
+        return inflater.inflate(R.layout.fragment_chats, container, false);
     }
 
 }

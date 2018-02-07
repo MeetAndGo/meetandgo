@@ -8,10 +8,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
-/**
- * Created by gilmarma on 1/31/2018.
- */
-
 public class FireApp extends Application {
     public void onCreate(){
         super.onCreate();

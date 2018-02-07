@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -29,13 +30,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.meetandgo.meetandgo.R;
 
-public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener,
-        GoogleMap.OnMyLocationClickListener, OnMapReadyCallback {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMyLocationClickListener {
+
+    private static final String TAG = "MapsFragment";
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private LatLng DEFAULT_LOCATION = new LatLng(53.341563, -6.253010);
     private static final int DEFAULT_ZOOM = 13;
-    private static final String TAG = "MapsFragment";
 
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
@@ -47,6 +50,10 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
     private Location mLastKnownLocation;
     private Location mLastKnownMarkerLocation;
     private Marker mDestination;
+
+    @BindView(R.id.fab) FloatingActionButton mFab;
+
+    public MapsFragment(){}
 
     public static Fragment newInstance() {
         MapsFragment fragment = new MapsFragment();
@@ -64,7 +71,6 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
             mLastKnownMarkerLocation = new Location("");
             mLastKnownMarkerLocation.setLatitude(DEFAULT_LOCATION.latitude);
             mLastKnownMarkerLocation.setLongitude(DEFAULT_LOCATION.longitude);
-
         }
     }
 
@@ -73,7 +79,17 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
-        askForLocationPermission();
+        ButterKnife.bind(this, view);
+
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getDeviceLocation();
+            }
+        });
+
+
+        askForLocationPermission(); // TODO: Ask for permissions on app boot
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -102,11 +118,9 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
             } else {
 
                 // No explanation needed, we can request the permission.
-
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
                 // MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION is an
                 // app-defined int constant. The callback method gets the
                 // result of the request.
@@ -130,7 +144,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
         // Construct a PlaceDetectionClient.
         // Add a marker in Sydney and move the camera
         putMarkerOnLocation(new LatLng(mLastKnownMarkerLocation.getLatitude(), mLastKnownMarkerLocation.getLongitude()));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
 
         // Check if we have location permission and if not -> ask for it
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -140,8 +154,10 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
         } else mLocationPermissionGranted = true;
 
         mMap.setMyLocationEnabled(true);
-        mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMyLocationClickListener(this);
+        mMap.getUiSettings().setRotateGesturesEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -162,16 +178,6 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
     @Override
     public void onMyLocationClick(@NonNull Location location) {
         Toast.makeText(getActivity(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
-
-    }
-
-    @Override
-    public boolean onMyLocationButtonClick() {
-        //Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
-        getDeviceLocation();
-        // Return false so that we don't consume the event and the default behavior still occurs
-        // (the camera animates to the user's current position).
-        return false;
     }
 
     @Override
@@ -217,12 +223,12 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
                             mLastKnownLocation = (Location) task.getResult();
                             LatLng newLocation = new LatLng(mLastKnownLocation.getLatitude(),
                                     mLastKnownLocation.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM));
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM));
                             putMarkerOnLocation(newLocation);
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
                             mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                     }
@@ -242,6 +248,5 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
             super.onSaveInstanceState(outState);
         }
     }
-
 
 }

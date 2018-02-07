@@ -10,14 +10,14 @@ import android.view.ViewGroup;
 
 import com.meetandgo.meetandgo.R;
 
-public class JourneyHistory extends Fragment {
+public class JourneyHistoryFragment extends Fragment {
 
-    public JourneyHistory() {
-        // Required empty public constructor
-    }
+    private static final String TAG = "JourneyHistoryFragment";
+
+    public JourneyHistoryFragment() {}
 
     public static Fragment newInstance() {
-        JourneyHistory fragment = new JourneyHistory();
+        JourneyHistoryFragment fragment = new JourneyHistoryFragment();
         return fragment;
     }
 

@@ -1,16 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-
     compileSdkVersion 26
     defaultConfig {
-        multiDexEnabled true
         applicationId "com.meetandgo.meetandgo"
         minSdkVersion 23
         targetSdkVersion 26
         versionCode 1
         versionName "0.01"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -22,34 +21,40 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    /* =============================================================================== */
+    /* = ANDROID ===================================================================== */
+    /* =============================================================================== */
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.google.firebase:firebase-database:11.4.2'
     implementation 'com.google.android.gms:play-services-maps:11.4.2'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    compile 'com.google.android.gms:play-services-location:11.4.2'
+
+
+    /* =============================================================================== */
+    /* = FIREBASE ==================================================================== */
+    /* =============================================================================== */
+    implementation 'com.google.firebase:firebase-database:11.4.2'
     compile 'com.firebaseui:firebase-ui-auth:3.1.0'
     compile 'com.google.firebase:firebase-auth:11.4.2'
     compile('com.facebook.android:facebook-android-sdk:4.27.0')
     compile 'com.firebase:firebase-client-android:2.5.2+'
-    compile 'com.google.android.gms:play-services-location:11.4.2'
     compile "com.android.support:support-core-utils:26.0.2"
 
-    /* TEST COMPILE */
+
+    /* =============================================================================== */
+    /* = TESTS ======================================================================= */
+    /* =============================================================================== */
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
-
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2') {
-        // Necessary if your app targets Marshmallow (since Espresso
-        // hasn't moved to Marshmallow yet)
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     androidTestCompile('com.android.support.test:runner:0.3') {
-        // Necessary if your app targets Marshmallow (since the test runner
-        // hasn't moved to Marshmallow yet)
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-
     androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
@@ -58,6 +63,13 @@ dependencies {
         exclude module: 'support-annotations'
         exclude module: 'recyclerview-v7'
     }
+
+
+    /* =============================================================================== */
+    /* = LIBRARIES =================================================================== */
+    /* =============================================================================== */
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
 
 

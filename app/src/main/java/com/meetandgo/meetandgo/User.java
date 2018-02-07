@@ -2,9 +2,6 @@ package com.meetandgo.meetandgo;
 
 import android.location.Location;
 
-/**
- * Created by gilmarma on 1/31/2018.
- */
 public class User {
         public String full_name;
         public String email;

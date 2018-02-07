@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../../../barbierj/StudioProjects/meetandgo/app/app.iml" filepath="$PROJECT_DIR$/../../../barbierj/StudioProjects/meetandgo/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://M:\ManuGil\barbierj\StudioProjects\meetandgo\app\app.iml" filepath="M:\ManuGil\barbierj\StudioProjects\meetandgo\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/meetandgo.iml" filepath="$PROJECT_DIR$/meetandgo.iml" />
+      <module fileurl="file://M:\ManuGil\TCD\Advanced Software Engineering\meetandgo\meetandgo.iml" filepath="M:\ManuGil\TCD\Advanced Software Engineering\meetandgo\meetandgo.iml" />
     </modules>
   </component>
 </project>

@@ -24,7 +24,7 @@
             android:value="@string/google_maps_key" />
 
         <!-- Boot Activity: Handles the logic organization of the app -->
-        <activity android:name=".BootActivity">
+        <activity android:name=".activities.BootActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,7 +32,7 @@
         </activity>
 
         <!-- Main Activity: TODO: To be defined -->
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".activities.MainActivity"></activity>
     </application>
 
 </manifest>
