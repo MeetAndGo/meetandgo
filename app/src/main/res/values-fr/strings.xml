@@ -3,11 +3,11 @@
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">605444806469252</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb41ff94088e78fd635592a4f5d0674a35</string>
-    <string name="sign_out">Sign Out</string>
+    <string name="sign_out">Au Revoir!</string>
     <string name="google_maps_key">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Le Map</string>
     <string name="menu_option_1">Start New Journey</string>
-    <string name="menu_option_2">Chats</string>
+    <string name="menu_option_2">Le chit chat</string>
     <string name="menu_option_3">Daily Commute</string>
     <string name="menu_option_4">History of Journeys</string>
 

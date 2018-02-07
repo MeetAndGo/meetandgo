@@ -2,6 +2,8 @@ package com.meetandgo.meetandgo.fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +32,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.meetandgo.meetandgo.R;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +58,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private Location mLastKnownLocation;
     private Location mLastKnownMarkerLocation;
     private Marker mDestination;
+    private Toast mToast;
 
     @BindView(R.id.fab) FloatingActionButton mFab;
 
@@ -72,6 +81,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             mLastKnownMarkerLocation.setLatitude(DEFAULT_LOCATION.latitude);
             mLastKnownMarkerLocation.setLongitude(DEFAULT_LOCATION.longitude);
         }
+        mToast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
+
     }
 
     @Override
@@ -143,7 +154,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mMap = googleMap;
         // Construct a PlaceDetectionClient.
         // Add a marker in Sydney and move the camera
-        putMarkerOnLocation(new LatLng(mLastKnownMarkerLocation.getLatitude(), mLastKnownMarkerLocation.getLongitude()));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
 
         // Check if we have location permission and if not -> ask for it
@@ -152,23 +162,39 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             askForLocationPermission();
             return;
         } else mLocationPermissionGranted = true;
-
+        mDestination = mMap.addMarker(new MarkerOptions().position(DEFAULT_LOCATION).draggable(true).visible(false));
         mMap.setMyLocationEnabled(true);
         mMap.setOnMyLocationClickListener(this);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
+
+
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 putMarkerOnLocation(latLng);
+                Location location = new Location("");
+                location.setLatitude(latLng.latitude);
+                location.setLongitude(latLng.longitude);
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                getLocationName(location);
+            };
+        });
+
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                Log.d(TAG, "Camera moving");
+                mMap.getCameraPosition();
+                putMarkerOnLocation(new LatLng(mMap.getCameraPosition().target.latitude,mMap.getCameraPosition().target.longitude));
             }
         });
     }
 
     private void putMarkerOnLocation(LatLng latLng) {
-        if (mDestination != null) mDestination.remove();
-        mDestination = mMap.addMarker(new MarkerOptions().position(latLng));
+        mDestination.setPosition(latLng);
+        mDestination.setDraggable(true);
         mLastKnownMarkerLocation = new Location("");
         mLastKnownMarkerLocation.setLongitude(latLng.longitude);
         mLastKnownMarkerLocation.setLatitude(latLng.latitude);
@@ -177,7 +203,38 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(getActivity(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
+        getLocationName(location);
+    }
+
+    // TODO: Follow the tutorial to make it a service on another thread
+    private void getLocationName(@NonNull Location location) {
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+
+        List<Address> addresses = null;
+
+        try {
+            addresses = geocoder.getFromLocation(
+                    location.getLatitude(),
+                    location.getLongitude(),
+                    // In this sample, get just a single address.
+                    1);
+
+            Address address = addresses.get(0);
+            ArrayList<String> addressFragments = new ArrayList<String>();
+
+            // Fetch the address lines using getAddressLine,
+            // join them, and send them to the thread.
+            for(int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                addressFragments.add(address.getAddressLine(i));
+            }
+             String message = TextUtils.join(System.getProperty("line.separator"),
+                            addressFragments);
+            mToast.setText(message);
+            mToast.show();
+        } catch (IOException e) {
+            mToast.setText(location.toString());
+            mToast.show();
+        }
     }
 
     @Override

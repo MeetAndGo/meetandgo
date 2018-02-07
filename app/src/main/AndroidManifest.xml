@@ -33,6 +33,7 @@
 
         <!-- Main Activity: TODO: To be defined -->
         <activity android:name=".activities.MainActivity"></activity>
+
     </application>
 
 </manifest>
