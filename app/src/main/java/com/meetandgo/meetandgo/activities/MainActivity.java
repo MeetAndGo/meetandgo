@@ -64,14 +64,6 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
-    public void onStart() {
-        super.onStart();
-        // Check if mFirebaseUser is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-    }
-
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -121,13 +113,14 @@ public class MainActivity extends AppCompatActivity {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         //Check if mFirebaseUser already exists
-        myRef = database.getReference("users");
+        myRef = database.getReference("users/"+uid);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            //TODO: getUserID from the firebase and not the whole database ->ask directly the server
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.hasChild(uid)) {
+                //User u = snapshot.getValue(User.class);
+                if (snapshot.getValue() == null) {
                     Log.e(TAG, "Snapshot -> True");
-                    exists = true;
                     addUser();
                 }
             }
@@ -224,9 +217,8 @@ public class MainActivity extends AppCompatActivity {
      * If the user does not exist in the database it creates a new one
      */
     private void addUser() {
-        if (exists) return;
-        User newuser = new User(mFirebaseUser.getDisplayName(), mFirebaseUser.getEmail(), 0.0, null);
-        myRef.child(uid).push().setValue(newuser);
+        User newuser = new User(mFirebaseUser.getDisplayName(), mFirebaseUser.getEmail(), 0.0);
+        myRef.setValue(newuser);
     }
 
     /**

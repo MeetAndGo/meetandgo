@@ -8,11 +8,17 @@ public class User {
         public double rating;
         public Location position;
 
-        public User(String full_name, String email,Double rating, Location position) {
+        public User()
+        {
+            this.full_name = "";
+            this.email = "";
+            this.rating = 0.0;
+        }
+
+        public User(String full_name, String email,Double rating) {
             this.full_name = full_name;
             this.email = email;
             this.rating = rating;
-            this.position = position;
         }
 
 }

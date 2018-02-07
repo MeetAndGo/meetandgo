@@ -26,11 +26,12 @@ import static org.junit.Assert.*;
 
 /**
  * Instrumented test, which will execute on an Android device.
+ * For the UI testing
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class MainActivityTest {
 
     @Rule
     public ActivityTestRule<MainActivity> activityTestRule =
@@ -42,7 +43,7 @@ public class ExampleInstrumentedTest {
     }
 
     @Test
-    public void testOpenDrawerLayaout() {
+    public void testOpenDrawerLayout() {
         onView(withId(R.id.drawer_layout)).check(matches(isClosed(Gravity.LEFT))).perform(DrawerActions.open());
         onView(withId(R.id.user_name)).check(matches(isDisplayed()));
         onView(withId(R.id.user_email)).check(matches(isDisplayed()));
