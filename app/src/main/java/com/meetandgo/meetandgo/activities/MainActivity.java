@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
+    private String uid;
+    private boolean exists = false;
+
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.navigation) NavigationView mNavView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
