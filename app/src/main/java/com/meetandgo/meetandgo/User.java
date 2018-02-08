@@ -13,12 +13,13 @@ public class User {
             this.full_name = "";
             this.email = "";
             this.rating = 0.0;
+            this.position = null;
         }
 
         public User(String full_name, String email,Double rating) {
             this.full_name = full_name;
             this.email = email;
             this.rating = rating;
+            this.position = null;
         }
-
 }

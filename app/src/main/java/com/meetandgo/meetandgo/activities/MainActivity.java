@@ -24,14 +24,7 @@ import android.widget.TextView;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.User;
 import com.meetandgo.meetandgo.fragments.ChatsFragment;
@@ -49,12 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private FirebaseAuth mAuth;
-    private FirebaseUser mFirebaseUser;
-    private DatabaseReference myRef;
-    private String uid;
-    private boolean exists = false;
-
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.navigation) NavigationView mNavView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -68,13 +55,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        FirebaseApp.initializeApp(this);
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseDB.initializeApp(this);
         setSupportActionBar(mToolbar);
 
         // Get the debug keyhash for facebook login (Not useful on release version)
         getDebugKeyHash();
 
+        setupUI();
+
+        // Add current user to the database
+        User currentUser = FirebaseDB.getCurrentUser();
+        FirebaseDB.addUser(currentUser);
+
+        mTextViewUserName.setText(currentUser.full_name);
+        mTextViewUserEmail.setText(currentUser.email);
+    }
+
+    private void setupUI() {
         mNavView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -102,34 +99,6 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        // TODO: Set database stuff in other method
-        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        mTextViewUserName.setText(user.getDisplayName());
-        mTextViewUserEmail.setText(user.getEmail());
-        uid = user.getUid();
-        Log.e(TAG, "Database -> uid:" + uid);
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //Check if mFirebaseUser already exists
-        myRef = database.getReference("users/"+uid);
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            //TODO: getUserID from the firebase and not the whole database ->ask directly the server
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                //User u = snapshot.getValue(User.class);
-                if (snapshot.getValue() == null) {
-                    Log.e(TAG, "Snapshot -> True");
-                    addUser();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override
@@ -211,14 +180,6 @@ public class MainActivity extends AppCompatActivity {
                         MainActivity.this.startActivity(bootActivityIntent);
                     }
                 });
-    }
-
-    /**
-     * If the user does not exist in the database it creates a new one
-     */
-    private void addUser() {
-        User newuser = new User(mFirebaseUser.getDisplayName(), mFirebaseUser.getEmail(), 0.0);
-        myRef.setValue(newuser);
     }
 
     /**
