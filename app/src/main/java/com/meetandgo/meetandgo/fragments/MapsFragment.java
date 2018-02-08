@@ -7,9 +7,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +43,9 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import com.meetandgo.meetandgo.fragments.CustomBottomSheetDialogFragment;
+import android.support.design.widget.BottomSheetBehavior;
+
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMyLocationClickListener {
 
     private static final String TAG = "MapsFragment";
@@ -59,6 +64,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private Location mLastKnownMarkerLocation;
     private Marker mDestination;
     private Toast mToast;
+
+    private BottomSheetBehavior bottomSheetBehavior;
+    private CustomBottomSheetDialogFragment mCustomBottomSheetDialogFragment;
+
 
     @BindView(R.id.fab) FloatingActionButton mFab;
 
@@ -82,6 +91,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             mLastKnownMarkerLocation.setLongitude(DEFAULT_LOCATION.longitude);
         }
         mToast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
+
+
 
     }
 
@@ -110,6 +121,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         mapFragment.getMapAsync(this);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        setupBottomSheet(view);
         return view;
     }
 
@@ -188,6 +201,52 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 Log.d(TAG, "Camera moving");
                 mMap.getCameraPosition();
                 putMarkerOnLocation(new LatLng(mMap.getCameraPosition().target.latitude,mMap.getCameraPosition().target.longitude));
+            }
+        });
+
+
+
+    }
+
+    private void setupBottomSheet(View view) {
+        // Set persistent bottom sheet:
+        bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.bottomSheetLayout));
+        mCustomBottomSheetDialogFragment = new CustomBottomSheetDialogFragment();
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(View bottomSheet, int newState) {
+
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    //      bottomSheetHeading.setText(getString(R.string.text_collapse_me));
+                } else {
+                    //     bottomSheetHeading.setText(getString(R.string.text_expand_me));
+                }
+
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        Log.e("Bottom Sheet Behaviour", "STATE_COLLAPSED");
+                        break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        Log.e("Bottom Sheet Behaviour", "STATE_DRAGGING");
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        Log.e("Bottom Sheet Behaviour", "STATE_EXPANDED");
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        Log.e("Bottom Sheet Behaviour", "STATE_HIDDEN");
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        Log.e("Bottom Sheet Behaviour", "STATE_SETTLING");
+                        break;
+                }
+            }
+
+
+            @Override
+            public void onSlide(View bottomSheet, float slideOffset) {
+                if(!mCustomBottomSheetDialogFragment.getShowsDialog()) {
+                    mCustomBottomSheetDialogFragment.show(getFragmentManager(), "Dialog");
+                }
             }
         });
     }
