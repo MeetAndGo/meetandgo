@@ -79,15 +79,27 @@ public class FirebaseDB {
         return false;
     }
 
+
+    /**
+     * Check to see if firebase was initialized or not
+     * @return Boolean variable indicating if firebase has been initialized or not
+     */
     public static boolean isFirebaseInitialised() {
         return sInitialised;
     }
 
+    /**
+     * Checks if the user is in database, not in the Authentication database but in the users one
+     * @param uid String corresponding to the user unique id that needs to be checked
+     * @return Boolean value indicating if the user was found or not
+     */
     public static boolean isUserInDB(String uid) {
         final boolean[] result = {false};
+        // References to the Database with the given userId is created
         DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
         databaseReference.removeValue();
 
+        // ValueEventListener needed to get the return of asking the database for the user
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -99,6 +111,8 @@ public class FirebaseDB {
             public void onCancelled(DatabaseError databaseError) {
             }
         };
+
+        // Run the search for the user based on his userId
         databaseReference.addListenerForSingleValueEvent(valueEventListener);
         return result[0];
     }

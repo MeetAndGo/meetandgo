@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        FirebaseDB.initializeApp(this);
         setSupportActionBar(mToolbar);
 
         // Get the debug KeyHash for facebook login (Not useful on release version)
@@ -85,6 +84,15 @@ public class MainActivity extends AppCompatActivity {
         setSelectedFragmentByMenuItem(R.id.menu_item_1);
 
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            if (mDrawerLayout.isDrawerOpen(Gravity.START)) mDrawerLayout.closeDrawer(Gravity.START);
+            else mDrawerLayout.openDrawer(Gravity.START);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -147,16 +155,6 @@ public class MainActivity extends AppCompatActivity {
         boolean result = setSelectedFragment(fragment);
         checkMenuItem(menuItemId);
         return result;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            if (mDrawerLayout.isDrawerOpen(Gravity.START)) mDrawerLayout.closeDrawer(Gravity.START);
-            else mDrawerLayout.openDrawer(Gravity.START);
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**

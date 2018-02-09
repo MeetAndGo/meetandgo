@@ -1,14 +1,12 @@
 package com.meetandgo.meetandgo.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
@@ -23,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -68,14 +65,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private Location mLastKnownLocation;
     private Location mLastKnownMarkerLocation;
     private Marker mMarkerDestination;
-    private BottomSheetBehavior bottomSheetBehavior;
+    private BottomSheetBehavior mBottomSheetBehavior;
 
     private AddressResultReceiver mResultReceiver;
 
     private View mView;
-    @BindView(R.id.fab) FloatingActionButton mFab;
-    @BindView(R.id.bottomSheetContent) RelativeLayout mRelativeSheetContent;
-    @BindView(R.id.imageViewMapCenter) ImageView mImageViewMapCenter;
+    @BindView(R.id.fab)
+    FloatingActionButton mFab;
+    @BindView(R.id.bottomSheetContent)
+    RelativeLayout mRelativeSheetContent;
+    @BindView(R.id.imageViewMapCenter)
+    ImageView mImageViewMapCenter;
+
     private OnCompleteListener mOnCompleteListenerMove;
     private OnCompleteListener mOnCompleteListenerAnimate;
     private int mSlideOffset;
@@ -99,17 +100,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         } else {
             mLastKnownMarkerLocation = convertLatLngToLocation(DEFAULT_LOCATION);
         }
-        mResultReceiver = new AddressResultReceiver(getActivity(),  new Handler());
+        mResultReceiver = new AddressResultReceiver(getActivity(), new Handler());
 
-    }
-
-    private void setUpMap() {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        SupportMapFragment mapFragment = new SupportMapFragment();
-        transaction.add(R.id.map, mapFragment);
-        transaction.commit();
-        mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -131,6 +123,100 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         setUpMap();
         return mView;
     }
+
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        // In order to use the location feature we need to ask for location permission
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
+        mMarkerDestination = mMap.addMarker(new MarkerOptions().position(DEFAULT_LOCATION).visible(false));
+        mMap.setOnMyLocationClickListener(this);
+        mMap.getUiSettings().setRotateGesturesEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                putMarkerOnLocation(latLng);
+                Location location = convertLatLngToLocation(latLng);
+                animateCameraToLocation(location);
+                getLocationName(location);
+            }
+
+        });
+
+
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                // We put the marker on the center of the mImageViewMapCenter
+                int markerX = (int) mImageViewMapCenter.getX() + mImageViewMapCenter.getWidth() / 2;
+                int markerY = (int) mImageViewMapCenter.getY() + mImageViewMapCenter.getHeight() / 2;
+                Point point = new Point(markerX, markerY);
+                putMarkerOnPoint(point);
+            }
+        });
+        mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int reason) {
+                if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                    mUserIsDragging = true;
+                }
+            }
+        });
+
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                if (!mUserIsDragging) return;
+                mUserIsDragging = false;
+                LatLng cameraLatLng = mMap.getCameraPosition().target;
+                getLocationName(convertLatLngToLocation(cameraLatLng));
+            }
+        });
+
+        manageLocationPermission();
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+        getLocationName(location);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mMap != null) {
+            outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
+            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
+            outState.putParcelable(KEY_MARKER_LOCATION, mLastKnownMarkerLocation);
+            super.onSaveInstanceState(outState);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mView = null;
+    }
+
+    private void setUpMap() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        SupportMapFragment mapFragment = new SupportMapFragment();
+        transaction.add(R.id.map, mapFragment);
+        transaction.commit();
+        mapFragment.getMapAsync(this);
+    }
+
 
     private boolean manageLocationPermission() {
         mLocationPermissionListener = new PermissionListener() {
@@ -169,69 +255,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        // In order to use the location feature we need to ask for location permission
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
-        mMarkerDestination = mMap.addMarker(new MarkerOptions().position(DEFAULT_LOCATION).visible(false));
-        mMap.setOnMyLocationClickListener(this);
-        mMap.getUiSettings().setRotateGesturesEnabled(false);
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                putMarkerOnLocation(latLng);
-                Location location = convertLatLngToLocation(latLng);
-                animateCameraToLocation(location);
-                getLocationName(location);
-            }
-
-        });
-
-
-
-        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-            @Override
-            public void onCameraMove() {
-                // We put the marker on the center of the mImageViewMapCenter
-                int markerX = (int) mImageViewMapCenter.getX() + mImageViewMapCenter.getWidth() / 2;
-                int markerY = (int) mImageViewMapCenter.getY() + mImageViewMapCenter.getHeight() / 2;
-                Point point = new Point(markerX, markerY);
-                putMarkerOnPoint(point);
-            }
-        });
-        mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
-            @Override
-            public void onCameraMoveStarted(int reason) {
-                if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                    mUserIsDragging = true;
-                }
-            }
-        });
-
-        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-            @Override
-            public void onCameraIdle() {
-                if(!mUserIsDragging) return;
-                mUserIsDragging = false;
-                LatLng cameraLatLng = mMap.getCameraPosition().target;
-                getLocationName(convertLatLngToLocation(cameraLatLng));
-            }
-        });
-
-        manageLocationPermission();
-    }
 
     /**
      * Setup the bottom sheet used for setting the preferences for the matching
@@ -239,8 +262,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * @param view The fragment view needed for finding the view id of the bottom sheet
      */
     private void setupBottomSheet(@NonNull View view) {
-        bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.bottomSheetLayout));
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        mBottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.bottomSheetLayout));
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(View bottomSheet, int newState) {
                 switch (newState) {
@@ -270,16 +293,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mRelativeSheetContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 }
             }
         });
     }
 
     private void centerMapCenterImageView(View bottomSheet, float slideOffset) {
-        int slideChangeHeight = bottomSheet.getHeight() - bottomSheetBehavior.getPeekHeight();
-        mSlideOffset = (int) (slideChangeHeight * (slideOffset/2));
+        int slideChangeHeight = bottomSheet.getHeight() - mBottomSheetBehavior.getPeekHeight();
+        mSlideOffset = (int) (slideChangeHeight * (slideOffset / 2));
         slideChangeHeight *= 1 - (slideOffset / 2);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mImageViewMapCenter.getWidth(), mImageViewMapCenter.getHeight());
         params.leftMargin = (int) mImageViewMapCenter.getX();
@@ -289,8 +312,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     public Point convertLatLngToPixels(LatLng latLng) {
         Projection projection = mMap.getProjection();
-        Point p1 = projection.toScreenLocation(latLng);
-        return p1;
+        Point point = projection.toScreenLocation(latLng);
+        return point;
     }
 
     public LatLng convertPixelsToLatLng(Point point) {
@@ -327,33 +350,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         // service kills itself automatically once all intents are processed.
         getActivity().startService(intent);
     }
-
-    // TODO: Follow the tutorial to make it a service on another thread
-//    private String getLocationName(@NonNull Location location) {
-//        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-//        List<Address> addresses;
-//        try {
-//            addresses = geocoder.getFromLocation(location.getLatitude(),
-//                    location.getLongitude(),
-//                    1);
-//
-//            // Get default Address in case map is not working for some reason
-//            Locale userLocale = getResources().getConfiguration().locale;
-//            Address address = new Address(userLocale);
-//            if (addresses.size() > 0) address = addresses.get(0);
-//
-//            // Format The address returned
-//            ArrayList<String> addressFragments = new ArrayList<>();
-//            // Fetch the address lines using getAddressLine,
-//            // join them, and send them to the thread.
-//            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-//                addressFragments.add(address.getAddressLine(i));
-//            }
-//            return TextUtils.join(System.getProperty("line.separator"), addressFragments);
-//        } catch (Exception e) {
-//            return location.toString();
-//        }
-//    }
 
     /**
      * Get the best and most recent location of the device, which may be null in rare
@@ -435,28 +431,5 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             }
         };
     }
-
-    @Override
-    public void onMyLocationClick(@NonNull Location location) {
-        getLocationName(location);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (mMap != null) {
-            outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
-            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
-            outState.putParcelable(KEY_MARKER_LOCATION, mLastKnownMarkerLocation);
-            super.onSaveInstanceState(outState);
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mView = null;
-    }
-
-
 
 }

@@ -10,13 +10,13 @@ import android.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.meetandgo.meetandgo.Constants;
+import com.meetandgo.meetandgo.R;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import com.meetandgo.meetandgo.Constants;
-import com.meetandgo.meetandgo.R;
 
 /**
  * Asynchronously handles an intent using a worker thread. Receives a ResultReceiver object and a
@@ -24,7 +24,7 @@ import com.meetandgo.meetandgo.R;
  * sends the result to the ResultReceiver.
  */
 public class FetchAddressIntentService extends IntentService {
-    private static final String TAG = "FetchAddressIS";
+    private static final String TAG = "FetchAddressService";
 
     /**
      * The receiver where results are forwarded from this service.
