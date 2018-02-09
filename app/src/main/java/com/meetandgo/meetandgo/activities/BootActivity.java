@@ -32,24 +32,17 @@ public class BootActivity extends AppCompatActivity {
 
     private PermissionListener mLocationPermissionListener;
     private int mAskPermissionCounter = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boot);
         askForPermissions();
+        //startMainActivity();
     }
 
     private void askForPermissions() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.dialog_needed_location_permission)
-                .setPositiveButton(R.string.allow_permission, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                       askForPermissions();
-                       mAskPermissionCounter++;
-                    }
-                });
-        final AlertDialog dialog = builder.create();
-        // Create the AlertDialog object and return it
+        final AlertDialog dialog = setUpPermissionDialog();
         mLocationPermissionListener = new PermissionListener() {
             @Override
             public void onPermissionGranted(PermissionGrantedResponse response) {
@@ -60,7 +53,7 @@ public class BootActivity extends AppCompatActivity {
             @Override
             public void onPermissionDenied(PermissionDeniedResponse response) {
                 Log.d(TAG, "PermssionDenied -> " + response.getPermissionName());
-                if(mAskPermissionCounter < 1) dialog.show();
+                if (mAskPermissionCounter < 1) dialog.show();
                 else startLoginActivity();
             }
 
@@ -71,14 +64,29 @@ public class BootActivity extends AppCompatActivity {
             }
         };
 
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(mLocationPermissionListener)
-                .check();
+        Dexter.withActivity(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(mLocationPermissionListener).check();
     }
 
+    private AlertDialog setUpPermissionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialog_needed_location_permission)
+                .setPositiveButton(R.string.allow_permission, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        askForPermissions();
+                        mAskPermissionCounter++;
+                    }
+                });
+        return builder.create();
+    }
+
+    /**
+     * Starts the Login Logic in a different activity, the result of it can be checked onActivityResult
+     */
     private void startLoginActivity() {
-        startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), RC_SIGN_IN);
+        Intent loginIntent = AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build();
+        startActivityForResult(loginIntent, RC_SIGN_IN);
+        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -86,7 +94,7 @@ public class BootActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
-                this.startMainActivity();
+                startMainActivity();
             } else {
                 Log.d(TAG, "Authentication -> Sign in failed.");
             }

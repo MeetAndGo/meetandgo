@@ -1,31 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottomSheetLayout"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
-    android:background="@color/bottomSheet"
-    android:padding="16dp"
-    app:behavior_peekHeight="60dp"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:orientation="vertical"
+    app:behavior_peekHeight="@dimen/bottom_sheet_peak_height"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
-    <TextView
-        android:id="@+id/bottomSheetHeading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Expand Me"
-        android:textAppearance="@android:style/TextAppearance.Large"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="right"
+        android:layout_margin="@dimen/margin_floating_button"
+        android:clickable="true"
+        android:src="@drawable/ic_gps_fixed_black_48dp"
+        android:tint="@android:color/white"
+        app:backgroundTint="@color/colorPrimary"
+        app:elevation="4dp"
+        app:fabSize="normal" />
 
-        android:text="This is Persistent Bottom Sheet"
-        android:textAppearance="@android:style/TextAppearance.Large"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/bottomSheetContent"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_sheet_content_height"
+        android:background="@color/bottomSheet"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/bottomSheetHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="Expand Me"
+            android:textAppearance="@android:style/TextAppearance.Large" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="This is Persistent Bottom Sheet"
+            android:textAppearance="@android:style/TextAppearance.Large" />
+    </RelativeLayout>
+</LinearLayout>

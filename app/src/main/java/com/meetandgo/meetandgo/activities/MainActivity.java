@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,6 +21,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,6 +52,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTextViewUserEmail;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    private Fragment mCurrentFragment;
+    private Fragment mMapFragment;
+    private Fragment mChatsFragment;
+    private Fragment mJourneyHistoryFragment;
+    private Fragment mCommuteFragment;
+
+    private Toast mToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,17 +68,44 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDB.initializeApp(this);
         setSupportActionBar(mToolbar);
 
-        // Get the debug keyhash for facebook login (Not useful on release version)
+        // Get the debug KeyHash for facebook login (Not useful on release version)
         getDebugKeyHash();
-
+        setUpMenuFragments();
         setupUI();
 
         // Add current user to the database
         User currentUser = FirebaseDB.getCurrentUser();
+        if (currentUser == null) startBootActivity();
         FirebaseDB.addUser(currentUser);
 
         mTextViewUserName.setText(currentUser.full_name);
         mTextViewUserEmail.setText(currentUser.email);
+
+        // Set the maps fragment as a default fragment on Start
+        setSelectedFragmentByMenuItem(R.id.menu_item_1);
+
+        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+    }
+
+    /**
+     * Setup the fragments of the Menu in order to recycle them later and not create new ones on
+     * the go.
+     */
+    private void setUpMenuFragments() {
+        try {
+            mMapFragment = MapsFragment.class.newInstance();
+            mChatsFragment = ChatsFragment.class.newInstance();
+            mJourneyHistoryFragment = JourneyHistoryFragment.class.newInstance();
+            mCommuteFragment = CommuteFragment.class.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startBootActivity() {
+        Intent bootActivityIntent = new Intent(this, BootActivity.class);
+        MainActivity.this.startActivity(bootActivityIntent);
+        finish();
     }
 
     private void setupUI() {
@@ -76,9 +113,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 Log.d(TAG, "MenuItemClicked -> MenuItem: " + menuItem.getTitle());
-                Class fragmentClass = getFragmentClass(menuItem.getItemId());
-                boolean result = setSelectedFragment(fragmentClass);
-                checkMenuItem(menuItem);
+                boolean result = setSelectedFragmentByMenuItem(menuItem.getItemId());
                 mDrawerLayout.closeDrawers();
                 return result;
             }
@@ -101,6 +136,18 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
+    /**
+     * Sets in the content view the fragment given the one of the menu item id available
+     *
+     * @param menuItemId Id of the menu item that corresponds to the selected fragment
+     * @return boolean value if the task succeeded or not
+     */
+    private boolean setSelectedFragmentByMenuItem(int menuItemId) {
+        Fragment fragment = getFragment(menuItemId);
+        boolean result = setSelectedFragment(fragment);
+        checkMenuItem(menuItemId);
+        return result;
+    }
 
 
     @Override
@@ -116,57 +163,74 @@ public class MainActivity extends AppCompatActivity {
      * Set as checked the menu item selected by the user in the navigation menu. It also sets the
      * rest of the items as not checked so there is only one highlighted.
      *
-     * @param menuItem MenuItem that was selected by the user
+     * @param menuItemId MenuItemId that was selected by the user
      */
-    private void checkMenuItem(MenuItem menuItem) {
+    private void checkMenuItem(int menuItemId) {
         int size = mNavView.getMenu().size();
         for (int i = 0; i < size; i++) {
             mNavView.getMenu().getItem(i).setChecked(false);
         }
+        MenuItem menuItem = mNavView.getMenu().findItem(menuItemId);
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
     }
 
     /**
-     * Puts the selected fragment in the content frame layout
+     * Puts the selected fragment in the content frame layout, selecting the same fragment that was
+     * selected does nothing
      *
-     * @param fragmentClass the fragment class you want to put in the content FrameLayout
+     * @param fragment the fragment you want to put in the content FrameLayout
      * @return boolean, true if it succeeds and false if it couldn't create the fragment instance
      */
-    private boolean setSelectedFragment(Class fragmentClass) {
+    private boolean setSelectedFragment(Fragment fragment) {
         try {
-            Fragment fragment = (Fragment) fragmentClass.newInstance();
+            String tag = fragment.getClass().getName();
+            if (mCurrentFragment != null && tag.equals(mCurrentFragment.getTag())) return false;
+
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            // We check if the fragment is on the stack, if is not we add it and show it
+            if (fragmentManager.findFragmentByTag(tag) == null) {
+                fragmentTransaction.add(R.id.content_frame, fragment, tag);
+            } else {
+                fragmentTransaction.show(fragment);
+            }
+            if (mCurrentFragment != null) {
+                fragmentTransaction.hide(mCurrentFragment);
+            }
+            fragmentTransaction.commit();
+            mCurrentFragment = fragment;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
         return true;
     }
 
     /**
-     * Depending on the menu item selected it returns the Fragment Class. This method should be changed
+     * Depending on the menu item selected it returns the Fragment. This method should be changed
      * when new items are added to the menu. The SignOut item does not return any fragment.
      *
      * @param menuItemId Item Id that was selected in the menu
-     * @return The fragment class corresponding to the item selected or null if the menu item does
+     * @return The fragment corresponding to the item selected or null if the menu item does
      * change the fragment of the content frame layout.
      */
-    private Class getFragmentClass(int menuItemId) {
+    private Fragment getFragment(int menuItemId) {
         switch (menuItemId) {
             case R.id.menu_item_1:
-                return MapsFragment.class;
+                return mMapFragment;
             case R.id.menu_item_2:
-                return ChatsFragment.class;
+                return mChatsFragment;
             case R.id.menu_item_3:
-                return CommuteFragment.class;
+                return mCommuteFragment;
             case R.id.menu_item_4:
-                return JourneyHistoryFragment.class;
+                return mJourneyHistoryFragment;
             case R.id.navigation_sign_out:
                 sign_out();
                 return null;
             default:
-                return MapsFragment.class;
+                return mMapFragment;
         }
     }
 
@@ -202,5 +266,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, "get_debug_keyhash() error: No such algorithm");
         }
+    }
+
+    public Toast getToast() {
+        return mToast;
     }
 }

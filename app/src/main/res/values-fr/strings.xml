@@ -6,10 +6,10 @@
     <string name="sign_out">Au Revoir!</string>
     <string name="google_maps_key">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
     <string name="title_activity_maps">Le Map</string>
-    <string name="menu_option_1">Start New Journey</string>
-    <string name="menu_option_2">Le chit chat</string>
-    <string name="menu_option_3">Daily Commute</string>
-    <string name="menu_option_4">History of Journeys</string>
+    <string name="menu_option_map">Start New Journey</string>
+    <string name="menu_option_chats">Le chit chat</string>
+    <string name="menu_option_commute">Daily Commute</string>
+    <string name="menu_option_history">History of Journeys</string>
 
     <string-array name="planets_array">
         <item>Mercury</item>
@@ -24,7 +24,7 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="navigation_sign_out">Au Revoir!</string>
+    <string name="menu_option_sign_out">Au Revoir!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -23,6 +23,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <service
+            android:name=".services.FetchAddressIntentService"
+            android:exported="false"/>
+
         <!-- Boot Activity: Handles the logic organization of the app -->
         <activity android:name=".activities.BootActivity">
             <intent-filter>
@@ -32,7 +36,9 @@
         </activity>
 
         <!-- Main Activity: TODO: To be defined -->
-        <activity android:name=".activities.MainActivity"></activity>
+        <activity android:name=".activities.MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true" ></activity>
 
     </application>
 

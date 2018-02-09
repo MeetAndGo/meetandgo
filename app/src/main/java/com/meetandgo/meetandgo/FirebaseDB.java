@@ -13,16 +13,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 /**
- * this static class is handling all the interactions with the Firebase database
+ * This static class is handling all the interactions with the Firebase database
  * In java only nested classes can be static so here all methods will be set to static
  */
-
 public class FirebaseDB {
     private static final String TAG = "FirebaseDB";
     private static FirebaseAuth sAuth;
     public static FirebaseDatabase sDatabase;
     private static boolean sInitialised;
-    private DatabaseReference myRef;
 
     public static void initializeApp(Activity activity) {
         FirebaseApp.initializeApp(activity);
@@ -33,7 +31,8 @@ public class FirebaseDB {
 
     public static String getCurrentUserUid() {
         FirebaseUser user = sAuth.getCurrentUser();
-        return user.getUid();
+        if(user != null) return user.getUid();
+        else return null;
     }
 
     /**
@@ -44,6 +43,8 @@ public class FirebaseDB {
     public static User getCurrentUser() {
         String uid = getCurrentUserUid();
         FirebaseUser firebaseUser = sAuth.getCurrentUser();
+        if (firebaseUser == null) return null;
+
         User newUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), 0.0);
         final User[] user = {newUser};
         DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
@@ -85,6 +86,7 @@ public class FirebaseDB {
     public static boolean isUserInDB(String uid) {
         final boolean[] result = {false};
         DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
+        databaseReference.removeValue();
 
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
@@ -101,6 +103,12 @@ public class FirebaseDB {
         return result[0];
     }
 
-    public static void removeUser(User user_one) {
+    public static void removeUser(String uid) {
+        // Remove user from the "users" database
+        DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
+        databaseReference.removeValue();
+        // Remove user from the auth database
+        FirebaseUser firebaseUser = sAuth.getCurrentUser();
+        firebaseUser.delete();
     }
 }

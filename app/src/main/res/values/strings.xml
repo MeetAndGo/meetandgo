@@ -6,25 +6,14 @@
     <string name="sign_out">Sign Out</string>
     <string name="google_maps_key" translatable="false">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
     <string name="title_activity_maps">Map</string>
-    <string name="menu_option_1">Start New Journey</string>
-    <string name="menu_option_2">Chats</string>
-    <string name="menu_option_3">Daily Commute</string>
-    <string name="menu_option_4">History of Journeys</string>
-
-    <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
-    </string-array>
+    <string name="menu_option_map">Start New Journey</string>
+    <string name="menu_option_chats">Chats</string>
+    <string name="menu_option_commute">Daily Commute</string>
+    <string name="menu_option_history">History of Journeys</string>
+    <string name="menu_option_sign_out">Sign Out</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="navigation_sign_out">Sign Out</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -32,8 +21,13 @@
     <string name="hello_chats">Hello Chats</string>
     <string name="hello_commute">Hello Commute</string>
     <string name="hello_journey_history">Hello journey history</string>
-    <string name="dialog_needed_location_permission">This app needs location permission to work</string>
+    <string name="dialog_needed_location_permission">This app needs location permission to work.</string>
     <string name="allow_permission">Allow</string>
-    <string name="cancel">Deny</string>
+    <string name="deny_permission">Deny</string>
+    <string name="no_location_data_provided">Location was not provided.</string>
+    <string name="service_not_available">Location Service not available.</string>
+    <string name="invalid_lat_long_used">Invalid LastLng</string>
+    <string name="no_address_found">Address not found.</string>
+    <string name="address_found">Address found.</string>
 
 </resources>
