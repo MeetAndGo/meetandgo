@@ -30,17 +30,22 @@ public class FirebaseDB {
     }
 
     public static String getCurrentUserUid() {
+        if (!isFirebaseInitialised()) return null;
+
         FirebaseUser user = sAuth.getCurrentUser();
-        if(user != null) return user.getUid();
+        if (user != null) return user.getUid();
         else return null;
     }
 
     /**
      * Give the current user, if the user does not exist on the database, we create the User with the
      * data from the FirebaseUser object.
+     *
      * @return the current user
      */
     public static User getCurrentUser() {
+        if (!isFirebaseInitialised()) return null;
+
         String uid = getCurrentUserUid();
         FirebaseUser firebaseUser = sAuth.getCurrentUser();
         if (firebaseUser == null) return null;
@@ -52,7 +57,7 @@ public class FirebaseDB {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.d(TAG, snapshot.toString());
-                 user[0] = snapshot.getValue(User.class);
+                user[0] = snapshot.getValue(User.class);
             }
 
             @Override
@@ -66,6 +71,7 @@ public class FirebaseDB {
 
     /**
      * Add user to Firebase Database
+     *
      * @return boolean, true if user successfully added, false otherwise
      */
     public static boolean addUser(User newUser) {
@@ -82,14 +88,18 @@ public class FirebaseDB {
 
     /**
      * Check to see if firebase was initialized or not
+     *
      * @return Boolean variable indicating if firebase has been initialized or not
      */
     public static boolean isFirebaseInitialised() {
+        if (sAuth == null) return false;
+        if (sDatabase == null) return false;
         return sInitialised;
     }
 
     /**
      * Checks if the user is in database, not in the Authentication database but in the users one
+     * TODO: The result is running in other thread, the return will always be false.
      * @param uid String corresponding to the user unique id that needs to be checked
      * @return Boolean value indicating if the user was found or not
      */
@@ -97,14 +107,13 @@ public class FirebaseDB {
         final boolean[] result = {false};
         // References to the Database with the given userId is created
         DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
-        databaseReference.removeValue();
 
         // ValueEventListener needed to get the return of asking the database for the user
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.getValue(User.class) == null)  result[0] = false;
-                else  result[0] = true;
+                if (snapshot.getValue(User.class) == null) result[0] = false;
+                else result[0] = true;
             }
 
             @Override

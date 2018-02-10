@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) startBootActivity();
         FirebaseDB.addUser(currentUser);
 
+        // UpdateUI based on the current user that is using the app
         mTextViewUserName.setText(currentUser.full_name);
         mTextViewUserEmail.setText(currentUser.email);
 
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle the selection of the burger toggle that manages the drawer layout
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             if (mDrawerLayout.isDrawerOpen(Gravity.START)) mDrawerLayout.closeDrawer(Gravity.START);
             else mDrawerLayout.openDrawer(Gravity.START);
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
     private void startBootActivity() {
         Intent bootActivityIntent = new Intent(this, BootActivity.class);
         MainActivity.this.startActivity(bootActivityIntent);
+        // After starting the boot activity we clear this one
         finish();
     }
 
@@ -165,6 +168,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private void checkMenuItem(int menuItemId) {
         int size = mNavView.getMenu().size();
+        // First of all we set all the menu items to false, and then we set the one that we want
+        // as true
         for (int i = 0; i < size; i++) {
             mNavView.getMenu().getItem(i).setChecked(false);
         }
@@ -194,9 +199,12 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 fragmentTransaction.show(fragment);
             }
+            // We hid the current fragment that it is being shown
             if (mCurrentFragment != null) {
                 fragmentTransaction.hide(mCurrentFragment);
             }
+            // Finally we commit the transaction that has to be made and save the new fragment as
+            // currentFragment
             fragmentTransaction.commit();
             mCurrentFragment = fragment;
         } catch (Exception e) {
@@ -236,14 +244,11 @@ public class MainActivity extends AppCompatActivity {
      * Signs out the current user from the account
      */
     private void sign_out() {
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Intent bootActivityIntent = new Intent(MainActivity.this, BootActivity.class);
-                        MainActivity.this.startActivity(bootActivityIntent);
-                    }
-                });
+        AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
+            public void onComplete(@NonNull Task<Void> task) {
+                startBootActivity();
+            }
+        });
     }
 
     /**

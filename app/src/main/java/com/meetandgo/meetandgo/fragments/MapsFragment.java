@@ -111,17 +111,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mView = inflater.inflate(R.layout.fragment_maps, container, false);
         ButterKnife.bind(this, mView);
 
+        setUpUI();
+        return mView;
+    }
+
+    /**
+     * SetUps the UI of the whole fragment
+     */
+    private void setUpUI() {
         setupBottomSheet(mView);
         setUpOnCompleteListeners();
+        // Floating Button OnClickListener
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getDeviceLocation(mOnCompleteListenerAnimate);
             }
         });
-
+        // SetUp the map fragment and all the methods needed for the map API to work
         setUpMap();
-        return mView;
     }
 
     /**
@@ -187,11 +195,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         manageLocationPermission();
     }
 
+    /**
+     * Handles the click of the current location of the user. This method is overriding a method by
+     * the Google MAPs API
+     * @param location Location of the current user
+     */
     @Override
     public void onMyLocationClick(@NonNull Location location) {
         getLocationName(location);
     }
 
+    /**
+     * This is method is called when the device suffers any changes, such as screen rotation or change
+     * of the screensize. We save variables in order to be accessed one those changes have finished,
+     * in order to give a better user experience to the user.
+     * @param outState
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mMap != null) {
@@ -209,15 +228,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void setUpMap() {
+        // Map Fragment containing the Google MAP is added to the content layout
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         SupportMapFragment mapFragment = new SupportMapFragment();
         transaction.add(R.id.map, mapFragment);
         transaction.commit();
+        // We load the map in an async way
         mapFragment.getMapAsync(this);
     }
 
-
+    /**
+     * Manage the local permission, if the user does grant the LOCATION permission we continue showing
+     * the map. If not we can not set the current user location and we try to setup everything
+     * so that the user does not run into any problems.
+     * @return boolean indicating if the location was granted or not
+     */
     private boolean manageLocationPermission() {
         mLocationPermissionListener = new PermissionListener() {
             @Override
@@ -300,35 +326,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         });
     }
 
+    /**
+     * Using the bottom sheet slide offset we calculate the position of the image view in the center
+     * of the map that helps the user set their location
+     * @param bottomSheet The bottom sheet view used to set the preferences
+     * @param slideOffset The slide offset that the bottom sheet currently has
+     */
     private void centerMapCenterImageView(View bottomSheet, float slideOffset) {
+        // Calculate the new position of the imageview
         int slideChangeHeight = bottomSheet.getHeight() - mBottomSheetBehavior.getPeekHeight();
         mSlideOffset = (int) (slideChangeHeight * (slideOffset / 2));
         slideChangeHeight *= 1 - (slideOffset / 2);
+        // Set the position, leaving the X as it was
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mImageViewMapCenter.getWidth(), mImageViewMapCenter.getHeight());
         params.leftMargin = (int) mImageViewMapCenter.getX();
         params.topMargin = slideChangeHeight;
         mImageViewMapCenter.setLayoutParams(params);
-    }
-
-    public Point convertLatLngToPixels(LatLng latLng) {
-        Projection projection = mMap.getProjection();
-        Point point = projection.toScreenLocation(latLng);
-        return point;
-    }
-
-    public LatLng convertPixelsToLatLng(Point point) {
-        Projection projection = mMap.getProjection();
-        return projection.fromScreenLocation(point);
-    }
-
-    private void putMarkerOnLocation(@NonNull LatLng latLng) {
-        mLastKnownMarkerLocation = convertLatLngToLocation(latLng);
-        mMarkerDestination.setPosition(latLng);
-    }
-
-    private void putMarkerOnPoint(Point point) {
-        LatLng latLng = convertPixelsToLatLng(point);
-        putMarkerOnLocation(latLng);
     }
 
     /**
@@ -375,33 +388,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
-    private Location convertLatLngToLocation(LatLng latLng) {
-        Location newLocation = new Location("");
-        newLocation.setLatitude(latLng.latitude);
-        newLocation.setLongitude(latLng.longitude);
-        return newLocation;
-    }
-
-    private void animateCameraToLocation(Location location) {
-        LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        newLocation = getLatLngWithSlideOffset(newLocation);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM));
-    }
-
-    private void moveCameraToLocation(Location location) {
-        LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        newLocation = getLatLngWithSlideOffset(newLocation);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM));
-    }
-
-    private LatLng getLatLngWithSlideOffset(LatLng newLocation) {
-        Point point = convertLatLngToPixels(newLocation);
-        point.y += mSlideOffset;
-        newLocation = convertPixelsToLatLng(point);
-        return newLocation;
-    }
-
-
+    /**
+     * SetUp the completion listeners for the move and animate camera methods. When the user
+     * starts the app we want to move the camera fast to some position without any animation. If
+     * they click the button "MyLocation" show the animation and move smoothly to the required position
+     */
     private void setUpOnCompleteListeners() {
         mOnCompleteListenerMove = new OnCompleteListener() {
             @Override
@@ -430,6 +421,53 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                         mLastKnownLocation.getLongitude()));
             }
         };
+    }
+
+    public Point convertLatLngToPixels(LatLng latLng) {
+        Projection projection = mMap.getProjection();
+        Point point = projection.toScreenLocation(latLng);
+        return point;
+    }
+
+    public LatLng convertPixelsToLatLng(Point point) {
+        Projection projection = mMap.getProjection();
+        return projection.fromScreenLocation(point);
+    }
+
+    private Location convertLatLngToLocation(LatLng latLng) {
+        Location newLocation = new Location("");
+        newLocation.setLatitude(latLng.latitude);
+        newLocation.setLongitude(latLng.longitude);
+        return newLocation;
+    }
+
+    private void putMarkerOnLocation(@NonNull LatLng latLng) {
+        mLastKnownMarkerLocation = convertLatLngToLocation(latLng);
+        mMarkerDestination.setPosition(latLng);
+    }
+
+    private void putMarkerOnPoint(Point point) {
+        LatLng latLng = convertPixelsToLatLng(point);
+        putMarkerOnLocation(latLng);
+    }
+
+    private void animateCameraToLocation(Location location) {
+        LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        newLocation = getLatLngWithSlideOffset(newLocation);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM));
+    }
+
+    private void moveCameraToLocation(Location location) {
+        LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        newLocation = getLatLngWithSlideOffset(newLocation);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM));
+    }
+
+    private LatLng getLatLngWithSlideOffset(LatLng newLocation) {
+        Point point = convertLatLngToPixels(newLocation);
+        point.y += mSlideOffset;
+        newLocation = convertPixelsToLatLng(point);
+        return newLocation;
     }
 
 }
