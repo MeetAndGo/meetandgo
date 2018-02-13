@@ -18,9 +18,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -42,6 +44,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.receivers.AddressResultReceiver;
 import com.meetandgo.meetandgo.services.FetchAddressIntentService;
 
@@ -70,19 +73,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private AddressResultReceiver mResultReceiver;
 
     private View mView;
-    @BindView(R.id.fab)
-    FloatingActionButton mFab;
-    @BindView(R.id.bottomSheetContent)
-    RelativeLayout mRelativeSheetContent;
-    @BindView(R.id.imageViewMapCenter)
-    ImageView mImageViewMapCenter;
+    @BindView(R.id.fab) FloatingActionButton mFab;
+    @BindView(R.id.bottomSheetContent) LinearLayout mRelativeSheetContent;
+    @BindView(R.id.imageViewMapCenter) ImageView mImageViewMapCenter;
+    @BindView(R.id.textViewStartLocation) TextView mTextViewStartLocation;
+    @BindView(R.id.textViewEndLocation) TextView mTextViewEndLocation;
+    @BindView(R.id.buttonSearch) Button mButtonSearch;
+    private TextView mTextViewCurrentFocus;
 
     private OnCompleteListener mOnCompleteListenerMove;
     private OnCompleteListener mOnCompleteListenerAnimate;
     private int mSlideOffset;
     private boolean mUserIsDragging;
 
+    private Preferences mPreferences;
+
     public MapsFragment() {
+        mPreferences = new Preferences();
+        Log.d(TAG, mPreferences.startLocation.toString());
     }
 
     public static Fragment newInstance() {
@@ -198,6 +206,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     /**
      * Handles the click of the current location of the user. This method is overriding a method by
      * the Google MAPs API
+     *
      * @param location Location of the current user
      */
     @Override
@@ -209,6 +218,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * This is method is called when the device suffers any changes, such as screen rotation or change
      * of the screensize. We save variables in order to be accessed one those changes have finished,
      * in order to give a better user experience to the user.
+     *
      * @param outState
      */
     @Override
@@ -242,6 +252,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * Manage the local permission, if the user does grant the LOCATION permission we continue showing
      * the map. If not we can not set the current user location and we try to setup everything
      * so that the user does not run into any problems.
+     *
      * @return boolean indicating if the location was granted or not
      */
     private boolean manageLocationPermission() {
@@ -321,7 +332,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View view) {
                 if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
+            }
+        });
+
+        mTextViewStartLocation.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                mTextViewCurrentFocus = mTextViewStartLocation;
+            }
+        });
+
+        mTextViewEndLocation.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                mTextViewCurrentFocus = mTextViewEndLocation;
             }
         });
     }
@@ -329,6 +354,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     /**
      * Using the bottom sheet slide offset we calculate the position of the image view in the center
      * of the map that helps the user set their location
+     *
      * @param bottomSheet The bottom sheet view used to set the preferences
      * @param slideOffset The slide offset that the bottom sheet currently has
      */
@@ -470,4 +496,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         return newLocation;
     }
 
+    public void setAddressInView(String address) {
+        if (mTextViewCurrentFocus == null) return;
+        mTextViewCurrentFocus.setText(address);
+    }
 }

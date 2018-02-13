@@ -31,7 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
-import com.meetandgo.meetandgo.User;
+import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.fragments.ChatsFragment;
 import com.meetandgo.meetandgo.fragments.CommuteFragment;
 import com.meetandgo.meetandgo.fragments.JourneyHistoryFragment;
@@ -296,5 +296,9 @@ public class MainActivity extends AppCompatActivity {
 
     public Toast getToast() {
         return mToast;
+    }
+
+    public MapsFragment getMapsFragment() {
+        return (MapsFragment) mMapFragment;
     }
 }

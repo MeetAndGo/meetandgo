@@ -11,7 +11,6 @@ import android.os.ResultReceiver;
 
 import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.activities.MainActivity;
-import com.meetandgo.meetandgo.fragments.MapsFragment;
 
 /**
  * Receiver for data sent from FetchAddressIntentService.
@@ -37,6 +36,7 @@ public class AddressResultReceiver extends ResultReceiver {
         if (resultCode == Constants.SUCCESS_RESULT) {
             ((MainActivity) mActivity).getToast().setText(addressOutput);
             ((MainActivity) mActivity).getToast().show();
+            ((MainActivity) mActivity).getMapsFragment().setAddressInView(addressOutput);
         }
 
     }

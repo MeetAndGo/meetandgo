@@ -11,15 +11,10 @@
     <string name="menu_option_commute">Daily Commute</string>
     <string name="menu_option_history">History of Journeys</string>
 
-    <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
+    <string-array name="gender_array" >
+        <item>Any</item>
+        <item>Male</item>
+        <item>Female</item>
     </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>
@@ -32,5 +27,15 @@
     <string name="hello_chats">Hello Chats</string>
     <string name="hello_commute">Hello Commute</string>
     <string name="hello_journey_history">Hello journey history</string>
+    <string name="gender_array" />
+    <string name="any">ANY</string>
+    <string name="gender_male">MALE</string>
+    <string name="gender_female">FEMALE</string>
+    <string name="mode_walk">Walk</string>
+    <string name="mode_car">Car</string>
+    <string name="mode_taxi" />
+    <string name="start_location">Start Location</string>
+    <string name="end_location">Destination</string>
+    <string name="search_button">Search</string>
 
 </resources>

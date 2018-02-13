@@ -38,7 +38,6 @@ public class BootActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boot);
-
         FirebaseDB.initializeApp(this);
         askForPermissions();
     }

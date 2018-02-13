@@ -1,4 +1,4 @@
-package com.meetandgo.meetandgo;
+package com.meetandgo.meetandgo.data;
 
 import android.location.Location;
 

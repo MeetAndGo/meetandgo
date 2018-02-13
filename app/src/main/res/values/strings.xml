@@ -29,5 +29,20 @@
     <string name="invalid_lat_long_used">Invalid LastLng</string>
     <string name="no_address_found">Address not found.</string>
     <string name="address_found">Address found.</string>
+    <string name="any">Any</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="mode_walk">Walk</string>
+    <string name="mode_car">Car</string>
+    <string name="mode_taxi">Taxi</string>
+    <string name="start_location">Start Location</string>
+    <string name="end_location">Destination</string>
+    <string name="search_button">Search</string>
+
+    <string-array name="gender_array" >
+        <item name="gender_any">Any</item>
+        <item name="gender_male">Male</item>
+        <item name="gender_female">Female</item>
+    </string-array>
 
 </resources>

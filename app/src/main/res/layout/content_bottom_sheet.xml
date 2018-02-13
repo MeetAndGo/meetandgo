@@ -24,31 +24,84 @@
         app:elevation="4dp"
         app:fabSize="normal" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/bottomSheetContent"
-        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_sheet_content_height"
         android:background="@color/bottomSheet"
-        android:padding="16dp">
+        android:clickable="true"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/bottomSheetHeading"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="Expand Me"
-            android:textAppearance="@android:style/TextAppearance.Large" />
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:clickable="true">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_search_black_48dp"
+                android:tint="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/textViewStartLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:hint="@string/start_location"
+                android:lines="1"
+                android:maxLines="1"
+                android:scrollHorizontally="true" />
+
+        </LinearLayout>
+
+        <include layout="@layout/separator_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:text="This is Persistent Bottom Sheet"
-            android:textAppearance="@android:style/TextAppearance.Large" />
-    </RelativeLayout>
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:clickable="true">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_chat_black_48dp"
+                android:tint="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/textViewEndLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:hint="@string/end_location"
+                android:lines="1"
+                android:scrollHorizontally="true" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:elevation="1dp"
+            android:text="@string/search_button"
+            android:textColor="@android:color/white" />
+
+
+    </LinearLayout>
 </LinearLayout>
