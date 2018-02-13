@@ -26,6 +26,9 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.User;
@@ -72,14 +75,34 @@ public class MainActivity extends AppCompatActivity {
         setUpMenuFragments();
         setupUI();
 
+        final User currentUser = FirebaseDB.getCurrentUser();
+        // ValueEventListener needed to get the return of asking the database for the user
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.e(TAG, "in ondatachange from event listener" + snapshot.toString());
+                if (snapshot.getValue(User.class) == null)  FirebaseDB.addUser(currentUser);
+                else {
+                    //check if already logged in
+                    if (FirebaseDB.getCurrentUserUid() == null)  startBootActivity();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+
         // Add current user to the database
-        User currentUser = FirebaseDB.getCurrentUser();
-        if (currentUser == null) startBootActivity();
-        FirebaseDB.addUser(currentUser);
+        FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), valueEventListener);
+
+        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 5);
+        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 5);
+        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 5);
 
         // UpdateUI based on the current user that is using the app
-        mTextViewUserName.setText(currentUser.full_name);
-        mTextViewUserEmail.setText(currentUser.email);
+        mTextViewUserName.setText(currentUser.mFullName);
+        mTextViewUserEmail.setText(currentUser.mEmail);
 
         // Set the maps fragment as a default fragment on Start
         setSelectedFragmentByMenuItem(R.id.menu_item_1);

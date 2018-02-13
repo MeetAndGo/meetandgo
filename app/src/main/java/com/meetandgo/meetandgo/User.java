@@ -3,22 +3,25 @@ package com.meetandgo.meetandgo;
 import android.location.Location;
 
 public class User {
-    public String full_name;
-    public String email;
-    public double rating;
-    public Location position;
+    public String mFullName;
+    public String mEmail;
+    public double mRating;
+    public int mNumOfRatings;
+    public Location mPosition;
 
     public User() {
-        this.full_name = "";
-        this.email = "";
-        this.rating = 0.0;
-        this.position = null;
+        this.mFullName = "";
+        this.mEmail = "";
+        this.mRating = 0.0;
+        this.mNumOfRatings = 0;
+        this.mPosition = null;
     }
 
-    public User(String full_name, String email, Double rating) {
-        this.full_name = full_name;
-        this.email = email;
-        this.rating = rating;
-        this.position = null;
+    public User(String full_name, String email) {
+        this.mFullName = full_name;
+        this.mEmail = email;
+        this.mRating = 0.0;
+        this.mNumOfRatings = 0;
+        this.mPosition = null;
     }
 }
