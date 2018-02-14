@@ -3,7 +3,6 @@ package com.meetandgo.meetandgo.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
@@ -162,7 +161,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mMap = googleMap;
         // In order to use the location feature we need to ask for location permission
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
-        mMarkerDestination = mMap.addMarker(new MarkerOptions().position(DEFAULT_LOCATION).visible(false));
+        mMarkerDestination = mMap.addMarker(new MarkerOptions().position(DEFAULT_LOCATION).visible(true));
         mMap.setOnMyLocationClickListener(this);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -374,14 +373,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * of the map that helps the user set their location
      *
      * @param bottomSheet The bottom sheet view used to set the preferences
-     * @param slideOffset The slide offset that the bottom sheet currently has
+     * @param slideOffset The slide offset that the bottom sheet currently has (from 0 not open to 1 fully open)
      */
     private void centerMapCenterImageView(View bottomSheet, float slideOffset) {
         // Calculate the new position of the imageview
+        float topLayerY = mBottomSheetBehavior.getPeekHeight();
+
+        Log.d(TAG, "bottom sheet height" + String.valueOf(topLayerY));
         int slideChangeHeight = (int) (bottomSheet.getHeight() - mBottomSheetBehavior.getPeekHeight());
         Log.d(TAG, String.valueOf(slideChangeHeight));
         mSlideOffset = (int) (slideChangeHeight * (slideOffset / 2));
-        slideChangeHeight *= 1- (slideOffset/2);
+        slideChangeHeight *= 1 - (slideOffset/2);
         // Set the position, leaving the X as it was
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mImageViewMapCenter.getWidth(), mImageViewMapCenter.getHeight());
         params.leftMargin = (int) mImageViewMapCenter.getX();

@@ -76,10 +76,9 @@ public class MainActivity extends AppCompatActivity {
         setupUI();
         setUpUser();
 
-        // TODO: Dont run here, it is not checking if the user is on the database!!!!
+        // TODO: D'ont run here, it is not checking if the user is on the database!!!!
+        //Yes it's because we will remove it eventually we were just testing the method
         FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 5);
-        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 1);
-        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 4);
 
         // Set the maps fragment as a default fragment on Start
         setSelectedFragmentByMenuItem(R.id.menu_item_1);

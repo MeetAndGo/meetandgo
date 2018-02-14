@@ -23,7 +23,7 @@ public class FirebaseDB {
     private static FirebaseAuth sAuth;
     public static FirebaseDatabase sDatabase;
     private static boolean sInitialised;
-    private final CountDownLatch loginLatch = new CountDownLatch (1);
+    private final CountDownLatch loginLatch = new CountDownLatch(1);
 
     public static void initializeApp(Activity activity) {
         FirebaseApp.initializeApp(activity);
@@ -104,6 +104,7 @@ public class FirebaseDB {
      * Checks if the user is in database, not in the Authentication database but in the users one
      * TODO: The result is running in other thread, the return will always be false.
      * //Do we really need that? Try doing callback one last time
+     *
      * @param uid String corresponding to the user unique id that needs to be checked
      * @return Boolean value indicating if the user was found or not
      */
@@ -129,19 +130,20 @@ public class FirebaseDB {
     /**
      * Adds rating to user uid
      * Note: if several addRating() launched sequentially, risk of over writing the previous call
-     * @param uid String corresponding to the user unique id that is rated
+     *
+     * @param uid    String corresponding to the user unique id that is rated
      * @param rating The rating that is given
      */
-    public static void addRating(String uid, final int rating)
-    {
+    public static void addRating(String uid, final int rating) {
+        if (uid == null) return;
         final DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 User userToRate = snapshot.getValue(User.class);
                 userToRate.mNumOfRatings++;
-                userToRate.mRating = ((userToRate.mRating * (userToRate.mNumOfRatings-1))
-                        + rating)/userToRate.mNumOfRatings;
+                userToRate.mRating = ((userToRate.mRating * (userToRate.mNumOfRatings - 1))
+                        + rating) / userToRate.mNumOfRatings;
                 databaseReference.setValue(userToRate);
             }
 
