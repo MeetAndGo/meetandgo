@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="bottomSheet">#FFFFFF</color>
     <color name="emailHeaderText">#AAFFFFFF</color>
+    <color name="colorGrey">#616161</color>
+    <color name="colorLineSeparatorGrey">#AAaaaaaa</color>
 </resources>

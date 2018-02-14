@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
+    android:elevation="16dp"
+    android:focusable="true"
     android:orientation="vertical"
     app:behavior_peekHeight="@dimen/bottom_sheet_peak_height"
     app:layout_behavior="@string/bottom_sheet_behavior">
@@ -13,95 +15,172 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="right"
-        android:layout_margin="@dimen/margin_floating_button"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/margin_floating_button"
         android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/ic_gps_fixed_black_48dp"
         android:tint="@android:color/white"
         app:backgroundTint="@color/colorPrimary"
         app:elevation="4dp"
         app:fabSize="normal" />
 
-    <LinearLayout
-        android:id="@+id/bottomSheetContent"
+    <com.meetandgo.meetandgo.views.ShadowView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_sheet_content_height"
-        android:background="@color/bottomSheet"
-        android:clickable="true"
-        android:orientation="vertical">
+        android:layout_height="16dp"
+        android:gravity="bottom"
+        app:layout_anchor="@id/bottomSheetLayout" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/bottomSheetContent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:clickable="true">
+            android:layout_height="match_parent"
+            android:background="@color/bottomSheet"
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/ic_search_black_48dp"
-                android:tint="@color/colorPrimary" />
-
-            <TextView
-                android:id="@+id/textViewStartLocation"
+            <LinearLayout
+                android:id="@+id/startLocationLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:ellipsize="end"
-                android:hint="@string/start_location"
-                android:lines="1"
-                android:maxLines="1"
-                android:scrollHorizontally="true" />
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="16dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:src="@drawable/ic_search_black_48dp"
+                    android:tint="@color/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/textViewStartLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:clickable="false"
+                    android:ellipsize="end"
+                    android:focusable="false"
+                    android:hint="@string/start_location"
+                    android:lines="1"
+                    android:scrollHorizontally="true" />
+
+            </LinearLayout>
+
+            <include layout="@layout/separator_line" />
+
+            <LinearLayout
+                android:id="@+id/endLocationLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="16dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:src="@drawable/ic_chat_black_48dp"
+                    android:tint="@color/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/textViewEndLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:clickable="false"
+                    android:ellipsize="end"
+                    android:focusable="false"
+                    android:hint="@string/end_location"
+                    android:lines="1"
+                    android:scrollHorizontally="true" />
+
+            </LinearLayout>
+
+            <include layout="@layout/separator_line" />
+
+            <LinearLayout
+                android:id="@+id/preferencesLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="16dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:src="@drawable/ic_settings_black_48dp"
+                    android:tint="@color/colorGrey" />
+
+                <TextView
+                    android:id="@+id/textViewPreferences"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:clickable="false"
+                    android:ellipsize="end"
+                    android:focusable="false"
+                    android:hint="@string/preferences_button"
+                    android:lines="1"
+                    android:scrollHorizontally="true" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonSearch"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorPrimary"
+                android:elevation="0dp"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="@string/search_button"
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
 
-        <include layout="@layout/separator_line" />
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/bottomSheetTopLayer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:clickable="true">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/ic_chat_black_48dp"
-                android:tint="@color/colorPrimary" />
-
-            <TextView
-                android:id="@+id/textViewEndLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:ellipsize="end"
-                android:hint="@string/end_location"
-                android:lines="1"
-                android:scrollHorizontally="true" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/buttonSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/colorPrimary"
-            android:elevation="1dp"
-            android:text="@string/search_button"
-            android:textColor="@android:color/white" />
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
 
+            <TextView
+                android:id="@+id/textViewTopLayer"
+                android:visibility="gone"
+                android:gravity="center"
+                android:layout_gravity="top"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="TextView" />
+        </FrameLayout>
 
-    </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

@@ -2,7 +2,7 @@
 <resources>
     <dimen name="margin_floating_button">16dp</dimen>
     <dimen name="margin_floating_button_sheet">76dp</dimen>
-    <dimen name="bottom_sheet_peak_height">148dp</dimen>
+    <dimen name="bottom_sheet_peak_height">134dp</dimen>
     <dimen name="bottom_sheet_content_peak_height">60dp</dimen>
     <dimen name="bottom_sheet_content_height">300dp</dimen>
 </resources>

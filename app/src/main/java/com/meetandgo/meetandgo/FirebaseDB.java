@@ -139,7 +139,7 @@ public class FirebaseDB {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 User userToRate = snapshot.getValue(User.class);
-                userToRate.mNumOfRatings ++;
+                userToRate.mNumOfRatings++;
                 userToRate.mRating = ((userToRate.mRating * (userToRate.mNumOfRatings-1))
                         + rating)/userToRate.mNumOfRatings;
                 databaseReference.setValue(userToRate);

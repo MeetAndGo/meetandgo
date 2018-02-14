@@ -74,17 +74,33 @@ public class MainActivity extends AppCompatActivity {
         getDebugKeyHash();
         setUpMenuFragments();
         setupUI();
+        setUpUser();
 
+        // TODO: Dont run here, it is not checking if the user is on the database!!!!
+        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 5);
+        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 1);
+        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 4);
+
+        // Set the maps fragment as a default fragment on Start
+        setSelectedFragmentByMenuItem(R.id.menu_item_1);
+    }
+
+    /**
+     * SetUp the actions related to setting up the user when the main activity is started and customize
+     * the UI for the current user
+     */
+    private void setUpUser() {
         final User currentUser = FirebaseDB.getCurrentUser();
+
         // ValueEventListener needed to get the return of asking the database for the user
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e(TAG, "in ondatachange from event listener" + snapshot.toString());
-                if (snapshot.getValue(User.class) == null)  FirebaseDB.addUser(currentUser);
+                if (snapshot.getValue(User.class) == null) FirebaseDB.addUser(currentUser);
                 else {
-                    //check if already logged in
-                    if (FirebaseDB.getCurrentUserUid() == null)  startBootActivity();
+                    //Check if it its already logged in
+                    if (FirebaseDB.getCurrentUserUid() == null) startBootActivity();
                 }
             }
 
@@ -96,18 +112,9 @@ public class MainActivity extends AppCompatActivity {
         // Add current user to the database
         FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), valueEventListener);
 
-        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 5);
-        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 5);
-        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 5);
-
         // UpdateUI based on the current user that is using the app
         mTextViewUserName.setText(currentUser.mFullName);
         mTextViewUserEmail.setText(currentUser.mEmail);
-
-        // Set the maps fragment as a default fragment on Start
-        setSelectedFragmentByMenuItem(R.id.menu_item_1);
-
-        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -168,6 +175,9 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        // SetUp the Toast for showing information to the user
+        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
     }
 
     /**

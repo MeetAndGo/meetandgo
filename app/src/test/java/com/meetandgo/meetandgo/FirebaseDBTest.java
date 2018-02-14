@@ -1,5 +1,7 @@
 package com.meetandgo.meetandgo;
 
+import com.meetandgo.meetandgo.data.User;
+
 import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;

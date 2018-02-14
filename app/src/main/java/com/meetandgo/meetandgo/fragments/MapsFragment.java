@@ -3,6 +3,7 @@ package com.meetandgo.meetandgo.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
@@ -80,6 +81,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @BindView(R.id.textViewEndLocation) TextView mTextViewEndLocation;
     @BindView(R.id.buttonSearch) Button mButtonSearch;
     private TextView mTextViewCurrentFocus;
+    @BindView(R.id.startLocationLayout) LinearLayout mStartLocationLayout;
+    @BindView(R.id.endLocationLayout) LinearLayout mEndLocationLayout;
+    @BindView(R.id.preferencesLayout) LinearLayout mPreferencesLayout;
+    @BindView(R.id.bottomSheetTopLayer) FrameLayout mBottomSheetTopLayer;
+    @BindView(R.id.textViewTopLayer) TextView mTextViewTopLayer;
 
     private OnCompleteListener mOnCompleteListenerMove;
     private OnCompleteListener mOnCompleteListenerAnimate;
@@ -118,7 +124,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_maps, container, false);
         ButterKnife.bind(this, mView);
-
         setUpUI();
         return mView;
     }
@@ -127,8 +132,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * SetUps the UI of the whole fragment
      */
     private void setUpUI() {
+        mTextViewCurrentFocus = mTextViewStartLocation;
         setupBottomSheet(mView);
         setUpOnCompleteListeners();
+
+        // SetUp the map fragment and all the methods needed for the map API to work
+        setUpMap();
+
         // Floating Button OnClickListener
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,8 +146,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 getDeviceLocation(mOnCompleteListenerAnimate);
             }
         });
-        // SetUp the map fragment and all the methods needed for the map API to work
-        setUpMap();
     }
 
     /**
@@ -324,10 +332,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
             @Override
             public void onSlide(View bottomSheet, float slideOffset) {
+                topLayerSlide(slideOffset);
                 centerMapCenterImageView(bottomSheet, slideOffset);
             }
         });
-        mRelativeSheetContent.setOnClickListener(new View.OnClickListener() {
+        mBottomSheetTopLayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -338,17 +347,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
 
-        mTextViewStartLocation.setOnClickListener(new View.OnClickListener() {
+        mStartLocationLayout.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 mTextViewCurrentFocus = mTextViewStartLocation;
             }
         });
 
-        mTextViewEndLocation.setOnClickListener(new View.OnClickListener() {
+        mEndLocationLayout.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 mTextViewCurrentFocus = mTextViewEndLocation;
             }
         });
+    }
+
+    private void topLayerSlide(float slideOffset) {
+        int alpha = (int) ((1-slideOffset)*255);
+        if(alpha == 0) mBottomSheetTopLayer.setVisibility(View.GONE);
+        else mBottomSheetTopLayer.setVisibility(View.VISIBLE);
+
+        mBottomSheetTopLayer.getBackground().setAlpha(alpha);
+        //mTextViewTopLayer.setTextColor(Color.argb(alpha, 255, 0, 0));
     }
 
     /**
@@ -360,9 +378,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      */
     private void centerMapCenterImageView(View bottomSheet, float slideOffset) {
         // Calculate the new position of the imageview
-        int slideChangeHeight = bottomSheet.getHeight() - mBottomSheetBehavior.getPeekHeight();
+        int slideChangeHeight = (int) (bottomSheet.getHeight() - mBottomSheetBehavior.getPeekHeight());
+        Log.d(TAG, String.valueOf(slideChangeHeight));
         mSlideOffset = (int) (slideChangeHeight * (slideOffset / 2));
-        slideChangeHeight *= 1 - (slideOffset / 2);
+        slideChangeHeight *= 1- (slideOffset/2);
         // Set the position, leaving the X as it was
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mImageViewMapCenter.getWidth(), mImageViewMapCenter.getHeight());
         params.leftMargin = (int) mImageViewMapCenter.getX();
