@@ -15,10 +15,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/toolbarColor"
             android:elevation="4dp"
-            android:theme="@style/AppToolbar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            android:theme="@style/AppToolbar" />
 
         <FrameLayout
             android:id="@+id/content_frame"

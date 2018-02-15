@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.meetandgo.meetandgo.data.User;
 
+import java.text.DecimalFormat;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -149,6 +150,9 @@ public class FirebaseDB {
                 userToRate.mNumOfRatings++;
                 userToRate.mRating = ((userToRate.mRating * (userToRate.mNumOfRatings - 1))
                         + rating) / userToRate.mNumOfRatings;
+                //trim the rating number to 2 decimal values
+                DecimalFormat df = new DecimalFormat("#.##");
+                userToRate.mRating =  Double.parseDouble(df.format(userToRate.mRating));
                 databaseReference.setValue(userToRate);
             }
 

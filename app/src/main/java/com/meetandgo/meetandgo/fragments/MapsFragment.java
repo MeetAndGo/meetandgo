@@ -45,6 +45,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.activities.PreferencesActivity;
 import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.receivers.AddressResultReceiver;
 import com.meetandgo.meetandgo.services.FetchAddressIntentService;
@@ -361,6 +362,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 mTextViewCurrentFocus = mTextViewEndLocation;
             }
         });
+
+        mPreferencesLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startPreferencesActivity();
+            }
+        });
     }
 
     private void topLayerSlide(float slideOffset) {
@@ -384,7 +392,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         int slideChangeHeight = bottomSheet.getHeight() - (mBottomSheetBehavior.getPeekHeight());
         mSlideOffset = (int) (slideChangeHeight * (slideOffset / 2));
         mImageViewMapCenter.setY(mMapView.getHeight() / 2 - mSlideOffset - mImageViewMapCenter.getHeight()/2);
-        animateCameraToLocation(mLastKnownLocation);
+        //animateCameraToLocation(mLastKnownLocation);
     }
 
     /**
@@ -516,5 +524,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void setAddressInView(String address) {
         if (mTextViewCurrentFocus == null) return;
         mTextViewCurrentFocus.setText(address);
+    }
+
+    private void startPreferencesActivity() {
+        Intent preferencesIntent = new Intent(getActivity(), PreferencesActivity.class);
+        startActivity(preferencesIntent);
+        getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 }

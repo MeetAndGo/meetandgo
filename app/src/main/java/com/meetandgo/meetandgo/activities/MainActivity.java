@@ -69,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
     private Toast mToast;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mToolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.toolbarColor));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
