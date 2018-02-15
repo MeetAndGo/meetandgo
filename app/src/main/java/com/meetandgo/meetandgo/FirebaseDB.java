@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.User;
 
 import java.util.concurrent.CountDownLatch;
@@ -118,6 +119,11 @@ public class FirebaseDB {
         return result[0];
     }
 
+    /**
+     * Removes a user from the Firebase Database
+     *
+     * @param uid ID of user to be removed
+     */
     public static void removeUser(String uid) {
         // Remove user from the "users" database
         DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
