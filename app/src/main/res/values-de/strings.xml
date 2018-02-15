@@ -37,5 +37,6 @@
     <string name="start_location">Start Location</string>
     <string name="end_location">Destination</string>
     <string name="search_button">Search</string>
+    <string name="null_text">null</string>
 
 </resources>

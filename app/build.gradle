@@ -72,6 +72,8 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.karumi:dexter:4.2.0'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
+    compile 'me.zhanghai.android.materialratingbar:library:1.2.0'
+
 }
 
 

@@ -28,6 +28,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -73,6 +74,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private AddressResultReceiver mResultReceiver;
 
     private View mView;
+    @BindView(R.id.map) MapView mMapView;
     @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.bottomSheetContent) LinearLayout mRelativeSheetContent;
     @BindView(R.id.imageViewMapCenter) ImageView mImageViewMapCenter;
@@ -161,7 +163,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mMap = googleMap;
         // In order to use the location feature we need to ask for location permission
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
-        mMarkerDestination = mMap.addMarker(new MarkerOptions().position(DEFAULT_LOCATION).visible(true));
+        mMarkerDestination = mMap.addMarker(new MarkerOptions().position(DEFAULT_LOCATION).visible(false));
         mMap.setOnMyLocationClickListener(this);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -347,21 +349,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         });
 
         mStartLocationLayout.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 mTextViewCurrentFocus = mTextViewStartLocation;
             }
         });
 
         mEndLocationLayout.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 mTextViewCurrentFocus = mTextViewEndLocation;
             }
         });
     }
 
     private void topLayerSlide(float slideOffset) {
-        int alpha = (int) ((1-slideOffset)*255);
-        if(alpha == 0) mBottomSheetTopLayer.setVisibility(View.GONE);
+        int alpha = (int) ((1 - slideOffset) * 255);
+        if (alpha == 0) mBottomSheetTopLayer.setVisibility(View.GONE);
         else mBottomSheetTopLayer.setVisibility(View.VISIBLE);
 
         mBottomSheetTopLayer.getBackground().setAlpha(alpha);
@@ -377,18 +381,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      */
     private void centerMapCenterImageView(View bottomSheet, float slideOffset) {
         // Calculate the new position of the imageview
-        float topLayerY = mBottomSheetBehavior.getPeekHeight();
-
-        Log.d(TAG, "bottom sheet height" + String.valueOf(topLayerY));
-        int slideChangeHeight = (int) (bottomSheet.getHeight() - mBottomSheetBehavior.getPeekHeight());
-        Log.d(TAG, String.valueOf(slideChangeHeight));
+        int slideChangeHeight = bottomSheet.getHeight() - (mBottomSheetBehavior.getPeekHeight());
         mSlideOffset = (int) (slideChangeHeight * (slideOffset / 2));
-        slideChangeHeight *= 1 - (slideOffset/2);
-        // Set the position, leaving the X as it was
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(mImageViewMapCenter.getWidth(), mImageViewMapCenter.getHeight());
-        params.leftMargin = (int) mImageViewMapCenter.getX();
-        params.topMargin = slideChangeHeight;
-        mImageViewMapCenter.setLayoutParams(params);
+        mImageViewMapCenter.setY(mMapView.getHeight() / 2 - mSlideOffset - mImageViewMapCenter.getHeight()/2);
+        animateCameraToLocation(mLastKnownLocation);
     }
 
     /**

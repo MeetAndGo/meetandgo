@@ -39,6 +39,7 @@
     <string name="end_location">Where are you going?</string>
     <string name="search_button">Search</string>
     <string name="preferences_button">Preferences</string>
+    <string name="null_text">null</string>
 
     <string-array name="gender_array" >
         <item name="gender_any">Any</item>

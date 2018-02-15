@@ -7,6 +7,7 @@
 
     <ImageView
         android:layout_width="match_parent"
+        android:contentDescription="header"
         android:layout_height="match_parent"
         android:src="@drawable/header_image"
         android:scaleType="centerCrop"/>
@@ -22,7 +23,7 @@
             android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="null"
+            android:text="@string/null_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@android:color/white"
             android:textSize="25dp" />
@@ -34,10 +35,11 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/emailHeaderText" />
 
-        <RatingBar
+        <me.zhanghai.android.materialratingbar.MaterialRatingBar
             android:id="@+id/rating"
-            android:layout_width="wrap_content"
-            android:layout_height="43dp"
+            android:layout_width="158dp"
+            android:layout_height="26dp"
+            android:layout_marginStart="-6dp"
             android:isIndicator="true"
             android:numStars="5"
             android:stepSize="0.1" />

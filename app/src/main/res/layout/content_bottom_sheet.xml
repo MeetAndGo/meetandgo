@@ -72,7 +72,6 @@
                     android:hint="@string/start_location"
                     android:lines="1"
                     android:scrollHorizontally="true" />
-
             </LinearLayout>
 
             <include layout="@layout/separator_line" />
@@ -107,7 +106,6 @@
                     android:hint="@string/end_location"
                     android:lines="1"
                     android:scrollHorizontally="true" />
-
             </LinearLayout>
 
             <include layout="@layout/separator_line" />
@@ -166,8 +164,7 @@
             android:background="@color/colorPrimary"
             android:clickable="true"
             android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:visibility="invisible">
+            android:foreground="?attr/selectableItemBackground">
 
             <TextView
                 android:id="@+id/textViewTopLayer"
