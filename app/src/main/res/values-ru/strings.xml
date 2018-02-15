@@ -38,5 +38,7 @@
     <string name="end_location">Destination</string>
     <string name="search_button">Search</string>
     <string name="null_text">null</string>
+    <string name="stars" />
+    <string name="num_of_votes">Votes</string>
 
 </resources>

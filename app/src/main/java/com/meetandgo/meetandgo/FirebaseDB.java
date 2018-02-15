@@ -10,7 +10,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.User;
 
 import java.util.concurrent.CountDownLatch;
@@ -151,6 +150,24 @@ public class FirebaseDB {
                 userToRate.mRating = ((userToRate.mRating * (userToRate.mNumOfRatings - 1))
                         + rating) / userToRate.mNumOfRatings;
                 databaseReference.setValue(userToRate);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+        databaseReference.addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    public static void getRating(String uid, final User user)
+    {
+        final DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                User DatabaseUser = snapshot.getValue(User.class);
+                user.mRating = DatabaseUser.mRating;
+                user.mNumOfRatings = DatabaseUser.mNumOfRatings;
             }
 
             @Override

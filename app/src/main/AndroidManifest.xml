@@ -15,7 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -25,21 +24,23 @@
 
         <service
             android:name=".services.FetchAddressIntentService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <!-- Boot Activity: Handles the logic organization of the app -->
         <activity android:name=".activities.BootActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <!-- Main Activity: TODO: To be defined -->
-        <activity android:name=".activities.MainActivity"
+        <activity
+            android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true" ></activity>
-
+            android:hardwareAccelerated="true" />
+        <activity android:name=".activities.ProfileActivity"></activity>
     </application>
 
 </manifest>

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -20,6 +22,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private View mHeaderLayout;
     private TextView mTextViewUserName;
     private TextView mTextViewUserEmail;
+    private TextView mTextViewNumberOfRatings;
+    private RatingBar mRatingBarRating;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private Fragment mCurrentFragment;
@@ -76,10 +81,6 @@ public class MainActivity extends AppCompatActivity {
         setupUI();
         setUpUser();
 
-        // TODO: D'ont run here, it is not checking if the user is on the database!!!!
-        //Yes it's because we will remove it eventually we were just testing the method
-        FirebaseDB.addRating(FirebaseDB.getCurrentUserUid(), 5);
-
         // Set the maps fragment as a default fragment on Start
         setSelectedFragmentByMenuItem(R.id.menu_item_1);
     }
@@ -99,7 +100,17 @@ public class MainActivity extends AppCompatActivity {
                 if (snapshot.getValue(User.class) == null) FirebaseDB.addUser(currentUser);
                 else {
                     //Check if it its already logged in
-                    if (FirebaseDB.getCurrentUserUid() == null) startBootActivity();
+                    mRatingBarRating.setRating((float)snapshot.getValue(User.class).mRating);
+                    mTextViewNumberOfRatings.setText(snapshot.getValue(User.class).mNumOfRatings + " Ratings");
+                    if(snapshot.getValue(User.class).mRating >= 4 && snapshot.getValue(User.class).mNumOfRatings >= 10)
+                    {
+                        mRatingBarRating.setProgressTintList(ColorStateList.valueOf(Color.YELLOW));
+                        mRatingBarRating.setSecondaryProgressTintList(ColorStateList.valueOf(Color.MAGENTA));
+                    }
+                    if (FirebaseDB.getCurrentUserUid() == null)
+                    {
+                        startBootActivity();
+                    }
                 }
             }
 
@@ -107,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         };
-
         // Add current user to the database
         FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), valueEventListener);
 
@@ -167,6 +177,17 @@ public class MainActivity extends AppCompatActivity {
         mHeaderLayout = mNavView.getHeaderView(0);
         mTextViewUserName = mHeaderLayout.findViewById(R.id.user_name);
         mTextViewUserEmail = mHeaderLayout.findViewById(R.id.user_email);
+        mTextViewNumberOfRatings = mHeaderLayout.findViewById(R.id.number_of_ratings);
+        mRatingBarRating = mHeaderLayout.findViewById(R.id.rating);
+
+        mHeaderLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent profileActivityIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                MainActivity.this.startActivity(profileActivityIntent);
+            }
+        });
+
 
         // SetUp the MDrawerToogle for the toolbar
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
