@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -23,6 +24,7 @@ import butterknife.ButterKnife;
 
 public class PreferencesActivity extends PreferenceActivity {
 
+    private static final String TAG = "PreferencesActivity";
     private AppCompatDelegate mDelegate;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -46,7 +48,7 @@ public class PreferencesActivity extends PreferenceActivity {
         setContentView(R.layout.activity_preferences);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
-        // TODO: The arrow for back button does not work!
+        getSupportActionBar().setTitle(R.string.title_activity_preferences);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         PreferencesFragment preferencesFragment = new PreferencesFragment();
@@ -118,10 +120,18 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     @Override public void onBackPressed() {
-        //super.onBackPressed();
-
+        super.onBackPressed();
         startActivity(new Intent(this, MainActivity.class));
         finish();
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
     }
 }

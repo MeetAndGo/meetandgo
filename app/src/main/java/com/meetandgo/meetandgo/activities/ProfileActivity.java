@@ -31,7 +31,6 @@ public class ProfileActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         final User currentUser = FirebaseDB.getCurrentUser();
 
-
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {

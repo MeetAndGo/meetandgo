@@ -6,6 +6,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="google_maps_key" translatable="false">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_preferences">Preferences</string>
     <string name="menu_option_map">Start New Journey</string>
     <string name="menu_option_chats">Chats</string>
     <string name="menu_option_commute">Daily Commute</string>
