@@ -1,11 +1,11 @@
 package com.meetandgo.meetandgo.activities;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RatingBar;
@@ -50,8 +50,8 @@ public class ProfileActivity extends AppCompatActivity {
                     mRatingBarRating.setRating((float) snapshot.getValue(User.class).mRating);
                     mTextViewNumberOfRatings.setText(snapshot.getValue(User.class).mNumOfRatings + "");
                     if (snapshot.getValue(User.class).mRating >= 4 && snapshot.getValue(User.class).mNumOfRatings >= 10) {
-                        mRatingBarRating.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorYellow)));
-                        mRatingBarRating.setSecondaryProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark)));
+                        //mRatingBarRating.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorYellow)));
+                        //mRatingBarRating.setSecondaryProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark)));
                     }
                 }
             }
@@ -75,8 +75,21 @@ public class ProfileActivity extends AppCompatActivity {
         window.setStatusBarColor(statusBarColor);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle(R.string.profile);
     }
 
+    @Override public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
 }

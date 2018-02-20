@@ -8,6 +8,7 @@ public class User {
     public double mRating;
     public int mNumOfRatings;
     public Location mPosition;
+    public int mNumOfTrips;
 
     public User() {
         this.mFullName = "";
@@ -15,6 +16,7 @@ public class User {
         this.mRating = 0.0;
         this.mNumOfRatings = 0;
         this.mPosition = null;
+        this.mNumOfTrips = 0;
     }
 
     public User(String full_name, String email) {
@@ -23,5 +25,6 @@ public class User {
         this.mRating = 0.0;
         this.mNumOfRatings = 0;
         this.mPosition = null;
+        this.mNumOfTrips = 0;
     }
 }
