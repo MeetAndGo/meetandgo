@@ -8,4 +8,5 @@
     <color name="colorGrey">#616161</color>
     <color name="colorLineSeparatorGrey">#AAaaaaaa</color>
     <color name="toolbarColor">#3F51B5</color>
+    <color name="colorYellow">#f1c40f</color>
 </resources>

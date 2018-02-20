@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -105,18 +103,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "in ondatachange from event listener" + snapshot.toString());
                 if (snapshot.getValue(User.class) == null) FirebaseDB.addUser(currentUser);
                 else {
-                    //Check if it its already logged in
-                    mRatingBarRating.setRating((float)snapshot.getValue(User.class).mRating);
-                    mTextViewNumberOfRatings.setText(snapshot.getValue(User.class).mNumOfRatings + " Ratings");
-                    if(snapshot.getValue(User.class).mRating >= 4 && snapshot.getValue(User.class).mNumOfRatings >= 10)
-                    {
-                        mRatingBarRating.setProgressTintList(ColorStateList.valueOf(Color.YELLOW));
-                        mRatingBarRating.setSecondaryProgressTintList(ColorStateList.valueOf(Color.MAGENTA));
-                    }
-                    if (FirebaseDB.getCurrentUserUid() == null)
-                    {
-                        startBootActivity();
-                    }
+                    if (FirebaseDB.getCurrentUserUid() == null) startBootActivity();
+
                 }
             }
 
