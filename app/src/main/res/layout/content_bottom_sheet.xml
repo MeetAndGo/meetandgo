@@ -1,35 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottomSheetLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_alignParentBottom="true"
     android:clickable="true"
     android:elevation="16dp"
     android:focusable="true"
-    android:orientation="vertical"
-    app:behavior_peekHeight="@dimen/bottom_sheet_peak_height"
-    app:layout_behavior="@string/bottom_sheet_behavior">
+    android:orientation="vertical">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/margin_floating_button"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_gps_fixed_black_48dp"
-        android:tint="@android:color/white"
-        app:backgroundTint="@color/colorPrimary"
-        app:elevation="4dp"
-        app:fabSize="normal" />
-
-    <com.meetandgo.meetandgo.views.ShadowView
-        android:layout_width="match_parent"
-        android:layout_height="16dp"
-        android:gravity="bottom"
-        app:layout_anchor="@id/bottomSheetLayout" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -155,31 +135,6 @@
                 android:textColor="@android:color/white" />
 
         </LinearLayout>
-
-
-        <FrameLayout
-            android:id="@+id/bottomSheetTopLayer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:visibility="visible">
-
-            <TextView
-                android:id="@+id/textViewTopLayer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_margin="16dp"
-                android:gravity="center"
-                android:text="TextView"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-        </FrameLayout>
 
     </FrameLayout>
 </LinearLayout>

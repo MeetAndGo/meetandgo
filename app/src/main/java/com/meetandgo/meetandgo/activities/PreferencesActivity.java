@@ -2,10 +2,10 @@ package com.meetandgo.meetandgo.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
@@ -21,7 +21,7 @@ import com.meetandgo.meetandgo.fragments.PreferencesFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PreferencesActivity extends PreferenceActivity {
+public class PreferencesActivity extends AppCompatActivity {
 
     private static final String TAG = "PreferencesActivity";
     private AppCompatDelegate mDelegate;
@@ -41,8 +41,6 @@ public class PreferencesActivity extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getDelegate().installViewFactory();
-        getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
         ButterKnife.bind(this);
@@ -111,12 +109,6 @@ public class PreferencesActivity extends PreferenceActivity {
     public void invalidateOptionsMenu() {
         getDelegate().invalidateOptionsMenu();
     }
-    private AppCompatDelegate getDelegate() {
-        if (mDelegate == null) {
-            mDelegate = AppCompatDelegate.create(this, null);
-        }
-        return mDelegate;
-    }
 
     @Override public void onBackPressed() {
         super.onBackPressed();
@@ -132,4 +124,5 @@ public class PreferencesActivity extends PreferenceActivity {
         }
         return false;
     }
+
 }

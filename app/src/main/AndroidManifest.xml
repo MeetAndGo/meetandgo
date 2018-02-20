@@ -28,7 +28,9 @@
             android:exported="false" />
 
         <!-- Boot Activity: Handles the logic organization of the app -->
-        <activity android:name=".activities.BootActivity">
+        <activity
+            android:name=".activities.BootActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,11 +42,16 @@
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true" />
-        <activity android:name=".activities.ProfileActivity"/>
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:screenOrientation="portrait" />
 
         <!-- Preferences Activity: TODO: To be defined -->
-        <activity android:name=".activities.PreferencesActivity" />
+        <activity
+            android:name=".activities.PreferencesActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

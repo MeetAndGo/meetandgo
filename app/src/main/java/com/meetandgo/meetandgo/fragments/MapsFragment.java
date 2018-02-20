@@ -19,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -86,8 +85,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @BindView(R.id.startLocationLayout) LinearLayout mStartLocationLayout;
     @BindView(R.id.endLocationLayout) LinearLayout mEndLocationLayout;
     @BindView(R.id.preferencesLayout) LinearLayout mPreferencesLayout;
-    @BindView(R.id.bottomSheetTopLayer) FrameLayout mBottomSheetTopLayer;
-    @BindView(R.id.textViewTopLayer) TextView mTextViewTopLayer;
 
     private OnCompleteListener mOnCompleteListenerMove;
     private OnCompleteListener mOnCompleteListenerAnimate;
@@ -309,90 +306,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * @param view The fragment view needed for finding the view id of the bottom sheet
      */
     private void setupBottomSheet(@NonNull View view) {
-        mBottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.bottomSheetLayout));
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        Log.d(TAG, "Bottom Sheet Behaviour: STATE_COLLAPSED");
-                        break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        Log.d(TAG, "Bottom Sheet Behaviour: STATE_DRAGGING");
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        Log.d(TAG, "Bottom Sheet Behaviour: STATE_EXPANDED");
-                        break;
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        Log.d(TAG, "Bottom Sheet Behaviour: STATE_HIDDEN");
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        Log.d(TAG, "Bottom Sheet Behaviour: STATE_SETTLING");
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(View bottomSheet, float slideOffset) {
-                topLayerSlide(slideOffset);
-                centerMapCenterImageView(bottomSheet, slideOffset);
-            }
-        });
-        mBottomSheetTopLayer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-            }
-        });
-
-        mStartLocationLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mTextViewCurrentFocus = mTextViewStartLocation;
-            }
-        });
-
-        mEndLocationLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mTextViewCurrentFocus = mTextViewEndLocation;
-            }
-        });
-
         mPreferencesLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startPreferencesActivity();
             }
         });
-    }
-
-    private void topLayerSlide(float slideOffset) {
-        int alpha = (int) ((1 - slideOffset) * 255);
-        if (alpha == 0) mBottomSheetTopLayer.setVisibility(View.GONE);
-        else mBottomSheetTopLayer.setVisibility(View.VISIBLE);
-
-        mBottomSheetTopLayer.getBackground().setAlpha(alpha);
-        //mTextViewTopLayer.setTextColor(Color.argb(alpha, 255, 0, 0));
-    }
-
-    /**
-     * Using the bottom sheet slide offset we calculate the position of the image view in the center
-     * of the map that helps the user set their location
-     *
-     * @param bottomSheet The bottom sheet view used to set the preferences
-     * @param slideOffset The slide offset that the bottom sheet currently has (from 0 not open to 1 fully open)
-     */
-    private void centerMapCenterImageView(View bottomSheet, float slideOffset) {
-        // Calculate the new position of the imageview
-        int slideChangeHeight = bottomSheet.getHeight() - (mBottomSheetBehavior.getPeekHeight());
-        mSlideOffset = (int) (slideChangeHeight * (slideOffset / 2));
-        mImageViewMapCenter.setY(mMapView.getHeight() / 2 - mSlideOffset - mImageViewMapCenter.getHeight()/2);
-        //animateCameraToLocation(mLastKnownLocation);
     }
 
     /**
