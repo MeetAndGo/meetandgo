@@ -1,6 +1,5 @@
 package com.meetandgo.meetandgo.activities;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -121,7 +120,6 @@ public class PreferencesActivity extends PreferenceActivity {
 
     @Override public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, MainActivity.class));
         finish();
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
