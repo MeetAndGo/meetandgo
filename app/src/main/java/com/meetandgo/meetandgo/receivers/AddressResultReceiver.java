@@ -34,8 +34,6 @@ public class AddressResultReceiver extends ResultReceiver {
 
         // Show a toast message if an address was found.
         if (resultCode == Constants.SUCCESS_RESULT) {
-            ((MainActivity) mActivity).getToast().setText(addressOutput);
-            ((MainActivity) mActivity).getToast().show();
             ((MainActivity) mActivity).getMapsFragment().setAddressInView(addressOutput);
         }
 

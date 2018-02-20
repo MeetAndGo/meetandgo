@@ -306,6 +306,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * @param view The fragment view needed for finding the view id of the bottom sheet
      */
     private void setupBottomSheet(@NonNull View view) {
+        mStartLocationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mTextViewCurrentFocus = mTextViewStartLocation;
+            }
+        });
+
+        mEndLocationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mTextViewCurrentFocus = mTextViewEndLocation;
+            }
+        });
+
         mPreferencesLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
