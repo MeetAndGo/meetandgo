@@ -1,6 +1,7 @@
 package com.meetandgo.meetandgo;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,6 +11,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.data.User;
 
 import java.text.DecimalFormat;
@@ -87,6 +89,24 @@ public class FirebaseDB {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Add a user Search to Firebase Database
+     *
+     * @return String, return the key of this search in firebase database, if unsuccessful in
+     * adding Search return empty string
+     */
+    public static String addSearch(Search newSearch) {
+        if (!isFirebaseInitialised()) return "";
+        if (newSearch != null) {
+            String uid = getCurrentUserUid();
+            DatabaseReference databaseReference = sDatabase.getReference("search").push();
+            databaseReference.setValue(newSearch);
+            Log.e(TAG, databaseReference.getKey());
+            return databaseReference.getKey();
+        }
+        return "";
     }
 
 

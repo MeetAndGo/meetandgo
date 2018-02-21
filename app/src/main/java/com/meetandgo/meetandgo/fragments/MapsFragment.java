@@ -43,9 +43,11 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.meetandgo.meetandgo.Constants;
+import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.activities.PreferencesActivity;
 import com.meetandgo.meetandgo.data.Preferences;
+import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.receivers.AddressResultReceiver;
 import com.meetandgo.meetandgo.services.FetchAddressIntentService;
 
@@ -80,11 +82,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @BindView(R.id.imageViewMapCenter) ImageView mImageViewMapCenter;
     @BindView(R.id.textViewStartLocation) TextView mTextViewStartLocation;
     @BindView(R.id.textViewEndLocation) TextView mTextViewEndLocation;
-    @BindView(R.id.buttonSearch) Button mButtonSearch;
     private TextView mTextViewCurrentFocus;
     @BindView(R.id.startLocationLayout) LinearLayout mStartLocationLayout;
     @BindView(R.id.endLocationLayout) LinearLayout mEndLocationLayout;
     @BindView(R.id.preferencesLayout) LinearLayout mPreferencesLayout;
+    @BindView(R.id.buttonSearch) Button mSearchButton;
 
     private OnCompleteListener mOnCompleteListenerMove;
     private OnCompleteListener mOnCompleteListenerAnimate;
@@ -95,7 +97,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     public MapsFragment() {
         mPreferences = new Preferences();
-        Log.d(TAG, mPreferences.startLocation.toString());
     }
 
     public static Fragment newInstance() {
@@ -326,6 +327,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 startPreferencesActivity();
             }
         });
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                clickSearchButton();
+            }
+        });
+    }
+
+    /**
+     *
+     */
+    private void clickSearchButton() {
+        Search searchTest = new Search(mPreferences, null, null);
+        FirebaseDB.addSearch(searchTest);
     }
 
     /**
