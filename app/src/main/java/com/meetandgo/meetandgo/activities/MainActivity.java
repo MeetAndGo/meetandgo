@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment mCommuteFragment;
 
     private Toast mToast;
+    private ValueEventListener mUserValueEventListener;
 
     @Override
     protected void onStart() {
@@ -95,17 +96,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setUpUser() {
         final User currentUser = FirebaseDB.getCurrentUser();
-
         // ValueEventListener needed to get the return of asking the database for the user
-        ValueEventListener valueEventListener = new ValueEventListener() {
+        mUserValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e(TAG, "in ondatachange from event listener" + snapshot.toString());
                 if (snapshot.getValue(User.class) == null) FirebaseDB.addUser(currentUser);
-                else {
-                    if (FirebaseDB.getCurrentUserUid() == null) startBootActivity();
-
-                }
+                else if (FirebaseDB.getCurrentUserUid() == null) startBootActivity();
             }
 
             @Override
@@ -113,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         // Add current user to the database
-        FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), valueEventListener);
+        FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), mUserValueEventListener);
 
         // UpdateUI based on the current user that is using the app
         mTextViewUserName.setText(currentUser.mFullName);
@@ -325,4 +322,5 @@ public class MainActivity extends AppCompatActivity {
     public MapsFragment getMapsFragment() {
         return (MapsFragment) mMapFragment;
     }
+
 }

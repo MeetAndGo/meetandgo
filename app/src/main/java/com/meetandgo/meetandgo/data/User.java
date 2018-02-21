@@ -1,7 +1,9 @@
 package com.meetandgo.meetandgo.data;
 
 import android.location.Location;
-
+/**
+ * Class to save the information of the user
+ */
 public class User {
     public String mFullName;
     public String mEmail;

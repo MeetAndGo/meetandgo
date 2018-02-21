@@ -26,13 +26,40 @@ public class FirebaseDB {
     private static FirebaseAuth sAuth;
     public static FirebaseDatabase sDatabase;
     private static boolean sInitialised;
+    private static DatabaseReference sUsersDatabaseReference;
     private final CountDownLatch loginLatch = new CountDownLatch(1);
 
     public static void initializeApp(Activity activity) {
         FirebaseApp.initializeApp(activity);
         sAuth = FirebaseAuth.getInstance();
-        sDatabase = FirebaseDatabase.getInstance();
+        initializeDatabaseReferences();
         sInitialised = true;
+    }
+
+    private static void initializeDatabaseReferences() {
+        String uid = getCurrentUserUid();
+        if(sDatabase == null){
+            sDatabase = FirebaseDatabase.getInstance();
+            sDatabase.setPersistenceEnabled(true);
+        }
+        if (uid != null) {
+            sUsersDatabaseReference = getUserDatabaseReference(uid);
+            // Set the keepSync method to true in order to have local storage
+            sUsersDatabaseReference.keepSynced(true);
+        }
+    }
+
+    /**
+     * Creates the reference to the database using the string user id
+     *
+     * @param uid
+     * @return DatabaseReference that refers to the users/uid database
+     */
+    public static DatabaseReference getUserDatabaseReference(String uid) {
+        if(sUsersDatabaseReference == null){
+            sUsersDatabaseReference = sDatabase.getReference("users/" + uid);
+        }
+        return sUsersDatabaseReference;
     }
 
     public static String getCurrentUserUid() {
@@ -58,11 +85,9 @@ public class FirebaseDB {
 
         User newUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
         final User[] user = {newUser};
-        DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                //Log.d(TAG, snapshot.toString());
                 user[0] = snapshot.getValue(User.class);
             }
 
@@ -71,7 +96,7 @@ public class FirebaseDB {
             }
         };
 
-        databaseReference.addListenerForSingleValueEvent(valueEventListener);
+        getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
         return user[0];
     }
 
@@ -84,8 +109,7 @@ public class FirebaseDB {
         if (!isFirebaseInitialised()) return false;
         if (newUser != null) {
             String uid = getCurrentUserUid();
-            DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
-            databaseReference.setValue(newUser);
+            getUserDatabaseReference(uid).setValue(newUser);
             return true;
         }
         return false;
@@ -130,12 +154,9 @@ public class FirebaseDB {
      * @return Boolean value indicating if the user was found or not
      */
     public static boolean isUserInDB(String uid, ValueEventListener valueEventListener) {
-
         final boolean[] result = {false};
-        // References to the Database with the given userId is created
-        DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
         // Run the search for the user based on his userId
-        databaseReference.addListenerForSingleValueEvent(valueEventListener);
+        getUserDatabaseReference(uid).addValueEventListener(valueEventListener);
         return result[0];
     }
 
@@ -146,12 +167,12 @@ public class FirebaseDB {
      */
     public static void removeUser(String uid) {
         // Remove user from the "users" database
-        DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
-        databaseReference.removeValue();
+        getUserDatabaseReference(uid).removeValue();
         // Remove user from the auth database
         FirebaseUser firebaseUser = sAuth.getCurrentUser();
         firebaseUser.delete();
     }
+
 
     /**
      * Adds rating to user uid
@@ -160,9 +181,8 @@ public class FirebaseDB {
      * @param uid    String corresponding to the user unique id that is rated
      * @param rating The rating that is given
      */
-    public static void addRating(String uid, final int rating) {
+    public static void addRating(final String uid, final int rating) {
         if (uid == null) return;
-        final DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -172,20 +192,19 @@ public class FirebaseDB {
                         + rating) / userToRate.mNumOfRatings;
                 //trim the rating number to 2 decimal values
                 DecimalFormat df = new DecimalFormat("#.##");
-                userToRate.mRating =  Double.parseDouble(df.format(userToRate.mRating));
-                databaseReference.setValue(userToRate);
+                userToRate.mRating = Double.parseDouble(df.format(userToRate.mRating));
+                getUserDatabaseReference(uid).setValue(userToRate);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         };
-        databaseReference.addListenerForSingleValueEvent(valueEventListener);
+        getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
     }
 
-    public static void getRating(String uid, final User user)
-    {
-        final DatabaseReference databaseReference = sDatabase.getReference("users/" + uid);
+    public static void getRating(String uid, final User user) {
+
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -198,6 +217,6 @@ public class FirebaseDB {
             public void onCancelled(DatabaseError databaseError) {
             }
         };
-        databaseReference.addListenerForSingleValueEvent(valueEventListener);
+        getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
     }
 }

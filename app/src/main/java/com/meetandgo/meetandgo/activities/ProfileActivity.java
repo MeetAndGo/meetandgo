@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
@@ -26,11 +27,21 @@ import butterknife.ButterKnife;
  */
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
-    @BindView(R.id.user_name) TextView mTextViewUserName;
-    @BindView(R.id.user_email) TextView mTextViewUserEmail;
-    @BindView(R.id.number_of_ratings) TextView mTextViewNumberOfRatings;
-    @BindView(R.id.rating) RatingBar mRatingBarRating;
-    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.user_name)    TextView mTextViewUserName;
+    @BindView(R.id.user_email)    TextView mTextViewUserEmail;
+    @BindView(R.id.number_of_ratings)
+    TextView mTextViewNumberOfRatings;
+    @BindView(R.id.rating)
+    RatingBar mRatingBarRating;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.number_of_trips) TextView mNumberOfTrips;
+    private ValueEventListener mUserValueEventListener;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,21 +49,20 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
         setUpToolbar();
+        setUpUser();
+    }
 
+    private void setUpUser() {
         final User currentUser = FirebaseDB.getCurrentUser();
 
-        ValueEventListener valueEventListener = new ValueEventListener() {
+        mUserValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e(TAG, "in ondatachange from event listener" + snapshot.toString());
-                if (snapshot.getValue(User.class) != null) {
-                    //Check if it its already logged in
-                    mRatingBarRating.setRating((float) snapshot.getValue(User.class).mRating);
-                    mTextViewNumberOfRatings.setText(snapshot.getValue(User.class).mNumOfRatings + "");
-                    if (snapshot.getValue(User.class).mRating >= 4 && snapshot.getValue(User.class).mNumOfRatings >= 10) {
-                        //mRatingBarRating.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorYellow)));
-                        //mRatingBarRating.setSecondaryProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark)));
-                    }
+                User user = snapshot.getValue(User.class);
+                if (user != null) {
+                    setRatingBarInfo(user);
+                    setNumberOfTrips(user);
                 }
             }
 
@@ -60,9 +70,24 @@ public class ProfileActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         };
-        FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), valueEventListener);
+        FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), mUserValueEventListener);
         mTextViewUserName.setText(currentUser.mFullName);
         mTextViewUserEmail.setText(currentUser.mEmail);
+    }
+
+    private void setRatingBarInfo(User user) {
+        //Check if it its already logged in
+        mRatingBarRating.setRating((float) user.mRating);
+        mTextViewNumberOfRatings.setText(getString(R.string.number_of_ratings, user.mNumOfRatings));
+        if (user.mRating >= 4 && user.mNumOfRatings >= 10) {
+            //mRatingBarRating.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorYellow)));
+            //mRatingBarRating.setSecondaryProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark)));
+
+        }
+    }
+
+    public void setNumberOfTrips(User user) {
+        mNumberOfTrips.setText(getString(R.string.number_of_trips, user.mNumOfTrips));
     }
 
     private void setUpToolbar() {
@@ -78,7 +103,8 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.profile);
     }
 
-    @Override public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
         super.onBackPressed();
         finish();
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
@@ -92,4 +118,12 @@ public class ProfileActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    @Override
+    protected void onDestroy() {
+        DatabaseReference databaseReference = FirebaseDB.getUserDatabaseReference(FirebaseDB.getCurrentUserUid());
+        databaseReference.removeEventListener(mUserValueEventListener);
+        super.onDestroy();
+    }
+
 }
