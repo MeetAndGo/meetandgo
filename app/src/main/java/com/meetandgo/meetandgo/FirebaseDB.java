@@ -1,7 +1,6 @@
 package com.meetandgo.meetandgo;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +26,7 @@ public class FirebaseDB {
     public static FirebaseDatabase sDatabase;
     private static boolean sInitialised;
     private static DatabaseReference sUsersDatabaseReference;
+    private static DatabaseReference sSearchDatabase;
     private final CountDownLatch loginLatch = new CountDownLatch(1);
 
     public static void initializeApp(Activity activity) {
@@ -36,6 +36,7 @@ public class FirebaseDB {
         sInitialised = true;
     }
 
+    // TODO: Refactor
     private static void initializeDatabaseReferences() {
         String uid = getCurrentUserUid();
         if(sDatabase == null){
@@ -47,6 +48,9 @@ public class FirebaseDB {
             // Set the keepSync method to true in order to have local storage
             sUsersDatabaseReference.keepSynced(true);
         }
+
+        sSearchDatabase = sDatabase.getReference("search");
+        sSearchDatabase.keepSynced(true);
     }
 
     /**
@@ -56,9 +60,7 @@ public class FirebaseDB {
      * @return DatabaseReference that refers to the users/uid database
      */
     public static DatabaseReference getUserDatabaseReference(String uid) {
-        if(sUsersDatabaseReference == null){
             sUsersDatabaseReference = sDatabase.getReference("users/" + uid);
-        }
         return sUsersDatabaseReference;
     }
 
@@ -124,11 +126,8 @@ public class FirebaseDB {
     public static String addSearch(Search newSearch) {
         if (!isFirebaseInitialised()) return "";
         if (newSearch != null) {
-            String uid = getCurrentUserUid();
-            DatabaseReference databaseReference = sDatabase.getReference("search").push();
-            databaseReference.setValue(newSearch);
-            Log.e(TAG, databaseReference.getKey());
-            return databaseReference.getKey();
+            sSearchDatabase.push().setValue(newSearch);
+            return sSearchDatabase.getKey();
         }
         return "";
     }

@@ -25,6 +25,8 @@ import com.meetandgo.meetandgo.fragments.PreferencesFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.meetandgo.meetandgo.Constants.PREFERENCES_EXTRA;
+
 public class PreferencesActivity extends AppCompatActivity {
 
     private static final String TAG = "PreferencesActivity";
@@ -33,8 +35,8 @@ public class PreferencesActivity extends AppCompatActivity {
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
     PreferenceFragment preferencesFragment;
+    Preferences mPreferences;
 
-    Preferences mPreferences = new Preferences();
     @Override
     protected void onStart() {
         super.onStart();
@@ -50,6 +52,7 @@ public class PreferencesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
+        mPreferences = new Preferences();
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(R.string.title_activity_preferences);
@@ -119,13 +122,13 @@ public class PreferencesActivity extends AppCompatActivity {
     }
 
     @Override public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(this,MainActivity.class);
-        intent.putExtra("journeyPreferences", mPreferences);
-        startActivity(intent);
         savePreferences();
+        Intent intent = new Intent();
+        intent.putExtra(PREFERENCES_EXTRA, mPreferences);
+        setResult(0, intent);
         finish();
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+        super.onBackPressed();
     }
 
     /**

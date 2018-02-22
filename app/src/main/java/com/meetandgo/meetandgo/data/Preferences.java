@@ -1,5 +1,7 @@
 package com.meetandgo.meetandgo.data;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 
 /**
@@ -12,7 +14,6 @@ public class Preferences implements Serializable {
 
     public Gender gender = Gender.ANY;
     public Mode mode = Mode.ANY;
-
 
     public Preferences(){
 
@@ -34,8 +35,8 @@ public class Preferences implements Serializable {
         this.mode = mode;
     }
 
-
-
+    // We exclude the methods from the database that are not useful for defining the preferences object
+    @Exclude
     public boolean isCompleted(){
         if (gender == null) return false;
         if (mode == null) return false;

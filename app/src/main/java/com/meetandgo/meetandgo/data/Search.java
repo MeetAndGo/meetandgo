@@ -13,6 +13,7 @@ public class Search {
 
     private String mUserID;
     private Preferences mUserPreferences;
+    // TODO: Change locations to float  of lat lng  (Location class is not being saved in firebase)
     private Location mStartLocation = new Location("");
     private Location mEndLocation = new Location("");
 
