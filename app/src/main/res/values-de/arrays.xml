@@ -6,6 +6,11 @@
         <item>Car</item>
         <item>Taxi</item>>
     </string-array>
+    <string-array name="genderArray">
+        <item>Any</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
     <string-array name="listValues">
         <item>1</item>
         <item>2</item>

@@ -2,14 +2,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
+        android:id = "@+id/mode"
         android:title="Mode Selection"
         android:summary="Select the journey you wish to embark on"
         android:key="journeyType"
         android:defaultValue="1"
         android:entries="@array/listArray"
         android:entryValues="@array/listValues" />
-    <CheckBoxPreference android:title="Female Only"
-        android:defaultValue="false"
-        android:key="genderChoice"/>
+    <ListPreference
+        android:id = "@+id/gender_list"
+        android:title="Gender Selection"
+        android:summary="Select the gender you wish to embark with"
+        android:key="genderType"
+        android:defaultValue="1"
+        android:entries="@array/genderArray"
+        android:entryValues="@array/listValues" />
 
 </PreferenceScreen>

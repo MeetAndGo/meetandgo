@@ -1,15 +1,18 @@
 package com.meetandgo.meetandgo.data;
 
+import java.io.Serializable;
+
 /**
  * Class to save the preferences that the user sets for the journey search
  */
-public class Preferences {
+public class Preferences implements Serializable {
 
-    enum Gender {ANY, MALE, FEMALE}
-    enum Mode {ANY, WALK, CAR, TAXI}
+    public enum Gender {ANY, MALE, FEMALE}
+    public enum Mode {ANY, WALK, CAR, TAXI}
 
     public Gender gender = Gender.ANY;
     public Mode mode = Mode.ANY;
+
 
     public Preferences(){
 
@@ -30,4 +33,16 @@ public class Preferences {
     public void setMode(Mode mode) {
         this.mode = mode;
     }
+
+
+
+    public boolean isCompleted(){
+        if (gender == null) return false;
+        if (mode == null) return false;
+        //if(startLocation.getLatitude() == 0 && startLocation.getLongitude() == 0 &&
+               // endLocation.getLongitude() == 0 && endLocation.getLatitude() ==0) return false;
+
+        return true;
+    }
+
 }

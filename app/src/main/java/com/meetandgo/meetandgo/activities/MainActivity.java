@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.fragments.ChatsFragment;
 import com.meetandgo.meetandgo.fragments.CommuteFragment;
@@ -291,6 +292,8 @@ public class MainActivity extends AppCompatActivity {
         AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
             public void onComplete(@NonNull Task<Void> task) {
                 startBootActivity();
+                Preferences mPreferences = (Preferences) getIntent().getSerializableExtra("journeyPreferences");
+                Log.e(TAG,mPreferences.toString());
             }
         });
     }
