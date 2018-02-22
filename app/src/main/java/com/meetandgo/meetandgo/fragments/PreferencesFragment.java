@@ -15,7 +15,6 @@ public class PreferencesFragment extends PreferenceFragment{
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
-        Log.e(TAG,"I resumed");
         setRetainInstance(true);
     }
 
