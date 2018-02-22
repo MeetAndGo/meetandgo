@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_item_4:
                 return mJourneyHistoryFragment;
             case R.id.navigation_sign_out:
-                sign_out();
+                signOut();
                 return null;
             default:
                 return mMapFragment;
@@ -297,12 +297,10 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Signs out the current user from the account
      */
-    private void sign_out() {
+    private void signOut() {
         AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
             public void onComplete(@NonNull Task<Void> task) {
                 startBootActivity();
-                Preferences mPreferences = (Preferences) getIntent().getSerializableExtra("journeyPreferences");
-                Log.e(TAG,mPreferences.toString());
             }
         });
     }

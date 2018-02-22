@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="listArray">
-        <item>Any</item>
-        <item>Walk</item>
-        <item>Car</item>
-        <item>Taxi</item>>
+        <item>@string/any</item>
+        <item>@string/mode_walk</item>
+        <item>@string/mode_car</item>
+        <item>@string/mode_taxi</item>>
     </string-array>
     <string-array name="genderArray">
-        <item>Any</item>
-        <item>Male</item>
-        <item>Female</item>
+        <item>@string/any</item>
+        <item>@string/gender_male</item>
+        <item>@string/gender_female</item>
     </string-array>
     <string-array name="listValues">
         <item>1</item>

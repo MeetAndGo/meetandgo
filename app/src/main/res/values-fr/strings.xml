@@ -5,11 +5,10 @@
     <string name="facebook_login_protocol_scheme" translatable="false">fb41ff94088e78fd635592a4f5d0674a35</string>
     <string name="sign_out">Au Revoir!</string>
     <string name="google_maps_key">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
-    <string name="title_activity_maps">Le Map</string>
-    <string name="menu_option_map">Start New Journey</string>
+    <string name="menu_option_map">Démarrer un trajet</string>
     <string name="menu_option_chats">Le chit chat</string>
-    <string name="menu_option_commute">Daily Commute</string>
-    <string name="menu_option_history">History of Journeys</string>
+    <string name="menu_option_commute">Trajet quotidien</string>
+    <string name="menu_option_history">Historique</string>
 
     <string-array name="gender_array" >
         <item>Any</item>
@@ -27,17 +26,25 @@
     <string name="hello_commute">Hello Commute</string>
     <string name="hello_journey_history">Hello journey history</string>
     <string name="gender_array" />
-    <string name="any">ANY</string>
-    <string name="gender_male">MALE</string>
-    <string name="gender_female">FEMALE</string>
-    <string name="mode_walk">Walk</string>
-    <string name="mode_car">Car</string>
-    <string name="mode_taxi" />
-    <string name="start_location">Start Location</string>
+    <string name="any">N\'importe</string>
+    <string name="gender_male">Uniquement homme</string>
+    <string name="gender_female">Uniquement femme</string>
+    <string name="mode_walk">Marche</string>
+    <string name="mode_car">Voiture</string>
+    <string name="mode_taxi" >Taxi</string>
+    <string name="start_location">Point de départ</string>
     <string name="end_location">Destination</string>
-    <string name="search_button">Search</string>
+    <string name="search_button">Rechercher</string>
     <string name="null_text">null</string>
     <string name="stars" />
     <string name="num_of_votes">Votes</string>
+    <string name="title_activity_preferences">Préférences</string>
+    <string name="profile">Votre profil</string>
+    <string name="number_of_trips">%d trajets</string>
+    <string name="change_password">Changer mot de passe</string>
+    <string name="number_of_ratings">%d avis</string>
+    <string name="preferences_button">Préférences</string>
+    <string name="mode_selection">Choisir mode de déplacement</string>
+    <string name="gender_selection">Choisir genre</string>
 
 </resources>

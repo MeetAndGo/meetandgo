@@ -3,13 +3,7 @@
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">605444806469252</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb41ff94088e78fd635592a4f5d0674a35</string>
-    <string name="sign_out">Sign Out</string>
     <string name="google_maps_key" translatable="false">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="menu_option_map">Start New Journey</string>
-    <string name="menu_option_chats">Chats</string>
-    <string name="menu_option_commute">Daily Commute</string>
-    <string name="menu_option_history">History of Journeys</string>
 
     <string-array name="gender_array" >
         <item>Any</item>
@@ -17,28 +11,9 @@
         <item>Female</item>
     </string-array>
 
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-    <string name="menu_option_sign_out">Sign Out</string>
-
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_journey_start">Hello journey start</string>
-    <string name="hello_chats">Hello Chats</string>
-    <string name="hello_commute">Hello Commute</string>
-    <string name="hello_journey_history">Hello journey history</string>
     <string name="gender_array" />
-    <string name="any">ANY</string>
-    <string name="gender_male">MALE</string>
-    <string name="gender_female">FEMALE</string>
-    <string name="mode_walk">Walk</string>
-    <string name="mode_car">Car</string>
     <string name="mode_taxi" />
-    <string name="start_location">Start Location</string>
-    <string name="end_location">Destination</string>
-    <string name="search_button">Search</string>
-    <string name="null_text">null</string>
     <string name="stars" />
-    <string name="num_of_votes">Votes</string>
 
 </resources>

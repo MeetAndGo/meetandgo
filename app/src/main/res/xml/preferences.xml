@@ -3,7 +3,7 @@
 
     <ListPreference
         android:id = "@+id/mode"
-        android:title="Mode Selection"
+        android:title="@string/mode_selection"
         android:summary="%s"
         android:key="journeyType"
         android:defaultValue="1"
@@ -11,7 +11,7 @@
         android:entryValues="@array/listValues" />
     <ListPreference
         android:id = "@+id/gender_list"
-        android:title="Gender Selection"
+        android:title="@string/gender_selection"
         android:summary="%s"
         android:key="genderType"
         android:defaultValue="1"
