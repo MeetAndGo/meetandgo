@@ -1,6 +1,7 @@
 package com.meetandgo.meetandgo;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,6 +11,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.data.User;
 
@@ -27,6 +29,7 @@ public class FirebaseDB {
     private static boolean sInitialised;
     private static DatabaseReference sUsersDatabaseReference;
     private static DatabaseReference sSearchDatabase;
+    private static DatabaseReference sJourneyDatabase;
     private final CountDownLatch loginLatch = new CountDownLatch(1);
 
     public static void initializeApp(Activity activity) {
@@ -51,6 +54,9 @@ public class FirebaseDB {
 
         sSearchDatabase = sDatabase.getReference("search");
         sSearchDatabase.keepSynced(true);
+
+        sJourneyDatabase = sDatabase.getReference("journeys");
+        sJourneyDatabase.keepSynced(true);
     }
 
     /**
@@ -130,6 +136,39 @@ public class FirebaseDB {
             return sSearchDatabase.getKey();
         }
         return "";
+    }
+    /**
+     * Add a Journey to Firebase Database
+     *
+     * @return String, return the key of this search in firebase database, if unsuccessful in
+     * adding Search return empty string
+     */
+    public static String addNewJourney(Journey journey) {
+        if (!isFirebaseInitialised()) return "";
+        if (journey != null) {
+            sJourneyDatabase.push().setValue(journey);
+            return sJourneyDatabase.getKey();
+        }
+        return "";
+    }
+
+    /**
+     * #TODO MAAAAANNNUUUUUUUU, can you do this pleeeeeaaasssse?
+     * @param jID
+     * @param uID
+     * @return
+     */
+    public static boolean addUserToJourney(String jID, String uID) {
+        if (!isFirebaseInitialised()) return false;
+        if (jID != null && uID != null) {
+            DatabaseReference databaseReference = sDatabase.getReference("journeys/" + jID + "/mUsers/" + uID);
+            databaseReference.setValue(true);
+            Log.e(TAG, databaseReference.getKey());
+            //updateChatInUser(uid, databaseReference.getKey());
+
+            return true;
+        }
+        return false;
     }
 
 

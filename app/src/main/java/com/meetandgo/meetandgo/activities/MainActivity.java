@@ -32,6 +32,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.data.Journey;
+import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.fragments.ChatsFragment;
@@ -41,6 +43,9 @@ import com.meetandgo.meetandgo.fragments.MapsFragment;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -272,6 +277,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_item_1:
                 return mMapFragment;
             case R.id.menu_item_2:
+                List<String> temp = new ArrayList<String>();
+                temp.add("FsRkQx13UaXaywCzzueQA8doEsv1");
+                Journey dontstopbelieving = new Journey(new Loc(69.69, 22.11), new Date().getTime() , temp);
+                FirebaseDB.addNewJourney(dontstopbelieving);
                 return mChatsFragment;
             case R.id.menu_item_3:
                 return mCommuteFragment;

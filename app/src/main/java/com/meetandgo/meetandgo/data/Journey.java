@@ -1,8 +1,6 @@
 package com.meetandgo.meetandgo.data;
 
-import android.location.Location;
-
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by pgeogheg on 2/15/2018.
@@ -11,27 +9,78 @@ import java.util.Date;
 public class Journey {
 
     private String mJid;
-    private Location mStartPosition;
-    private Date mStartTime;
-    private User mUsers[];
+    private Loc mStartLocation;
+
+    private long mStartTime;
+    private List<String> mJourneyUsers;
+    private String mChatID;
 
     public Journey() {
-        mJid = "";
-        mStartPosition = null;
-        mStartTime = null;
-        mUsers = new User[0];
+        this.mJid = "";
+        this.mStartLocation = null;
+        this.mStartTime = -1;
+        this.mJourneyUsers = null;
+        this.mChatID = "";
     }
 
-    public Journey(Location mStartPosition, Date mStartTime, User mUsers[]) {
+    public Journey(Loc mStartPosition, long mStartTime, List<String> mUsers) {
         this.mJid = "";
-        this.mStartPosition = mStartPosition;
+        this.mStartLocation = mStartPosition;
         this.mStartTime = mStartTime;
-        this.mUsers = mUsers;
+        this.mJourneyUsers = mUsers;
+        this.mChatID = "";
+    }
+
+    public String getmJid() {
+        return mJid;
+    }
+
+    public void setmJid(String mJid) {
+        this.mJid = mJid;
+    }
+
+    public Loc getmStartLocation() {
+        return mStartLocation;
+    }
+
+    public void setmStartLocation(Loc mStartLocation) {
+        this.mStartLocation = mStartLocation;
+    }
+
+    public long getmStartTime() {
+        return mStartTime;
+    }
+
+    public void setmStartTime(long mStartTime) {
+        this.mStartTime = mStartTime;
+    }
+
+    public List<String> getmJourneyUsers() {
+        return mJourneyUsers;
+    }
+
+    public void setmJourneyUsers(List<String> mUsers) {
+        this.mJourneyUsers = mUsers;
+    }
+
+    public String getmChatID() {
+        return mChatID;
+    }
+
+    public void setmChatID(String mChatID) {
+        this.mChatID = mChatID;
     }
 
     public void assignId(String mJid) {
         this.mJid = mJid;
     }
 
+    public void setChatID(String newChatID) {
+        this.mChatID = newChatID;
+    }
+
+    public String toString() {
+        return "";
+    }
 
 }
