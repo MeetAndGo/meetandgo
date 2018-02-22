@@ -27,14 +27,11 @@ import butterknife.ButterKnife;
  */
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
-    @BindView(R.id.user_name)    TextView mTextViewUserName;
-    @BindView(R.id.user_email)    TextView mTextViewUserEmail;
-    @BindView(R.id.number_of_ratings)
-    TextView mTextViewNumberOfRatings;
-    @BindView(R.id.rating)
-    RatingBar mRatingBarRating;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    @BindView(R.id.user_name) TextView mTextViewUserName;
+    @BindView(R.id.user_email) TextView mTextViewUserEmail;
+    @BindView(R.id.number_of_ratings) TextView mTextViewNumberOfRatings;
+    @BindView(R.id.rating) RatingBar mRatingBarRating;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.number_of_trips) TextView mNumberOfTrips;
     private ValueEventListener mUserValueEventListener;
 
@@ -71,15 +68,15 @@ public class ProfileActivity extends AppCompatActivity {
             }
         };
         FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), mUserValueEventListener);
-        mTextViewUserName.setText(currentUser.mFullName);
-        mTextViewUserEmail.setText(currentUser.mEmail);
+        mTextViewUserName.setText(currentUser.fullName);
+        mTextViewUserEmail.setText(currentUser.email);
     }
 
     private void setRatingBarInfo(User user) {
         //Check if it its already logged in
-        mRatingBarRating.setRating((float) user.mRating);
-        mTextViewNumberOfRatings.setText(getString(R.string.number_of_ratings, user.mNumOfRatings));
-        if (user.mRating >= 4 && user.mNumOfRatings >= 10) {
+        mRatingBarRating.setRating((float) user.rating);
+        mTextViewNumberOfRatings.setText(getString(R.string.number_of_ratings, user.numOfRatings));
+        if (user.rating >= 4 && user.numOfRatings >= 10) {
             //mRatingBarRating.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorYellow)));
             //mRatingBarRating.setSecondaryProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark)));
 
@@ -87,7 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void setNumberOfTrips(User user) {
-        mNumberOfTrips.setText(getString(R.string.number_of_trips, user.mNumOfTrips));
+        mNumberOfTrips.setText(getString(R.string.number_of_trips, user.numOfTrips));
     }
 
     private void setUpToolbar() {

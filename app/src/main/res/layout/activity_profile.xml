@@ -43,7 +43,7 @@
                 android:elevation="2dp"
                 android:padding="5dp"
                 app:cardCornerRadius="5dp"
-                app:cardElevation="4dp">
+                app:cardElevation="1dp">
 
 
                 <LinearLayout
@@ -65,9 +65,9 @@
                             android:id="@+id/profile_image"
                             android:layout_width="0dp"
                             android:layout_height="100dp"
-                            android:paddingBottom="4dp"
                             android:layout_gravity="center"
                             android:layout_weight="0.75"
+                            android:paddingBottom="4dp"
                             android:src="@drawable/profile_pic"
                             app:civ_border_color="@color/colorPrimary"
                             app:civ_border_width="2dp" />
@@ -128,9 +128,9 @@
                                 android:layout_width="@dimen/icon_size"
                                 android:layout_height="@dimen/icon_size"
                                 android:layout_gravity="center"
-                                android:paddingTop="5dp"
-                                android:paddingRight="5dp"
                                 android:paddingLeft="5dp"
+                                android:paddingRight="5dp"
+                                android:paddingTop="5dp"
                                 android:src="@drawable/ic_stars_black_48dp"
                                 android:tint="@color/colorGrey" />
 
@@ -161,9 +161,9 @@
                                 android:layout_width="@dimen/icon_size"
                                 android:layout_height="@dimen/icon_size"
                                 android:layout_gravity="center"
-                                android:paddingTop="5dp"
-                                android:paddingRight="5dp"
                                 android:paddingLeft="5dp"
+                                android:paddingRight="5dp"
+                                android:paddingTop="5dp"
                                 android:src="@drawable/ic_directions_walk_black_48dp"
                                 android:tint="@color/colorGrey" />
 

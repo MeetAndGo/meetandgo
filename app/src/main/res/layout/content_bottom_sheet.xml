@@ -127,7 +127,7 @@
                 android:id="@+id/buttonSearch"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="#3F51B6"
+                android:background="@drawable/search_button_background"
                 android:elevation="0dp"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"

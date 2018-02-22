@@ -15,9 +15,7 @@ public class Preferences implements Serializable {
     public Gender gender = Gender.ANY;
     public Mode mode = Mode.ANY;
 
-    public Preferences(){
-
-    }
+    public Preferences(){}
 
     public Gender getGender() {
         return gender;

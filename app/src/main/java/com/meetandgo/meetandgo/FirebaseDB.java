@@ -10,12 +10,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.data.User;
 
 import java.text.DecimalFormat;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -130,12 +132,12 @@ public class FirebaseDB {
      * adding Search return empty string
      */
     public static String addSearch(Search newSearch) {
-        if (!isFirebaseInitialised()) return "";
+        if (!isFirebaseInitialised()) return null;
         if (newSearch != null) {
             sSearchDatabase.push().setValue(newSearch);
             return sSearchDatabase.getKey();
         }
-        return "";
+        return null;
     }
     /**
      * Add a Journey to Firebase Database
@@ -225,12 +227,12 @@ public class FirebaseDB {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 User userToRate = snapshot.getValue(User.class);
-                userToRate.mNumOfRatings++;
-                userToRate.mRating = ((userToRate.mRating * (userToRate.mNumOfRatings - 1))
-                        + rating) / userToRate.mNumOfRatings;
+                userToRate.numOfRatings++;
+                userToRate.rating = ((userToRate.rating * (userToRate.numOfRatings - 1))
+                        + rating) / userToRate.numOfRatings;
                 //trim the rating number to 2 decimal values
                 DecimalFormat df = new DecimalFormat("#.##");
-                userToRate.mRating = Double.parseDouble(df.format(userToRate.mRating));
+                userToRate.rating = Double.parseDouble(df.format(userToRate.rating));
                 getUserDatabaseReference(uid).setValue(userToRate);
             }
 
@@ -247,8 +249,8 @@ public class FirebaseDB {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 User DatabaseUser = snapshot.getValue(User.class);
-                user.mRating = DatabaseUser.mRating;
-                user.mNumOfRatings = DatabaseUser.mNumOfRatings;
+                user.rating = DatabaseUser.rating;
+                user.numOfRatings = DatabaseUser.numOfRatings;
             }
 
             @Override
@@ -256,5 +258,14 @@ public class FirebaseDB {
             }
         };
         getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    /**
+     * Whenever the class is sent to the server the timestamp is updated. See the data/Search class
+     * for reference on how to use it
+     * @return
+     */
+    public static Map<String,String> getServerTime() {
+        return ServerValue.TIMESTAMP;
     }
 }

@@ -48,6 +48,7 @@ import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.activities.PreferencesActivity;
+import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.receivers.AddressResultReceiver;
@@ -100,7 +101,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private boolean mUserIsDragging;
 
     private Preferences mPreferences;
-    private SharedPreferences  mSharedPreferences;
+    private SharedPreferences mSharedPreferences;
 
 
     public MapsFragment() {
@@ -132,7 +133,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         Gson gson = new Gson();
         String json = mSharedPreferences.getString(STARTING_PREFERENCES, "");
         mPreferences = gson.fromJson(json, Preferences.class);
-        if(mPreferences == null) mPreferences = new Preferences();
+        if (mPreferences == null) mPreferences = new Preferences();
     }
 
     @Override
@@ -200,6 +201,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 int markerY = (int) mImageViewMapCenter.getY() + mImageViewMapCenter.getHeight() / 2;
                 Point point = new Point(markerX, markerY);
                 putMarkerOnPoint(point);
+
             }
         });
         mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
@@ -217,7 +219,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 if (!mUserIsDragging) return;
                 mUserIsDragging = false;
                 LatLng cameraLatLng = mMap.getCameraPosition().target;
+                // Depending on the current view that is selected we set the location to either start or end location
                 getLocationName(convertLatLngToLocation(cameraLatLng));
+                if (mTextViewCurrentFocus.getId() == mTextViewStartLocation.getId()) {
+                    mStartLocation = convertLatLngToLocation(cameraLatLng);
+                } else {
+                    mEndLocation = convertLatLngToLocation(cameraLatLng);
+                }
+                setButtonState();
+
             }
         });
 
@@ -225,10 +235,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     /**
+     * Checks the search information from the activity and turns the button to enable or disable
+     */
+    private void setButtonState() {
+        if (mStartLocation == null || mEndLocation == null) {
+            mSearchButton.setEnabled(false);
+            mSearchButton.setTextColor(getActivity().getColor(R.color.colorGrey));
+        } else {
+            mSearchButton.setEnabled(true);
+            mSearchButton.setTextColor(getActivity().getColor(R.color.colorWhite));
+        }
+
+    }
+
+    /**
      * Handles the click of the current location of the user. This method is overriding a method by
      * the Google MAPs API
      *
-     * @param location Location of the current user
+     * @param location Loc of the current user
      */
     @Override
     public void onMyLocationClick(@NonNull Location location) {
@@ -288,17 +312,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     /**
      * Actions to be done when the map is clicked by the user
+     *
      * @param latLng
      */
     private void onMapClick(LatLng latLng) {
         putMarkerOnLocation(latLng);
         Location location = convertLatLngToLocation(latLng);
-        // Depending on the current view that is selected we set the location to either start or end location
-        if (mTextViewCurrentFocus.getId() == mStartLocationLayout.getId()) {
-            mStartLocation = location;
-        } else {
-            mEndLocation = location;
-        }
         animateCameraToLocation(location);
         getLocationName(location);
     }
@@ -379,14 +398,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 clickSearchButton();
             }
         });
+        setButtonState();
     }
 
     /**
      *
      */
     private void clickSearchButton() {
-
-        Search searchTest = new Search(mPreferences, mStartLocation, mEndLocation);
+        Loc sLocation = new Loc(mStartLocation.getLatitude(), mStartLocation.getLongitude());
+        Loc eLocation = new Loc(mEndLocation.getLatitude(), mEndLocation.getLongitude());
+        Search searchTest = new Search(mPreferences, sLocation, eLocation);
         FirebaseDB.addSearch(searchTest);
     }
 

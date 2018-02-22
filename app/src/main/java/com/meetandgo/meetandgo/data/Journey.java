@@ -2,85 +2,77 @@ package com.meetandgo.meetandgo.data;
 
 import java.util.List;
 
-/**
- * Created by pgeogheg on 2/15/2018.
- */
-
 public class Journey {
 
-    private String mJid;
-    private Loc mStartLocation;
+    private String journeyId;
+    private Loc startLocation;
 
-    private long mStartTime;
-    private List<String> mJourneyUsers;
-    private String mChatID;
+    private long startTime;
+    private List<String> journeyUsers;
+    private String chatId;
 
     public Journey() {
-        this.mJid = "";
-        this.mStartLocation = null;
-        this.mStartTime = -1;
-        this.mJourneyUsers = null;
-        this.mChatID = "";
+        this.journeyId = "";
+        this.startLocation = null;
+        this.startTime = -1;
+        this.journeyUsers = null;
+        this.chatId = "";
     }
 
     public Journey(Loc mStartPosition, long mStartTime, List<String> mUsers) {
-        this.mJid = "";
-        this.mStartLocation = mStartPosition;
-        this.mStartTime = mStartTime;
-        this.mJourneyUsers = mUsers;
-        this.mChatID = "";
+        this.journeyId = "";
+        this.startLocation = mStartPosition;
+        this.startTime = mStartTime;
+        this.journeyUsers = mUsers;
+        this.chatId = "";
     }
 
-    public String getmJid() {
-        return mJid;
+    public String getJourneyId() {
+        return journeyId;
     }
 
-    public void setmJid(String mJid) {
-        this.mJid = mJid;
+    public void setJourneyId(String journey_id) {
+        this.journeyId = journey_id;
     }
 
-    public Loc getmStartLocation() {
-        return mStartLocation;
+    public Loc getStartLocation() {
+        return startLocation;
     }
 
-    public void setmStartLocation(Loc mStartLocation) {
-        this.mStartLocation = mStartLocation;
+    public void setStartLocation(Loc start_location) {
+        this.startLocation = start_location;
     }
 
-    public long getmStartTime() {
-        return mStartTime;
+    public long getStartTime() {
+        return startTime;
     }
 
-    public void setmStartTime(long mStartTime) {
-        this.mStartTime = mStartTime;
+    public void setStartTime(long start_time) {
+        this.startTime = start_time;
     }
 
-    public List<String> getmJourneyUsers() {
-        return mJourneyUsers;
+    public List<String> getJourneyUsers() {
+        return journeyUsers;
     }
 
-    public void setmJourneyUsers(List<String> mUsers) {
-        this.mJourneyUsers = mUsers;
+    public void setJourneyUsers(List<String> mUsers) {
+        this.journeyUsers = mUsers;
     }
 
-    public String getmChatID() {
-        return mChatID;
+    public String getChatId() {
+        return chatId;
     }
 
-    public void setmChatID(String mChatID) {
-        this.mChatID = mChatID;
+    public void setChatId(String chat_id) {
+        this.chatId = chat_id;
     }
 
     public void assignId(String mJid) {
-        this.mJid = mJid;
+        this.journeyId = mJid;
     }
 
     public void setChatID(String newChatID) {
-        this.mChatID = newChatID;
-    }
-
-    public String toString() {
-        return "";
+        this.chatId = newChatID;
     }
 
 }

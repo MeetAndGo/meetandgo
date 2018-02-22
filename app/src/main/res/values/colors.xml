@@ -9,4 +9,7 @@
     <color name="colorLineSeparatorGrey">#AAaaaaaa</color>
     <color name="toolbarColor">#3F51B5</color>
     <color name="colorYellow">#f1c40f</color>
+    <color name="colorSoftBlue">#7986CB</color>
+    <color name="colorSoftGrey">#EEEEEE</color>
+    <color name="colorWhite">#FFF</color>
 </resources>
