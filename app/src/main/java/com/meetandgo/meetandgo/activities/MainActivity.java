@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
     private View mHeaderLayout;
     private TextView mTextViewUserName;
     private TextView mTextViewUserEmail;
-    private TextView mTextViewNumberOfRatings;
-    private RatingBar mRatingBarRating;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private Fragment mCurrentFragment;
@@ -168,8 +165,6 @@ public class MainActivity extends AppCompatActivity {
         mHeaderLayout = mNavView.getHeaderView(0);
         mTextViewUserName = mHeaderLayout.findViewById(R.id.user_name);
         mTextViewUserEmail = mHeaderLayout.findViewById(R.id.user_email);
-        mTextViewNumberOfRatings = mHeaderLayout.findViewById(R.id.number_of_ratings);
-        mRatingBarRating = mHeaderLayout.findViewById(R.id.rating);
 
         mHeaderLayout.setOnClickListener(new View.OnClickListener() {
             @Override
