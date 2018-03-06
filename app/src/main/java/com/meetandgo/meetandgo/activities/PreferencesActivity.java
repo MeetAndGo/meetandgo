@@ -151,9 +151,6 @@ public class PreferencesActivity extends AppCompatActivity {
         if(pref.getEntry().equals("Walk")) {
             mPreferences.setMode(Preferences.Mode.WALK);
         }
-        else if(pref.getEntry().equals("Car")) {
-            mPreferences.setMode(Preferences.Mode.CAR);
-        }
         else if(pref.getEntry().equals("Taxi")) {
             mPreferences.setMode(Preferences.Mode.TAXI);
         }

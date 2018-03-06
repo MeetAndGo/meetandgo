@@ -10,12 +10,17 @@ import java.io.Serializable;
 public class Preferences implements Serializable {
 
     public enum Gender {ANY, MALE, FEMALE}
-    public enum Mode {ANY, WALK, CAR, TAXI}
+    public enum Mode {ANY, WALK, TAXI}
 
     public Gender gender = Gender.ANY;
     public Mode mode = Mode.ANY;
 
     public Preferences(){}
+
+    public Preferences(Gender gender, Mode mode){
+        this.gender = gender;
+        this.mode = mode;
+    }
 
     public Gender getGender() {
         return gender;

@@ -1,7 +1,6 @@
 package com.meetandgo.meetandgo;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -140,6 +139,8 @@ public class FirebaseDB {
         }
         return null;
     }
+
+
     /**
      * Add a Journey to Firebase Database
      *
@@ -172,10 +173,9 @@ public class FirebaseDB {
     }
 
     /**
-     * #TODO MAAAAANNNUUUUUUUU, can you do this pleeeeeaaasssse?
-     * @param jID
-     * @param uID
-     * @return
+     * @param jID journey ID
+     * @param uID user ID
+     * @return boolean, return true if addition of user to journey successful
      */
     public static boolean addUserToJourney(String jID, String uID) {
         if (!isFirebaseInitialised()) return false;

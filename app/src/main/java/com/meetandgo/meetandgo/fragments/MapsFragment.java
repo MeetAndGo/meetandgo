@@ -320,6 +320,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         Location location = convertLatLngToLocation(latLng);
         animateCameraToLocation(location);
         getLocationName(location);
+        // Depending on the current view that is selected we set the location to either start or end location
+        getLocationName(convertLatLngToLocation(latLng));
+        if (mTextViewCurrentFocus.getId() == mTextViewStartLocation.getId()) {
+            mStartLocation = convertLatLngToLocation(latLng);
+        } else {
+            mEndLocation = convertLatLngToLocation(latLng);
+        }
+        setButtonState();
     }
 
     /**

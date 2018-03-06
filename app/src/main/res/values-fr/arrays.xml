@@ -3,7 +3,6 @@
     <string-array name="listArray">
         <item>@string/any</item>
         <item>@string/mode_walk</item>
-        <item>@string/mode_car</item>
         <item>@string/mode_taxi</item>>
     </string-array>
     <string-array name="genderArray">
