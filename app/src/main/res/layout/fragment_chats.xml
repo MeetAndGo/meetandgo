@@ -1,12 +1,70 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.meetandgo.meetandgo.fragments.ChatsFragment">
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    tools:context="com.meetandgo.meetandgo.activities.ChatActivity">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_chats" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
 
-</FrameLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@id/fab"
+        android:dividerHeight="16dp"
+        android:divider="@android:color/transparent"
+        android:id="@+id/list_of_messages"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:gravity="bottom"
+        android:text='@string/gobutton'/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_exit_to_app_black_48dp"
+            android:id="@+id/fab"
+            android:tint="@android:color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            app:fabSize="mini" />
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/fab"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Input"
+                android:id="@+id/input"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
+
+

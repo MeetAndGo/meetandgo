@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.meetandgo.meetandgo.data.ChatMessage;
 import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.data.User;
@@ -148,8 +149,24 @@ public class FirebaseDB {
     public static String addNewJourney(Journey journey) {
         if (!isFirebaseInitialised()) return "";
         if (journey != null) {
-            sJourneyDatabase.push().setValue(journey);
-            return sJourneyDatabase.getKey();
+            DatabaseReference journeyEnrty = sJourneyDatabase.push();
+            journeyEnrty.setValue(journey);
+            return journeyEnrty.getKey();
+        }
+        return "";
+    }
+
+    /**
+     * TODO: MAAAAAAAAAAAAAAAANUUUUUUUUUUU
+     * @param journey
+     * @return
+     */
+    public static String updateJourney(String jID, Journey journey) {
+        if (!isFirebaseInitialised()) return "";
+        if (jID != null && journey != null) {
+            DatabaseReference journeyEnrty = sDatabase.getReference("journeys/" + jID);
+            journeyEnrty.setValue(journey);
+            return journeyEnrty.getKey();
         }
         return "";
     }
@@ -165,13 +182,31 @@ public class FirebaseDB {
         if (jID != null && uID != null) {
             DatabaseReference databaseReference = sDatabase.getReference("journeys/" + jID + "/mUsers/" + uID);
             databaseReference.setValue(true);
-            Log.e(TAG, databaseReference.getKey());
             //updateChatInUser(uid, databaseReference.getKey());
 
             return true;
         }
         return false;
     }
+
+    /**
+     * #TODO MAAAAANNNUUUUUUUU, can you buy cookies?
+     * @param jID
+     * @param message
+     * @return
+     */
+    public static boolean addMessageToJourney(String jID, ChatMessage message) {
+        if (!isFirebaseInitialised()) return false;
+        if (jID != null && message != null) {
+            DatabaseReference databaseReference = sDatabase.getReference("journeys/" + jID + "/mMessages/");
+            databaseReference.push().setValue(message);
+            //updateChatInUser(uid, databaseReference.getKey());
+
+            return true;
+        }
+        return false;
+    }
+
 
 
     /**

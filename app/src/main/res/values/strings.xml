@@ -48,6 +48,7 @@
     <string name="number_of_trips">%d Trips</string>
     <string name="change_password">Change Password</string>
     <string name="number_of_ratings">%d Ratings</string>
+    <string name="gobutton">Let's Go!</string>
 
     <string-array name="gender_array">
         <item name="gender_any">Any</item>

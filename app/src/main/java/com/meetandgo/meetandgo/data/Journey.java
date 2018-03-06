@@ -1,78 +1,82 @@
 package com.meetandgo.meetandgo.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Journey {
 
-    private String journeyId;
-    private Loc startLocation;
+    private String mJid;
+    private Loc mStartLocation;
 
-    private long startTime;
-    private List<String> journeyUsers;
-    private String chatId;
+    private long mStartTime;
+    private List<String> mUsers;
+    private List<ChatMessage> mMessages;
 
     public Journey() {
-        this.journeyId = "";
-        this.startLocation = null;
-        this.startTime = -1;
-        this.journeyUsers = null;
-        this.chatId = "";
+        this.mJid = "";
+        this.mStartLocation = null;
+        this.mStartTime = -1;
+        this.mUsers = new ArrayList<String>();
+        this.mMessages = new ArrayList<ChatMessage>();
     }
 
     public Journey(Loc mStartPosition, long mStartTime, List<String> mUsers) {
-        this.journeyId = "";
-        this.startLocation = mStartPosition;
-        this.startTime = mStartTime;
-        this.journeyUsers = mUsers;
-        this.chatId = "";
+        this.mJid = "";
+        this.mStartLocation = mStartPosition;
+        this.mStartTime = mStartTime;
+        this.mUsers = mUsers;
+        this.mMessages = new ArrayList<ChatMessage>();
     }
 
-    public String getJourneyId() {
-        return journeyId;
+    public Journey(Loc mStartPosition, long mStartTime, List<String> mUsers, List<ChatMessage> mMessages) {
+        this.mJid = "";
+        this.mStartLocation = mStartPosition;
+        this.mStartTime = mStartTime;
+        this.mUsers = mUsers;
+        this.mMessages = mMessages ;
+    }
+    public String getmJid() {
+        return mJid;
     }
 
-    public void setJourneyId(String journey_id) {
-        this.journeyId = journey_id;
+    public void setmJid(String journey_id) {
+        this.mJid = journey_id;
     }
 
-    public Loc getStartLocation() {
-        return startLocation;
+    public Loc getmStartLocation() {
+        return mStartLocation;
     }
 
-    public void setStartLocation(Loc start_location) {
-        this.startLocation = start_location;
+    public void setmStartLocation(Loc start_location) {
+        this.mStartLocation = start_location;
     }
 
-    public long getStartTime() {
-        return startTime;
+    public long getmStartTime() {
+        return mStartTime;
     }
 
-    public void setStartTime(long start_time) {
-        this.startTime = start_time;
+    public void setmStartTime(long start_time) {
+        this.mStartTime = start_time;
     }
 
-    public List<String> getJourneyUsers() {
-        return journeyUsers;
+    public List<String> getmUsers() {
+        return mUsers;
     }
 
-    public void setJourneyUsers(List<String> mUsers) {
-        this.journeyUsers = mUsers;
+    public void setmUsers(List<String> mUsers) {
+        this.mUsers = mUsers;
     }
 
-    public String getChatId() {
-        return chatId;
+    public List<ChatMessage> getmMessages() { return mMessages; }
+
+    public void setmMessages(List<ChatMessage> mMessages) { this.mMessages = mMessages; }
+
+    public void addUser(String uId) {
+        mUsers.add(uId);
     }
 
-    public void setChatId(String chat_id) {
-        this.chatId = chat_id;
-    }
-
-    public void assignId(String mJid) {
-        this.journeyId = mJid;
-    }
-
-    public void setChatID(String newChatID) {
-        this.chatId = newChatID;
+    public void addMessage(ChatMessage message) {
+        mMessages.add(message);
     }
 
 }
