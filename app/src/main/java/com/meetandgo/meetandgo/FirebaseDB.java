@@ -17,6 +17,8 @@ import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.data.User;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -303,4 +305,33 @@ public class FirebaseDB {
     public static Map<String,String> getServerTime() {
         return ServerValue.TIMESTAMP;
     }
+
+    /**
+     * Retrieve every search from DB
+     * @return List of all searches
+     */
+    public List<Search> retrieveAllSearches() {
+        List<Search> searches = new ArrayList<>();
+        if (!isFirebaseInitialised()) return null;
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("searches");
+        ref.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //Get map of users in datasnapshot
+                        //calculateSearch((Map<String,Object>) dataSnapshot.getValue(),Search userSearch);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        //handle databaseError
+                    }
+                });
+
+        return searches;
+    }
+
+
 }
+
+

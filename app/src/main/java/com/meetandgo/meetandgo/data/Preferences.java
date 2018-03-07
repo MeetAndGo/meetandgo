@@ -49,4 +49,10 @@ public class Preferences implements Serializable {
         return true;
     }
 
+    public boolean equals(Preferences other){
+        if(this.gender == other.getGender() && this.mode == other.getMode())
+            return true;
+        else
+            return false;
+    }
 }
