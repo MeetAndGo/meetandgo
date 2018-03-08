@@ -2,6 +2,7 @@ package com.meetandgo.meetandgo.data;
 
 import com.meetandgo.meetandgo.FirebaseDB;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,7 +32,7 @@ public class Search {
         this.userPreferences = iPreferences;
         this.startLocation = iStartLocation;
         this.endLocation = iEndLocation;
-        this.timeCreated = FirebaseDB.getServerTime();
+        this.timeCreated = new HashMap<>();
     }
 
     public String getUserId() {

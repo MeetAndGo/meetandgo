@@ -1,6 +1,7 @@
 package com.meetandgo.meetandgo;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -327,6 +328,7 @@ public class FirebaseDB {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //Get map of users in datasnapshot
+                        Log.e(TAG,dataSnapshot.getValue().toString());
                         //calculateSearch((Map<String,Object>) dataSnapshot.getValue(),Search userSearch);
                     }
 

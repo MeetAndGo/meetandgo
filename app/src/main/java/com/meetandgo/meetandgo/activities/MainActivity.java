@@ -1,5 +1,6 @@
 package com.meetandgo.meetandgo.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -100,7 +102,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e(TAG, "in OnDataChange from event listener" + snapshot.toString());
-                if (snapshot.getValue(User.class) == null) FirebaseDB.addUser(currentUser);
+                if (snapshot.getValue(User.class) == null)
+                {
+                    checkGender(currentUser);
+                }
                 else if (FirebaseDB.getCurrentUserUid() == null) startBootActivity();
             }
 
@@ -126,6 +131,32 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Checks what gender the user is.
+     */
+    private void checkGender(User mUser)
+    {
+        final User user = mUser;
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        user.mGender = User.Gender.MALE;
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        user.mGender = User.Gender.FEMALE;
+                        break;
+                }
+                FirebaseDB.addUser(user);
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("What gender do you MOST feel like?").setPositiveButton("Male", dialogClickListener)
+                .setNegativeButton("Female", dialogClickListener).show();
+    }
     /**
      * Setup the fragments of the Menu in order to recycle them later and not create new ones on
      * the go.

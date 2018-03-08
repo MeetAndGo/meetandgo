@@ -417,6 +417,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         Loc eLocation = new Loc(mEndLocation.getLatitude(), mEndLocation.getLongitude());
         Search searchTest = new Search(mPreferences, sLocation, eLocation);
         FirebaseDB.addSearch(searchTest);
+        //FirebaseDB.retrieveAllSearches();
     }
 
     /**
