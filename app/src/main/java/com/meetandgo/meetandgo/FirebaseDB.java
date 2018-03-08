@@ -61,6 +61,7 @@ public class FirebaseDB {
 
         sJourneyDatabase = sDatabase.getReference("journeys");
         sJourneyDatabase.keepSynced(true);
+
     }
 
     /**
@@ -304,6 +305,13 @@ public class FirebaseDB {
      */
     public static Map<String,String> getServerTime() {
         return ServerValue.TIMESTAMP;
+    }
+
+    public static DatabaseReference getJourneyMessagesReference(String curr_journey) {
+
+        DatabaseReference journeyMessagesRef = sDatabase.getReference("journeys/" + curr_journey + "/mMessages");
+        journeyMessagesRef.keepSynced(true);
+        return journeyMessagesRef;
     }
 
     /**

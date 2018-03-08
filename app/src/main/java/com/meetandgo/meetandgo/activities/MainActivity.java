@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         // Get the debug KeyHash for facebook login (Not useful on release version)
         getDebugKeyHash();
         setUpMenuFragments();
+        FirebaseDB.initializeApp(this);
+
         setupUI();
         setUpUser();
 

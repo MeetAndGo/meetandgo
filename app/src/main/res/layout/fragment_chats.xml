@@ -5,65 +5,63 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
     tools:context="com.meetandgo.meetandgo.activities.ChatActivity">
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:src="@drawable/ic_exit_to_app_black_48dp"
-        android:id="@+id/msg_button"
-        android:tint="@android:color/white"
-        app:backgroundTint="@color/colorPrimary"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        app:fabSize="mini"
-        />
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/msg_button"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Input"
-            android:textColorHint="@color/colorPrimary"
-            android:id="@+id/input"
-            android:maxLines="4"
-            />
-    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/button_lets_go"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorPrimary"
-        android:textColor="@android:color/white"
-        android:focusable="true"
         android:clickable="true"
+        android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:text="@string/gobutton"/>
+        android:text="@string/gobutton"
+        android:textColor="@android:color/white" />
 
     <ListView
         android:id="@+id/list_of_messages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/fab"
+        android:layout_above="@+id/send_message_layout"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/button_lets_go"
-        android:layout_marginBottom="16dp"
-        android:layout_toEndOf="@id/button_lets_go"
+        android:background="#EEEEEE"
         android:divider="@android:color/transparent"
-        android:dividerHeight="16dp" />
+        android:dividerHeight="16dp"
+        android:transcriptMode="alwaysScroll" />
 
+    <RelativeLayout
+        android:id="@+id/send_message_layout"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:id="@+id/input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/msg_button"
+            android:layout_toStartOf="@+id/msg_button"
+            android:hint="Input"
+            android:maxLines="4"
+            android:textColorHint="@color/colorPrimary" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/msg_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:src="@drawable/ic_exit_to_app_black_48dp"
+            android:tint="@android:color/white"
+            app:backgroundTint="@color/colorPrimary"
+            app:fabSize="mini" />
+    </RelativeLayout>
 </RelativeLayout>
 
 

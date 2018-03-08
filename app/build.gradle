@@ -46,7 +46,8 @@ dependencies {
         transitive = true
     }
     implementation 'com.google.firebase:firebase-core:11.4.2'
-
+    implementation 'com.google.firebase:firebase-auth:11.4.2'
+    implementation 'com.firebaseui:firebase-ui:1.2.0'
 
     /* =============================================================================== */
     /* = TESTS ======================================================================= */
