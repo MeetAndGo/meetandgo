@@ -25,6 +25,15 @@ public class Search {
         this.timeCreated = FirebaseDB.getServerTime();
     }
 
+    // Test constructor
+    public Search(Preferences iPreferences, Loc iStartLocation, Loc iEndLocation, String userId) {
+        this.userId = userId;
+        this.userPreferences = iPreferences;
+        this.startLocation = iStartLocation;
+        this.endLocation = iEndLocation;
+        this.timeCreated = FirebaseDB.getServerTime();
+    }
+
     public String getUserId() {
         return this.userId;
     }
