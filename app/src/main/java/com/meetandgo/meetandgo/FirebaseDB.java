@@ -19,8 +19,8 @@ import com.meetandgo.meetandgo.data.User;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -304,8 +304,10 @@ public class FirebaseDB {
      * for reference on how to use it
      * @return
      */
-    public static Map<String,String> getServerTime() {
-        return ServerValue.TIMESTAMP;
+    public static HashMap<String, Object> getServerTime() {
+        HashMap<String, Object> timestampNow = new HashMap<>();
+        timestampNow.put("timestamp", ServerValue.TIMESTAMP);
+        return timestampNow;
     }
 
     public static DatabaseReference getJourneyMessagesReference(String curr_journey) {

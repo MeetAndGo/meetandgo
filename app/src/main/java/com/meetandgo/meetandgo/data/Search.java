@@ -3,7 +3,6 @@ package com.meetandgo.meetandgo.data;
 import com.meetandgo.meetandgo.FirebaseDB;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Class of a user search, to store in firebase
@@ -15,7 +14,7 @@ public class Search {
     // TODO: Change locations to float  of lat lng  (Loc class is not being saved in firebase)
     private Loc startLocation = new Loc();
     private Loc endLocation = new Loc();
-    private Map<String, String> timeCreated;
+    private HashMap<String, Object> timeCreated;
 
 
     public Search(Preferences iPreferences, Loc iStartLocation, Loc iEndLocation) {
@@ -32,7 +31,7 @@ public class Search {
         this.userPreferences = iPreferences;
         this.startLocation = iStartLocation;
         this.endLocation = iEndLocation;
-        this.timeCreated = new HashMap<>();
+        this.timeCreated = FirebaseDB.getServerTime();
     }
 
     public String getUserId() {
@@ -59,11 +58,11 @@ public class Search {
         this.endLocation = endLocation;
     }
 
-    public Map<String, String> getTimeCreated() {
+    public HashMap<String, Object> getTimeCreated() {
         return timeCreated;
     }
 
-    public void setTimeCreated(Map<String, String> time_created) {
+    public void setTimeCreated(HashMap<String, Object> time_created) {
         this.timeCreated = time_created;
     }
 

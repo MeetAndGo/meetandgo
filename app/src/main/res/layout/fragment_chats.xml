@@ -28,7 +28,6 @@
         android:layout_below="@+id/button_lets_go"
         android:background="#EEEEEE"
         android:divider="@android:color/transparent"
-        android:dividerHeight="16dp"
         android:transcriptMode="alwaysScroll" />
 
     <RelativeLayout
@@ -56,6 +55,7 @@
             android:layout_margin="5dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            app:elevation="2dp"
             android:clickable="true"
             android:src="@drawable/ic_exit_to_app_black_48dp"
             android:tint="@android:color/white"

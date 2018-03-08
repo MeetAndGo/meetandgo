@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -130,15 +131,28 @@ public class ChatsFragment extends Fragment {
                 TextView messageText = v.findViewById(R.id.message_text);
                 TextView messageUser = v.findViewById(R.id.message_user);
                 TextView messageTime = v.findViewById(R.id.message_time);
+                RelativeLayout colorLayout = v.findViewById(R.id.color_layout);
+                RelativeLayout leftMarginLayout = v.findViewById(R.id.left_margin);
+                RelativeLayout rightMarginLayout = v.findViewById(R.id.right_margin);
 
                 // Set their text
                 messageText.setText(model.getMessageText());
                 messageUser.setText(model.getMessageUser());
 
                 // Format the date before showing it
-                messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
-                        model.getMessageTime()));
+                messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", model.getTimestampCreatedLong()));
 
+                // Handle the case when the message if from the current user
+                if (model.getMessageUser().equals(FirebaseDB.getCurrentUser().fullName)) {
+                    colorLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.myMessageColor));
+                    rightMarginLayout.setVisibility(View.GONE);
+                    leftMarginLayout.setVisibility(View.VISIBLE);
+
+                } else {
+                    colorLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.othersMessageColor));
+                    leftMarginLayout.setVisibility(View.GONE);
+                    rightMarginLayout.setVisibility(View.VISIBLE);
+                }
 
             }
         };
