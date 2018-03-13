@@ -41,6 +41,7 @@ public class ChatsFragment extends Fragment {
 
     //TODO: Current journey should be given by the previous activity when matching
     private Journey curr_journey;
+    private String journey_key;
 
     public ChatsFragment() {
     }
@@ -63,12 +64,15 @@ public class ChatsFragment extends Fragment {
         users.add("Paddy");
 
         curr_journey = new Journey(curr_loc, start, users);
-        curr_journey.setmJid(FirebaseDB.addNewJourney(curr_journey));
+        //curr_journey.setmJid(FirebaseDB.addNewJourney(curr_journey));
+        curr_journey.setmJid("Viva Espana");
+        journey_key = FirebaseDB.addNewJourney(curr_journey);
 
         mSendMsgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String messageText = mTextInput.getText().toString();
+
                 if (messageText.equals("")) return;
 
                 ChatMessage message1 = new ChatMessage(messageText, FirebaseDB.getCurrentUser().fullName, FirebaseDB.getCurrentUserUid());
@@ -76,13 +80,16 @@ public class ChatsFragment extends Fragment {
 
                 // Read the input field and push a new instance
                 // of ChatMessage to the Firebase database
-                FirebaseDB.addMessageToJourney(curr_journey.getmJid(), message1);
+                FirebaseDB.addMessageToJourney(journey_key, message1);
 
                 // Clear the input
                 mTextInput.setText("");
+
+                mSendMsgButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(), R.color.colorGrey));
+                mSendMsgButton.setEnabled(false);
+
             }
         });
-
 
         setUpEditText();
 
@@ -102,7 +109,8 @@ public class ChatsFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int count) {
-                if (count == 0) {
+                // i is start, i1 is before
+                if (count == 0 && i1 == 1 && i == 0) {
                     mSendMsgButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(), R.color.colorGrey));
                     mSendMsgButton.setEnabled(false);
                 } else {
@@ -124,7 +132,7 @@ public class ChatsFragment extends Fragment {
 
     private void displayChatMessages() {
         adapter = new FirebaseListAdapter<ChatMessage>(getActivity(), ChatMessage.class,
-                R.layout.message, FirebaseDB.getJourneyMessagesReference(curr_journey.getmJid())) {
+                R.layout.message, FirebaseDB.getJourneyMessagesReference(journey_key)) {
             @Override
             protected void populateView(View v, ChatMessage model, int position) {
                 // Get references to the views of message.xml

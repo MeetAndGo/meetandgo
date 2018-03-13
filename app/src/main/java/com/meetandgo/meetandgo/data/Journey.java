@@ -11,6 +11,7 @@ public class Journey {
     private long mStartTime;
     private List<String> mUsers;
     private List<ChatMessage> mMessages;
+    private boolean mActive;
 
     public Journey() {
         this.mJid = "";
@@ -18,6 +19,7 @@ public class Journey {
         this.mStartTime = -1;
         this.mUsers = new ArrayList<String>();
         this.mMessages = new ArrayList<ChatMessage>();
+        this.mActive=true;
     }
 
     public Journey(Loc mStartPosition, long mStartTime, List<String> mUsers) {
@@ -26,6 +28,7 @@ public class Journey {
         this.mStartTime = mStartTime;
         this.mUsers = mUsers;
         this.mMessages = new ArrayList<ChatMessage>();
+        this.mActive=true;
     }
 
     public Journey(Loc mStartPosition, long mStartTime, List<String> mUsers, List<ChatMessage> mMessages) {
@@ -34,6 +37,12 @@ public class Journey {
         this.mStartTime = mStartTime;
         this.mUsers = mUsers;
         this.mMessages = mMessages ;
+        this.mActive=true;
+    }
+
+    public void deactivateJourney(){
+        this.mActive=false;
+
     }
     public String getmJid() {
         return mJid;

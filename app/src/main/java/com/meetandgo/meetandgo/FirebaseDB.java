@@ -154,24 +154,25 @@ public class FirebaseDB {
     public static String addNewJourney(Journey journey) {
         if (!isFirebaseInitialised()) return "";
         if (journey != null) {
-            DatabaseReference journeyEnrty = sJourneyDatabase.push();
-            journeyEnrty.setValue(journey);
-            return journeyEnrty.getKey();
+            DatabaseReference journeyEntry = sJourneyDatabase.push();
+            journeyEntry.setValue(journey);
+            return journeyEntry.getKey();
         }
         return "";
     }
 
     /**
-     * TODO: MAAAAAAAAAAAAAAAANUUUUUUUUUUU
+     * Set the given journey to the given journey ID in firebaseDB
+     * @param jID ID that we want to link to the given journey
      * @param journey
      * @return
      */
     public static String updateJourney(String jID, Journey journey) {
         if (!isFirebaseInitialised()) return "";
         if (jID != null && journey != null) {
-            DatabaseReference journeyEnrty = sDatabase.getReference("journeys/" + jID);
-            journeyEnrty.setValue(journey);
-            return journeyEnrty.getKey();
+            DatabaseReference journeyEntry = sDatabase.getReference("journeys/" + jID);
+            journeyEntry.setValue(journey);
+            return journeyEntry.getKey();
         }
         return "";
     }
@@ -210,7 +211,6 @@ public class FirebaseDB {
         }
         return false;
     }
-
 
 
     /**
