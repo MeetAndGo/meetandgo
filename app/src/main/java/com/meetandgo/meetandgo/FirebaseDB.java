@@ -195,6 +195,27 @@ public class FirebaseDB {
     }
 
     /**
+     * Combine several users into one search and delete old searches
+     * @param sID search ID
+     * @param uID user ID
+     * @param deleteID search to delete
+     * @return boolean, return true if addition of user to search successful
+     */
+    //TODO: this needs to be tested as soon as the matching is over
+    public static boolean addUserToSearch(String sID, String uID, String deleteID) {
+        if (!isFirebaseInitialised()) return false;
+        if (sID != null && uID != null && deleteID != null) {
+            DatabaseReference databaseReference = sDatabase.getReference("search/" + sID + "/additionalUsers/");
+            databaseReference.push().setValue(uID);
+            //delete search with deleteID
+            DatabaseReference searchReference = sDatabase.getReference("search/" + deleteID);
+            searchReference.removeValue();
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * #TODO MAAAAANNNUUUUUUUU, can you buy cookies?
      * @param jID
      * @param message
