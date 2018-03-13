@@ -1,6 +1,7 @@
 package com.meetandgo.meetandgo;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
@@ -12,6 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.meetandgo.meetandgo.data.ChatMessage;
 import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Search;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * This static class is handling all the interactions with the Firebase database
@@ -35,6 +39,7 @@ public class FirebaseDB {
     private static DatabaseReference sUsersDatabaseReference;
     private static DatabaseReference sSearchDatabase;
     private static DatabaseReference sJourneyDatabase;
+    private static SharedPreferences mPrefs;
     private final CountDownLatch loginLatch = new CountDownLatch(1);
 
     public static void initializeApp(Activity activity) {
@@ -42,6 +47,8 @@ public class FirebaseDB {
         sAuth = FirebaseAuth.getInstance();
         initializeDatabaseReferences();
         sInitialised = true;
+
+        mPrefs = activity.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
     }
 
     // TODO: Refactor
@@ -97,8 +104,15 @@ public class FirebaseDB {
         FirebaseUser firebaseUser = sAuth.getCurrentUser();
         if (firebaseUser == null) return null;
 
-        User newUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
-        final User[] user = {newUser};
+        // Get Current user saved in the phone, if it doesn't exist use a new one created for this
+        Gson gson = new Gson();
+        String json = mPrefs.getString(Constants.CURRENT_USER, "");
+        Log.d(TAG, json);
+        User currentUser = gson.fromJson(json, User.class);
+        if (currentUser == null){
+            currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
+        }
+        final User[] user = {currentUser};
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -111,6 +125,7 @@ public class FirebaseDB {
         };
 
         getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
+
         return user[0];
     }
 

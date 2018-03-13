@@ -10,18 +10,6 @@
     android:focusable="true"
     android:orientation="vertical">
 
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:id="@+id/bottomSheetContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/bottomSheet"
-            android:orientation="vertical">
-
             <LinearLayout
                 android:id="@+id/startLocationLayout"
                 android:layout_width="match_parent"
@@ -32,14 +20,15 @@
                 android:padding="16dp">
 
                 <ImageView
+                    android:id="@+id/startLocationImage"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_marginEnd="16dp"
                     android:clickable="false"
                     android:focusable="false"
-                    android:src="@drawable/ic_search_black_48dp"
-                    android:tint="@color/colorPrimary" />
+                    android:src="@drawable/ic_gps_fixed_black_48dp"
+                    android:tint="@color/colorSoftSoftGrey" />
 
                 <TextView
                     android:id="@+id/textViewStartLocation"
@@ -52,9 +41,10 @@
                     android:hint="@string/start_location"
                     android:lines="1"
                     android:scrollHorizontally="true" />
+
             </LinearLayout>
 
-            <include layout="@layout/separator_line" />
+            <include layout="@layout/separator_line"/>
 
             <LinearLayout
                 android:id="@+id/endLocationLayout"
@@ -66,14 +56,15 @@
                 android:padding="16dp">
 
                 <ImageView
+                    android:id="@+id/endLocationImage"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_marginEnd="16dp"
                     android:clickable="false"
                     android:focusable="false"
-                    android:src="@drawable/ic_chat_black_48dp"
-                    android:tint="@color/colorPrimary" />
+                    android:src="@drawable/ic_add_location_black_48dp"
+                    android:tint="@color/colorSoftSoftGrey" />
 
                 <TextView
                     android:id="@+id/textViewEndLocation"
@@ -134,7 +125,4 @@
                 android:text="@string/search_button"
                 android:textColor="@android:color/white" />
 
-        </LinearLayout>
-
-    </FrameLayout>
 </LinearLayout>

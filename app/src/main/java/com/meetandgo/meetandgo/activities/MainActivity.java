@@ -1,7 +1,7 @@
 package com.meetandgo.meetandgo.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -31,13 +30,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.fragments.ChatsFragment;
 import com.meetandgo.meetandgo.fragments.CommuteFragment;
 import com.meetandgo.meetandgo.fragments.JourneyHistoryFragment;
 import com.meetandgo.meetandgo.fragments.MapsFragment;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toast mToast;
     private ValueEventListener mUserValueEventListener;
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onStart() {
@@ -75,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPrefs = getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
@@ -102,11 +107,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e(TAG, "in OnDataChange from event listener" + snapshot.toString());
-                if (snapshot.getValue(User.class) == null)
-                {
+                if (snapshot.getValue(User.class) == null) {
                     checkGender(currentUser);
-                }
-                else if (FirebaseDB.getCurrentUserUid() == null) startBootActivity();
+                } else if (FirebaseDB.getCurrentUserUid() == null) startBootActivity();
             }
 
             @Override
@@ -132,31 +135,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Checks what gender the user is.
+     * Checks what preferredGender the user is.
      */
-    private void checkGender(User mUser)
-    {
-        final User user = mUser;
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        user.mGender = User.Gender.MALE;
-                        break;
+    private void checkGender(final User mUser) {
 
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        user.mGender = User.Gender.FEMALE;
-                        break;
-                }
-                FirebaseDB.addUser(user);
-            }
-        };
+        new LovelyStandardDialog(this, LovelyStandardDialog.ButtonLayout.HORIZONTAL)
+                .setTopColorRes(R.color.colorPrimaryDark)
+                .setButtonsColorRes(R.color.colorPrimary)
+                .setIcon(R.drawable.ic_face_white_48dp)
+                .setMessage(R.string.rate_message)
+                .setPositiveButton(R.string.gender_male, new View.OnClickListener() {
+                    @Override public void onClick(View view) {
+                        mUser.gender = Preferences.Gender.MALE;
+                        addUserToDatabase(mUser);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("What gender do you MOST feel like?").setPositiveButton("Male", dialogClickListener)
-                .setNegativeButton("Female", dialogClickListener).show();
+                    }
+                })
+                .setNeutralButton(R.string.other, new View.OnClickListener() {
+                    @Override public void onClick(View view) {
+                        mUser.gender = Preferences.Gender.ANY;
+                        addUserToDatabase(mUser);
+
+                    }
+                })
+                .setNegativeButton(R.string.gender_female, new View.OnClickListener() {
+                    @Override public void onClick(View view) {
+                        mUser.gender = Preferences.Gender.FEMALE;
+                        addUserToDatabase(mUser);
+                    }
+                })
+                .show();
     }
+
+    private void addUserToDatabase(User user) {
+        // Save it to database
+        FirebaseDB.addUser(user);
+        // Save a copy to the local storage
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+        prefsEditor.putString(Constants.CURRENT_USER, json);
+        prefsEditor.apply();
+    }
+
     /**
      * Setup the fragments of the Menu in order to recycle them later and not create new ones on
      * the go.

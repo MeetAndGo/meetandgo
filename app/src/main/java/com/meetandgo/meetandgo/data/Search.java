@@ -31,7 +31,7 @@ public class Search {
     }
 
     // Test constructor
-    public Search(Preferences iPreferences, Loc iStartLocation, Loc iEndLocation, String userId) {
+    public Search(Preferences iPreferences, Loc iStartLocation, Loc iEndLocation, String userIdW) {
         this.userId = userId;
         this.additionalUsers = new ArrayList<>();
         this.userPreferences = iPreferences;

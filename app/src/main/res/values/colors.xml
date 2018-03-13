@@ -6,6 +6,7 @@
     <color name="bottomSheet">#FFFFFF</color>
     <color name="emailHeaderText">#AAFFFFFF</color>
     <color name="colorGrey">#616161</color>
+    <color name="colorSoftSoftGrey">#a6a6a6</color>
     <color name="colorLineSeparatorGrey">#AAaaaaaa</color>
     <color name="toolbarColor">#3F51B5</color>
     <color name="colorYellow">#f1c40f</color>
@@ -14,4 +15,5 @@
     <color name="colorWhite">#FFF</color>
     <color name="myMessageColor">#c3e7ff</color>
     <color name="othersMessageColor">#a7ffcc</color>
+    <color name="colorSoftSoftBlue">#f1f1f1</color>
 </resources>

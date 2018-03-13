@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,7 @@ import com.meetandgo.meetandgo.activities.PreferencesActivity;
 import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.data.Search;
+import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.receivers.AddressResultReceiver;
 import com.meetandgo.meetandgo.services.FetchAddressIntentService;
 
@@ -86,7 +88,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private View mView;
     @BindView(R.id.map) MapView mMapView;
     @BindView(R.id.fab) FloatingActionButton mFab;
-    @BindView(R.id.bottomSheetContent) LinearLayout mRelativeSheetContent;
     @BindView(R.id.imageViewMapCenter) ImageView mImageViewMapCenter;
     @BindView(R.id.textViewStartLocation) TextView mTextViewStartLocation;
     @BindView(R.id.textViewEndLocation) TextView mTextViewEndLocation;
@@ -94,6 +95,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @BindView(R.id.startLocationLayout) LinearLayout mStartLocationLayout;
     @BindView(R.id.endLocationLayout) LinearLayout mEndLocationLayout;
     @BindView(R.id.preferencesLayout) LinearLayout mPreferencesLayout;
+    @BindView(R.id.startLocationImage) ImageView mStartLocationImage;
+    @BindView(R.id.endLocationImage) ImageView mEndLocationImage;
     @BindView(R.id.buttonSearch) Button mSearchButton;
 
     private OnCompleteListener mOnCompleteListenerMove;
@@ -103,10 +106,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private Preferences mPreferences;
     private SharedPreferences mSharedPreferences;
 
-
-    public MapsFragment() {
-
-    }
+    public MapsFragment() {   }
 
     public static Fragment newInstance() {
         MapsFragment fragment = new MapsFragment();
@@ -130,10 +130,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void setUpPreferences() {
+        User currenUser = FirebaseDB.getCurrentUser();
         Gson gson = new Gson();
         String json = mSharedPreferences.getString(STARTING_PREFERENCES, "");
         mPreferences = gson.fromJson(json, Preferences.class);
-        if (mPreferences == null) mPreferences = new Preferences();
+        if (mPreferences == null) mPreferences = new Preferences(currenUser);
     }
 
     @Override
@@ -150,6 +151,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      */
     private void setUpUI() {
         mTextViewCurrentFocus = mTextViewStartLocation;
+        mStartLocationImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        mEndLocationImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorSoftSoftGrey));
+
         setupBottomSheet(mView);
         setUpOnCompleteListeners();
 
@@ -385,6 +389,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view) {
                 mTextViewCurrentFocus = mTextViewStartLocation;
+                mStartLocationImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+                mEndLocationImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorSoftSoftGrey));
             }
         });
 
@@ -392,6 +398,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view) {
                 mTextViewCurrentFocus = mTextViewEndLocation;
+                mEndLocationImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+                mStartLocationImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorSoftSoftGrey));
+
             }
         });
 

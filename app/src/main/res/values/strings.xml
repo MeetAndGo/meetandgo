@@ -49,9 +49,18 @@
     <string name="change_password">Change Password</string>
     <string name="number_of_ratings">%d Ratings</string>
     <string name="gobutton">Let\'s Go!</string>
+    <string name="rate_message">What preferredGender do you MOST feel like?</string>
+    <string name="confirm">Confirm</string>
+    <string name="other">other</string>
 
     <string-array name="gender_array">
         <item name="gender_any">Any</item>
+        <item name="gender_male">Male</item>
+        <item name="gender_female">Female</item>
+    </string-array>
+
+    <string-array name="gender_array_select">
+        <item name="gender_any">Other</item>
         <item name="gender_male">Male</item>
         <item name="gender_female">Female</item>
     </string-array>

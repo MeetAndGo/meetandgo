@@ -1,6 +1,7 @@
 package com.meetandgo.meetandgo.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -18,6 +19,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.meetandgo.meetandgo.Constants;
+import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.fragments.PreferencesFragment;
@@ -34,8 +37,9 @@ public class PreferencesActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
-    PreferenceFragment preferencesFragment;
-    Preferences mPreferences;
+    private PreferenceFragment preferencesFragment;
+    private Preferences mPreferences;
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onStart() {
@@ -52,7 +56,9 @@ public class PreferencesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
-        mPreferences = new Preferences();
+        mPrefs = getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+
+        mPreferences = new Preferences(FirebaseDB.getCurrentUser());
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(R.string.title_activity_preferences);
@@ -138,13 +144,13 @@ public class PreferencesActivity extends AppCompatActivity {
 
         ListPreference pref = (ListPreference) preferencesFragment.findPreference("genderType");
         if(pref.getEntry().equals("Male")) {
-            mPreferences.setGender(Preferences.Gender.MALE);
+            mPreferences.setPreferredGender(Preferences.Gender.MALE);
         }
         else if(pref.getEntry().equals("Female")) {
-            mPreferences.setGender(Preferences.Gender.FEMALE);
+            mPreferences.setPreferredGender(Preferences.Gender.FEMALE);
         }
         else{
-            mPreferences.setGender(Preferences.Gender.ANY);
+            mPreferences.setPreferredGender(Preferences.Gender.ANY);
         }
 
         pref = (ListPreference) preferencesFragment.findPreference("journeyType");

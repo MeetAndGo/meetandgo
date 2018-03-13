@@ -12,22 +12,34 @@ public class Preferences implements Serializable {
     public enum Gender {ANY, MALE, FEMALE}
     public enum Mode {ANY, WALK, TAXI}
 
-    public Gender gender = Gender.ANY;
+    public Gender preferredGender = Gender.ANY;
+    public Gender userGender = Gender.ANY;
     public Mode mode = Mode.ANY;
 
-    public Preferences(){}
+    public Preferences(User currentUser){
+        this.userGender = currentUser.gender;
+    }
 
-    public Preferences(Gender gender, Mode mode){
-        this.gender = gender;
+    public Preferences(Gender gender, Mode mode, User user){
+        this.preferredGender = gender;
         this.mode = mode;
+        this.userGender = user.gender;
     }
 
-    public Gender getGender() {
-        return gender;
+    public Gender getPreferredGender() {
+        return preferredGender;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void setPreferredGender(Gender preferredGender) {
+        this.preferredGender = preferredGender;
+    }
+
+    public Gender getUserGender() {
+        return userGender;
+    }
+
+    public void setUserGender(Gender userGender) {
+        this.userGender = userGender;
     }
 
     public Mode getMode() {
@@ -41,7 +53,7 @@ public class Preferences implements Serializable {
     // We exclude the methods from the database that are not useful for defining the preferences object
     @Exclude
     public boolean isCompleted(){
-        if (gender == null) return false;
+        if (preferredGender == null) return false;
         if (mode == null) return false;
         //if(startLocation.getLatitude() == 0 && startLocation.getLongitude() == 0 &&
                // endLocation.getLongitude() == 0 && endLocation.getLatitude() ==0) return false;
@@ -50,7 +62,21 @@ public class Preferences implements Serializable {
     }
 
     public boolean equals(Preferences other){
-        if(this.gender == other.getGender() && this.mode == other.getMode())
+        if(this.preferredGender == other.getPreferredGender() && this.mode == other.getMode())
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * Checks if othor user matches our search criteria
+     * @param otherPreferences other user preferences
+     * @return boolean if match
+     */
+    public boolean match(Preferences otherPreferences) {
+        if(preferredGender == Gender.ANY && mode == otherPreferences.mode)
+            return true;
+        else if(preferredGender.ordinal() == otherPreferences.userGender.ordinal() && mode == otherPreferences.mode)
             return true;
         else
             return false;
