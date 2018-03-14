@@ -20,10 +20,10 @@ public class Preferences implements Serializable {
         this.userGender = currentUser.gender;
     }
 
-    public Preferences(Gender gender, Mode mode, User user){
+    public Preferences(Gender gender, Mode mode, Gender user_gender){
         this.preferredGender = gender;
         this.mode = mode;
-        this.userGender = user.gender;
+        this.userGender = user_gender;
     }
 
     public Gender getPreferredGender() {
@@ -61,22 +61,44 @@ public class Preferences implements Serializable {
         return true;
     }
 
-    public boolean equals(Preferences other){
-        if(this.preferredGender == other.getPreferredGender() && this.mode == other.getMode())
+    /**
+     *
+     * @param m1 preferred mode of user 1
+     * @param m2 preferred mode of user 2
+     * @return true if mode ok false otherwise
+     */
+    private static boolean checkMode(Mode m1, Mode m2)
+    {
+        if (m1 == Mode.ANY || m2 == Mode.ANY || m1 == m2)
+        {
             return true;
-        else
+        }
+        else{
             return false;
+        }
     }
 
     /**
-     * Checks if othor user matches our search criteria
+     *
+     * @param g1 preferred mode of user 1
+     * @param g2 preferred mode of user 2
+     * @return true if mode ok false otherwise
+     */
+    private static boolean checkGender(Gender g1, Gender g2)
+    {
+        return true;
+    }
+
+    /**
+     * Checks if other user matches our search criteria
      * @param otherPreferences other user preferences
      * @return boolean if match
      */
-    public boolean match(Preferences otherPreferences) {
-        if(preferredGender == Gender.ANY && mode == otherPreferences.mode)
+    public boolean checkPreferences(Preferences otherPreferences) {
+        //if(checkMode(this.mode, otherPreferences.mode))
+        if(this.preferredGender == Gender.ANY && this.mode == otherPreferences.mode)
             return true;
-        else if(preferredGender.ordinal() == otherPreferences.userGender.ordinal() && mode == otherPreferences.mode)
+        else if(this.preferredGender.ordinal() == otherPreferences.userGender.ordinal() && this.mode == otherPreferences.mode)
             return true;
         else
             return false;

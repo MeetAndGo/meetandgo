@@ -30,6 +30,7 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * This static class is handling all the interactions with the Firebase database
  * In java only nested classes can be static so here all methods will be set to static
+ * TODO: Massive refactor - divide functions by object type by creating e.g. UserFirebaseDB
  */
 public class FirebaseDB {
     private static final String TAG = "FirebaseDB";

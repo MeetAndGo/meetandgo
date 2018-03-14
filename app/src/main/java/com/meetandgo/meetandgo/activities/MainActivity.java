@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e(TAG, "in OnDataChange from event listener" + snapshot.toString());
                 if (snapshot.getValue(User.class) == null) {
-                    checkGender(currentUser);
+                    askGender(currentUser);
                 } else if (FirebaseDB.getCurrentUserUid() == null) startBootActivity();
             }
 
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Checks what preferredGender the user is.
      */
-    private void checkGender(final User mUser) {
+    private void askGender(final User mUser) {
 
         new LovelyStandardDialog(this, LovelyStandardDialog.ButtonLayout.HORIZONTAL)
                 .setTopColorRes(R.color.colorPrimaryDark)

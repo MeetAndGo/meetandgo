@@ -1,7 +1,6 @@
 package com.meetandgo.meetandgo.utils;
 
 import com.meetandgo.meetandgo.data.Loc;
-import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.data.Search;
 
 import java.util.ArrayList;
@@ -30,10 +29,6 @@ public final class SearchUtil {
         return score;
     }
 
-    public boolean checkPreferences(Preferences user_prefs, Preferences search_prefs) {
-        return user_prefs.equals(search_prefs);
-    }
-
     public List<Search> calculateSearch(Map<String, Object> searches, Search currentUser) {
 
         List<Search> results = new ArrayList<Search>();
@@ -47,7 +42,7 @@ public final class SearchUtil {
             //PROCESS SEARCH
             if (!search.getUserId().equals(currentUser.getUserId())) {
                 //Check Preference
-                if (currentUser.getUserPreferences().match(search.getUserPreferences())) {
+                if (currentUser.getUserPreferences().checkPreferences(search.getUserPreferences())) {
                     //Calculate Score
                     double score = calculateScore(currentUser.getStartLocation(),
                             currentUser.getEndLocation(), search.getStartLocation(), search.getEndLocation());
