@@ -19,6 +19,18 @@
         android:text="@string/gobutton"
         android:textColor="@android:color/white" />
 
+    <Button
+        android:id="@+id/button_finish"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/green_complete"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:text="@string/finishbutton"
+        android:textColor="@android:color/white"
+        android:visibility="gone"/>
+
     <ListView
         android:id="@+id/list_of_messages"
         android:layout_width="match_parent"

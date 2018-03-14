@@ -231,6 +231,17 @@ public class FirebaseDB {
         return false;
     }
 
+    public static boolean deleteSearch(String sID)
+    {
+        if (!isFirebaseInitialised()) return false;
+        if(sID != null) {
+            DatabaseReference searchReference = sDatabase.getReference("search/" + sID);
+            searchReference.removeValue();
+            return true;
+        }
+        return false;
+    }
+
     /**
      * #TODO MAAAAANNNUUUUUUUU, can you buy cookies?
      * @param jID
@@ -379,6 +390,7 @@ public class FirebaseDB {
 
         return searches;
     }
+
 
 
 }

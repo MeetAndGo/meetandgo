@@ -10,6 +10,7 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.activities.MainActivity;
 import com.meetandgo.meetandgo.data.ChatMessage;
 import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Loc;
@@ -34,6 +36,8 @@ public class ChatsFragment extends Fragment {
     @BindView(R.id.msg_button) FloatingActionButton mSendMsgButton;
     @BindView(R.id.input) EditText mTextInput;
     @BindView(R.id.list_of_messages) ListView mListMessages;
+    @BindView(R.id.button_lets_go) Button mLetsGoButton;
+    @BindView(R.id.button_finish) Button mFinishButton;
 
     private static final String TAG = "ChatsFragment";
     private View mView;
@@ -92,6 +96,8 @@ public class ChatsFragment extends Fragment {
         });
 
         setUpEditText();
+        setUpBeginJourney();
+        setUpFinishJourney();
 
         //display message
         displayChatMessages();
@@ -125,6 +131,31 @@ public class ChatsFragment extends Fragment {
             }
         });
     }
+    //TODO: Get searchID from current Journey
+    private void setUpBeginJourney(){
+        mLetsGoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mLetsGoButton.setVisibility(View.GONE);
+                //test:
+                FirebaseDB.deleteSearch("-L7UbdMfY68vr_CFczoS");
+                mFinishButton.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void setUpFinishJourney(){
+        mFinishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                curr_journey.deactivateJourney();
+
+                MainActivity activity = (MainActivity) getActivity();
+                activity.setSelectedFragmentByMenuItem(R.id.menu_item_4);
+            }
+        });
+    }
+
 
     public void onStart() {
         super.onStart();

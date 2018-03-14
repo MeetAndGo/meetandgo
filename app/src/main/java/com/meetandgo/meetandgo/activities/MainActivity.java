@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
      * @param menuItemId Id of the menu item that corresponds to the selected fragment
      * @return boolean value if the task succeeded or not
      */
-    private boolean setSelectedFragmentByMenuItem(int menuItemId) {
+    public boolean setSelectedFragmentByMenuItem(int menuItemId) {
         Fragment fragment = getFragment(menuItemId);
         boolean result = setSelectedFragment(fragment);
         checkMenuItem(menuItemId);
@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
      * @param fragment the fragment you want to put in the content FrameLayout
      * @return boolean, true if it succeeds and false if it couldn't create the fragment instance
      */
-    private boolean setSelectedFragment(Fragment fragment) {
+    public boolean setSelectedFragment(Fragment fragment) {
         try {
             String tag = fragment.getClass().getName();
             if (mCurrentFragment != null && tag.equals(mCurrentFragment.getTag())) return false;
