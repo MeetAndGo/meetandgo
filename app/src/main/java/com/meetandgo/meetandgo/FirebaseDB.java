@@ -303,12 +303,13 @@ public class FirebaseDB {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 User userToRate = snapshot.getValue(User.class);
-                userToRate.numOfRatings++;
-                userToRate.rating = ((userToRate.rating * (userToRate.numOfRatings - 1))
-                        + rating) / userToRate.numOfRatings;
+                userToRate.setNumOfRatings(userToRate.getNumOfRatings()+1);
+                double userRating = ((userToRate.getRating() * (userToRate.getNumOfRatings() - 1))
+                        + rating) / userToRate.getNumOfRatings();
+                userToRate.setRating(userRating);
                 //trim the rating number to 2 decimal values
                 DecimalFormat df = new DecimalFormat("#.##");
-                userToRate.rating = Double.parseDouble(df.format(userToRate.rating));
+                userToRate.setRating(Double.parseDouble(df.format(userToRate.getRating())));
                 getUserDatabaseReference(uid).setValue(userToRate);
             }
 
@@ -325,8 +326,8 @@ public class FirebaseDB {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 User DatabaseUser = snapshot.getValue(User.class);
-                user.rating = DatabaseUser.rating;
-                user.numOfRatings = DatabaseUser.numOfRatings;
+                user.setRating(DatabaseUser.getRating());
+                user.setRating(DatabaseUser.getNumOfRatings());
             }
 
             @Override

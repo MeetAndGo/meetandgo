@@ -12,12 +12,12 @@ public class Preferences implements Serializable {
     public enum Gender {ANY, MALE, FEMALE}
     public enum Mode {ANY, WALK, TAXI}
 
-    public Gender preferredGender = Gender.ANY;
-    public Gender userGender = Gender.ANY;
-    public Mode mode = Mode.ANY;
+    private Gender preferredGender = Gender.ANY;
+    private Gender userGender = Gender.ANY;
+    private Mode mode = Mode.ANY;
 
     public Preferences(User currentUser){
-        this.userGender = currentUser.gender;
+        this.userGender = currentUser.getGender();
     }
 
     public Preferences(Gender preferred_gender, Mode mode, Gender user_gender){

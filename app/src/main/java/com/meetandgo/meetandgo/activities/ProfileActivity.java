@@ -33,6 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.rating) RatingBar mRatingBarRating;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.number_of_trips) TextView mNumberOfTrips;
+    @BindView(R.id.user_add_to_group) TextView mAddToGroup;
     private ValueEventListener mUserValueEventListener;
 
     @Override
@@ -68,15 +69,17 @@ public class ProfileActivity extends AppCompatActivity {
             }
         };
         FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), mUserValueEventListener);
-        mTextViewUserName.setText(currentUser.fullName);
-        mTextViewUserEmail.setText(currentUser.email);
+        mTextViewUserName.setText(currentUser.getFullName());
+        mTextViewUserEmail.setText(currentUser.getEmail());
+        String gender = currentUser.getGender().toString();
+        mAddToGroup.setText(gender.substring(0, 1).toUpperCase() + gender.substring(1));
     }
 
     private void setRatingBarInfo(User user) {
         //Check if it its already logged in
-        mRatingBarRating.setRating((float) user.rating);
-        mTextViewNumberOfRatings.setText(getString(R.string.number_of_ratings, user.numOfRatings));
-        if (user.rating >= 4 && user.numOfRatings >= 10) {
+        mRatingBarRating.setRating((float) user.getRating());
+        mTextViewNumberOfRatings.setText(getString(R.string.number_of_ratings, user.getNumOfRatings()));
+        if (user.getRating() >= 4 && user.getNumOfRatings() >= 10) {
             //mRatingBarRating.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorYellow)));
             //mRatingBarRating.setSecondaryProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark)));
 
@@ -84,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void setNumberOfTrips(User user) {
-        mNumberOfTrips.setText(getString(R.string.number_of_trips, user.numOfTrips));
+        mNumberOfTrips.setText(getString(R.string.number_of_trips, user.getNumOfTrips()));
     }
 
     private void setUpToolbar() {

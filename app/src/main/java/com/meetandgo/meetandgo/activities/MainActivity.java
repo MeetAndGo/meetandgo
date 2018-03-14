@@ -52,9 +52,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.navigation) NavigationView mNavView;
-    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.navigation)
+    NavigationView mNavView;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
     private View mHeaderLayout;
     private TextView mTextViewUserName;
     private TextView mTextViewUserEmail;
@@ -120,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), mUserValueEventListener);
 
         // UpdateUI based on the current user that is using the app
-        mTextViewUserName.setText(currentUser.fullName);
-        mTextViewUserEmail.setText(currentUser.email);
+        mTextViewUserName.setText(currentUser.getFullName());
+        mTextViewUserEmail.setText(currentUser.getEmail());
     }
 
     @Override
@@ -145,22 +148,25 @@ public class MainActivity extends AppCompatActivity {
                 .setIcon(R.drawable.ic_face_white_48dp)
                 .setMessage(R.string.rate_message)
                 .setPositiveButton(R.string.gender_male, new View.OnClickListener() {
-                    @Override public void onClick(View view) {
-                        mUser.gender = Preferences.Gender.MALE;
+                    @Override
+                    public void onClick(View view) {
+                        mUser.setGender(Preferences.Gender.MALE);
                         addUserToDatabase(mUser);
 
                     }
                 })
                 .setNeutralButton(R.string.other, new View.OnClickListener() {
-                    @Override public void onClick(View view) {
-                        mUser.gender = Preferences.Gender.ANY;
+                    @Override
+                    public void onClick(View view) {
+                        mUser.setGender(Preferences.Gender.ANY);
                         addUserToDatabase(mUser);
 
                     }
                 })
                 .setNegativeButton(R.string.gender_female, new View.OnClickListener() {
-                    @Override public void onClick(View view) {
-                        mUser.gender = Preferences.Gender.FEMALE;
+                    @Override
+                    public void onClick(View view) {
+                        mUser.setGender(Preferences.Gender.FEMALE);
                         addUserToDatabase(mUser);
                     }
                 })
