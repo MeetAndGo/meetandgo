@@ -2,18 +2,21 @@ package com.meetandgo.meetandgo.data;
 
 import android.location.Location;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class to save the information of the user
  */
 public class User {
-
-    private String fullName;
-    private String email;
-    private double rating;
-    private int numOfRatings;
-    private Location position;
-    private int numOfTrips;
-    private Preferences.Gender gender;
+    public String fullName;
+    public String email;
+    public double rating;
+    public int numOfRatings;
+    public Location position;
+    public int numOfTrips;
+    public Preferences.Gender gender;
+    public List<String> journeyIDs;
 
     public User() {
         this.fullName = "";
@@ -23,6 +26,7 @@ public class User {
         this.position = null;
         this.numOfTrips = 0;
         this.gender = null;
+        this.journeyIDs = new ArrayList<String>();
     }
 
     public User(String fullName, String email) {
@@ -33,6 +37,7 @@ public class User {
         this.position = null;
         this.numOfTrips = 0;
         this.gender = null;
+        this.journeyIDs = new ArrayList<String>();
     }
 
     public String getFullName() {

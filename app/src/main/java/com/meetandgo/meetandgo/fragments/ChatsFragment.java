@@ -23,6 +23,7 @@ import com.meetandgo.meetandgo.activities.MainActivity;
 import com.meetandgo.meetandgo.data.ChatMessage;
 import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Loc;
+import com.meetandgo.meetandgo.data.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,7 +47,7 @@ public class ChatsFragment extends Fragment {
     //TODO: Current journey should be given by the previous activity when matching
     private Journey curr_journey;
     private String journey_key;
-
+    private User curr_user;
     public ChatsFragment() {
     }
 
@@ -71,6 +72,9 @@ public class ChatsFragment extends Fragment {
         //curr_journey.setmJid(FirebaseDB.addNewJourney(curr_journey));
         curr_journey.setmJid("Viva Espana");
         journey_key = FirebaseDB.addNewJourney(curr_journey);
+        curr_user=FirebaseDB.getCurrentUser();
+        curr_user.journeyIDs.add(journey_key);
+        FirebaseDB.addUser(curr_user);
 
         mSendMsgButton.setOnClickListener(new View.OnClickListener() {
             @Override
