@@ -2,6 +2,7 @@ package com.meetandgo.meetandgo.data;
 
 import com.meetandgo.meetandgo.FirebaseDB;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,17 +10,15 @@ import java.util.List;
 /**
  * Class of a user search, to store in firebase
  */
-public class Search {
+public class Search implements Serializable{
 
     private String userId;
     //additional users are those added to combine search between several users
     private List<String> additionalUsers;
     private Preferences userPreferences;
-    // TODO: Change locations to float  of lat lng  (Loc class is not being saved in firebase)
     private Loc startLocation = new Loc();
     private Loc endLocation = new Loc();
     private HashMap<String, Object> timeCreated;
-
 
     public Search(){}
 

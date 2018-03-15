@@ -4,8 +4,6 @@ import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.Search;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public final class SearchUtil {
     /**
@@ -17,7 +15,7 @@ public final class SearchUtil {
      * @param searchEnd   Other User Destination
      * @return Matching Score
      */
-    public double calculateScore(Loc userStart, Loc userEnd, Loc searchStart, Loc searchEnd) {
+    public static double calculateScore(Loc userStart, Loc userEnd, Loc searchStart, Loc searchEnd) {
         double score;
 
         //Get Distance From Start
@@ -29,23 +27,22 @@ public final class SearchUtil {
         return score;
     }
 
-    public List<Search> calculateSearch(Map<String, Object> searches, Search currentUser) {
+    public static ArrayList<Search> calculateSearch(ArrayList<Search> searches, Search currentUserSearch) {
 
-        List<Search> results = new ArrayList<Search>();
+        ArrayList<Search> results = new ArrayList<>();
         double[][] resultOrder = new double[searches.size()][2];
 
         int count = 0;
         int validIndexes = 0;
-        for (Map.Entry<String, Object> entry : searches.entrySet()) {
-            Search search = (Search) entry.getValue();
+        for(Search search : searches){
             results.add(search);
             //PROCESS SEARCH
-            if (!search.getUserId().equals(currentUser.getUserId())) {
+            if (!search.getUserId().equals(currentUserSearch.getUserId())) {
                 //Check Preference
-                if (currentUser.getUserPreferences().checkPreferences(search.getUserPreferences())) {
+                if (currentUserSearch.getUserPreferences().checkPreferences(search.getUserPreferences())) {
                     //Calculate Score
-                    double score = calculateScore(currentUser.getStartLocation(),
-                            currentUser.getEndLocation(), search.getStartLocation(), search.getEndLocation());
+                    double score = calculateScore(currentUserSearch.getStartLocation(),
+                            currentUserSearch.getEndLocation(), search.getStartLocation(), search.getEndLocation());
                     //ADD TO RESULTS ORDER if Preference okay
                     resultOrder[count][0] = score;
                     resultOrder[count][1] = count;
@@ -56,13 +53,13 @@ public final class SearchUtil {
                 }
                 count++;
             }
-
         }
+
         DataStructureUtils util = new DataStructureUtils();
         double[][] sortedResults = util.sort2DArray(resultOrder);
 
         //Create ArrayList of results
-        List<Search> list = new ArrayList<>();
+        ArrayList<Search> list = new ArrayList<>();
         for (int i = sortedResults.length - validIndexes; i < sortedResults.length; i++) {
             list.add(results.get((int) sortedResults[i][1]));
         }

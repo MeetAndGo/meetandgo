@@ -17,9 +17,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by barbierj on 3/6/2018.
- */
 public class MatchingTest {
 
     DataStructureUtils utils = new DataStructureUtils();

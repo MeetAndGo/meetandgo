@@ -38,19 +38,26 @@
             </intent-filter>
         </activity>
 
-        <!-- Main Activity: TODO: To be defined -->
+        <!-- Main Activity: Is the main activity -->
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
+
+        <!-- Profile Activity: Activity displaying the profile information of the user-->
         <activity
             android:name=".activities.ProfileActivity"
             android:screenOrientation="portrait" />
 
-        <!-- Preferences Activity: TODO: To be defined -->
+        <!-- Preferences Activity: Activity for setting the preferences of the search -->
         <activity
             android:name=".activities.PreferencesActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- Matching Results Activity: Activity displaying the list of results from the search -->
+        <activity
+            android:name=".activities.MatchingResults"
             android:screenOrientation="portrait" />
 
     </application>

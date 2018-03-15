@@ -48,6 +48,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.activities.MatchingResults;
 import com.meetandgo.meetandgo.activities.PreferencesActivity;
 import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.Preferences;
@@ -55,6 +56,8 @@ import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.receivers.AddressResultReceiver;
 import com.meetandgo.meetandgo.services.FetchAddressIntentService;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,7 +109,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private Preferences mPreferences;
     private SharedPreferences mSharedPreferences;
 
-    public MapsFragment() {   }
+    public ArrayList<Search> resultSearches = new ArrayList<>();
+
+    public MapsFragment() {
+    }
 
     public static Fragment newInstance() {
         MapsFragment fragment = new MapsFragment();
@@ -422,16 +428,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      *
      */
     private void clickSearchButton() {
+        resultSearches.clear();
         Loc sLocation = new Loc(mStartLocation.getLatitude(), mStartLocation.getLongitude());
         Loc eLocation = new Loc(mEndLocation.getLatitude(), mEndLocation.getLongitude());
-        Search searchTest = new Search(mPreferences, sLocation, eLocation);
+        Search currentUserSearch = new Search(mPreferences, sLocation, eLocation);
+        FirebaseDB.addSearch(currentUserSearch);
 
-        //Matching algorithm
-        FirebaseDB.retrieveSearchesBySearch(searchTest);
+        startMatchingResultsActivity(currentUserSearch);
 
-        FirebaseDB.addSearch(searchTest);
+    }
 
-        //FirebaseDB.retrieveAllSearches();
+    private void startMatchingResultsActivity(Search search) {
+        Intent matchingResultsIntent = new Intent(getActivity(), MatchingResults.class);
+        Gson gson = new Gson();
+        String json = gson.toJson(search);
+        matchingResultsIntent.putExtra("currentUserSearch", json);
+        startActivity(matchingResultsIntent);
     }
 
     /**

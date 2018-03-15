@@ -74,7 +74,6 @@ public class ProfileActivity extends AppCompatActivity {
         String gender = currentUser.getGender().toString();
 
         if(gender.equals("FEMALE")){
-
             mAddToGroup.setText(R.string.gender_female);
         }else if(gender.equals("MALE")){
             mAddToGroup.setText(R.string.gender_male);

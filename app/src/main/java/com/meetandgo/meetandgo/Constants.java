@@ -10,4 +10,5 @@ public final class Constants {
     public static final String PREFERENCES_EXTRA = "PREFERENCES_EXTRA";
     public static final String CURRENT_USER = "CurrentUser";
     public static final String SHARED_PREFERENCES_NAME = "SHARED_PREFERENCES";
+    public static final double SEARCH_RADIUS = 10.0;
 }

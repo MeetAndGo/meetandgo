@@ -14,11 +14,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ChatActivity extends AppCompatActivity {
+
     private static final String TAG = "ChatActivity";
     @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
     @BindView(R.id.navigation) NavigationView mNavView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
+
     protected void onStart() {
         super.onStart();
         mToolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.toolbarColor));

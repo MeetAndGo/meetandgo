@@ -12,21 +12,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.meetandgo.meetandgo.data.ChatMessage;
 import com.meetandgo.meetandgo.data.Journey;
-import com.meetandgo.meetandgo.data.JourneyHistory;
 import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.data.User;
+import com.squareup.otto.Bus;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -235,10 +233,9 @@ public class FirebaseDB {
         return false;
     }
 
-    public static boolean deleteSearch(String sID)
-    {
+    public static boolean deleteSearch(String sID) {
         if (!isFirebaseInitialised()) return false;
-        if(sID != null) {
+        if (sID != null) {
             DatabaseReference searchReference = sDatabase.getReference("search/" + sID);
             searchReference.removeValue();
             return true;
@@ -249,7 +246,7 @@ public class FirebaseDB {
     /**
      * Add message to the journey with the ID jID
      *
-     * @param jID ID of the journey the message is added to
+     * @param jID     ID of the journey the message is added to
      * @param message to add to the journey
      * @return true if correctly added, false otherwise
      */
@@ -375,26 +372,25 @@ public class FirebaseDB {
      *
      * @return List of all searches
      */
-    public static List<Search> retrieveSearchesBySearch(Search search) {
-        final List<Search> searches = new ArrayList<>();
+    public static ArrayList<Search> retrieveSearchesBySearch(final Bus bus, final Search search) {
+        final ArrayList<Search> searches = new ArrayList<>();
         if (!isFirebaseInitialised()) return null;
         final Loc startLocation = search.getStartLocation();
-        Loc endLocation = search.getEndLocation();
+        final Loc endLocation = search.getEndLocation();
 
         //TODO: make method to change from number to meters to e.g. restrict to 500 meters
-        sSearchDatabase.child("startLocation/lat").startAt(startLocation.getLat() - 10)
-                .endAt(startLocation.getLat() + 10).startAt(startLocation.getLng() - 10)
-                .endAt(startLocation.getLng() + 10).addChildEventListener(new ChildEventListener() {
+        sSearchDatabase.orderByChild("startLocation/lat").startAt(startLocation.getLat() - Constants.SEARCH_RADIUS)
+                .endAt(startLocation.getLat() + Constants.SEARCH_RADIUS).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Search searchResult = dataSnapshot.getValue(Search.class);
-                 Log.d(TAG,"S-Lng: " + searchResult.getStartLocation().getLng());
-                 Log.d(TAG,"S-Lat: " + searchResult.getStartLocation().getLat());
-                 Log.d(TAG,"E-Lng: " + searchResult.getEndLocation().getLng());
-                 Log.d(TAG,"E-Lat: " + searchResult.getEndLocation().getLat());
-                 Log.d(TAG,"Previous Search ID: " + prevChildKey);
-
+                Log.d(TAG,"S-Lng: " + searchResult.getStartLocation().getLng());
+                Log.d(TAG,"S-Lat: " + searchResult.getStartLocation().getLat());
+                Log.d(TAG,"E-Lng: " + searchResult.getEndLocation().getLng());
+                Log.d(TAG,"E-Lat: " + searchResult.getEndLocation().getLat());
+                Log.d(TAG,"Previous Search ID: " + prevChildKey);
                 searches.add(searchResult);
+                bus.post(searchResult);
             }
 
             @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -412,10 +408,8 @@ public class FirebaseDB {
         });
 
         Log.d(TAG, String.valueOf(searches.size()));
-
         return searches;
     }
-
 
 
 }

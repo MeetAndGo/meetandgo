@@ -1,7 +1,6 @@
 package com.meetandgo.meetandgo.fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,16 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.linearlistview.LinearListView;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.data.User;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -31,6 +27,7 @@ public class JourneyHistoryFragment extends Fragment {
     @BindView(R.id.listHistoryJourneys) ListView listHistoryJourneys;
     List<String>journey_history_ids;
     ArrayAdapter adapter;
+
     public JourneyHistoryFragment() {}
 
     public static Fragment newInstance() {
