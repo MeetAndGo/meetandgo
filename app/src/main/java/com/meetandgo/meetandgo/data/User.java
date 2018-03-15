@@ -96,4 +96,8 @@ public class User {
         this.gender = gender;
     }
 
+    public List<String> getJourneyIDs() { return journeyIDs; }
+
+    public void setJourneyIDs(List<String> journeyIDs) { this.journeyIDs = journeyIDs; }
+
 }

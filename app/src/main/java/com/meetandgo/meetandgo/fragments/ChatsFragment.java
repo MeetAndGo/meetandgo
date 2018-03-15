@@ -22,8 +22,10 @@ import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.activities.MainActivity;
 import com.meetandgo.meetandgo.data.ChatMessage;
 import com.meetandgo.meetandgo.data.Journey;
+import com.meetandgo.meetandgo.data.JourneyHistory;
 import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.User;
+import com.meetandgo.meetandgo.utils.SerializationUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -156,6 +158,9 @@ public class ChatsFragment extends Fragment {
 
                 MainActivity activity = (MainActivity) getActivity();
                 activity.setSelectedFragmentByMenuItem(R.id.menu_item_4);
+                JourneyHistory.journeyIDs.push(curr_journey);
+                SerializationUtils sUtils = new SerializationUtils();
+                sUtils.serializeJourneyHistory(getContext());
             }
         });
     }

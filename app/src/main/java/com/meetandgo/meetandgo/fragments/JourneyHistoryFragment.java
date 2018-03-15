@@ -44,32 +44,22 @@ public class JourneyHistoryFragment extends Fragment {
         journey_history_ids = Arrays.asList(getResources().getStringArray(R.array.history));
         mView = inflater.inflate(R.layout.fragment_journey_history, container, false);
         ButterKnife.bind(this, mView);
-        //Testing
-//        Loc l = new Loc(12,13);
-//        long start = new Date().getTime();
-//        List<String> users = new ArrayList<String>();
-//        users.add("Hello");
-//        ChatMessage m = new ChatMessage("Hello World!","Paddy");
-//        ChatMessage m2 = new ChatMessage("Hello Paddy!","World");
-//        List<ChatMessage> messages = new ArrayList<ChatMessage>();
-//        messages.add(m);
-//        Journey j = new Journey(l,start,users);
-//        String journeyId = FirebaseDB.addNewJourney(j);
-//        //FirebaseDB.addMessageToJourney(journeyId, m);
-//        //FirebaseDB.addMessageToJourney(journeyId, m2);
-//        j.addMessage(m);
-//        j.addMessage(m2);
-//        j.addUser("Paddy");
-//        j.addUser("World");
-//        FirebaseDB.updateJourney(journeyId, j);
-        //Log.e(TAG, journey_history_ids[0]);
+
+
         mUser = FirebaseDB.getCurrentUser();
         List<String> userJourneyIDs = mUser.journeyIDs;
-        Log.e(TAG,userJourneyIDs.get(0));
-        adapter = new ArrayAdapter(getActivity().getApplicationContext(),
-                R.layout.journey_history_list_item,journey_history_ids );
-        listHistoryJourneys.setAdapter(adapter);
-        //mView = inflater.inflate(R.layout.fragment_journey_history, container, false);
+        userJourneyIDs.add("Viva Espana");
+        userJourneyIDs.add("Balamory");
+        userJourneyIDs.add("France Never Wins");
+        Log.e(TAG, mUser.journeyIDs.get(0));
+        if(userJourneyIDs.size() > 0) {
+            Log.e(TAG, userJourneyIDs.get(0));
+            adapter = new ArrayAdapter(getActivity().getApplicationContext(),
+                    R.layout.journey_history_list_item, userJourneyIDs);
+            listHistoryJourneys.setAdapter(adapter);
+
+            //mView = inflater.inflate(R.layout.fragment_journey_history, container, false);
+        }
         return mView;
     }
 
