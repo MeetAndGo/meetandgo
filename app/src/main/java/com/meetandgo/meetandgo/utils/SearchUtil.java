@@ -11,20 +11,20 @@ public final class SearchUtil {
     /**
      * Calculates the Matching Score
      *
-     * @param user_start   Location of User
-     * @param user_end     Destination of User
-     * @param search_start Other User Location
-     * @param search_end   Other User Destination
+     * @param userStart   Location of User
+     * @param userEnd     Destination of User
+     * @param searchStart Other User Location
+     * @param searchEnd   Other User Destination
      * @return Matching Score
      */
-    public double calculateScore(Loc user_start, Loc user_end, Loc search_start, Loc search_end) {
+    public double calculateScore(Loc userStart, Loc userEnd, Loc searchStart, Loc searchEnd) {
         double score;
 
         //Get Distance From Start
-        double distanceStart = Math.sqrt(Math.pow((search_start.getLat() - user_start.getLat()), 2)
-                + Math.pow((search_start.getLng() - user_start.getLng()), 2));
-        double distanceEnd = Math.sqrt(Math.pow((search_end.getLat() - user_end.getLat()), 2)
-                + Math.pow((search_end.getLng() - user_end.getLng()), 2));
+        double distanceStart = Math.sqrt(Math.pow((searchStart.getLat() - userStart.getLat()), 2)
+                + Math.pow((searchStart.getLng() - userStart.getLng()), 2));
+        double distanceEnd = Math.sqrt(Math.pow((searchEnd.getLat() - userEnd.getLat()), 2)
+                + Math.pow((searchEnd.getLng() - userEnd.getLng()), 2));
         score = (distanceStart * 0.7) + (distanceEnd * 0.3);
         return score;
     }

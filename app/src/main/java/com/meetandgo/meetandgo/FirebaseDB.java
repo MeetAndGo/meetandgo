@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,6 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.meetandgo.meetandgo.data.ChatMessage;
 import com.meetandgo.meetandgo.data.Journey;
+import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.data.User;
 
@@ -55,7 +57,7 @@ public class FirebaseDB {
     // TODO: Refactor
     private static void initializeDatabaseReferences() {
         String uid = getCurrentUserUid();
-        if(sDatabase == null){
+        if (sDatabase == null) {
             sDatabase = FirebaseDatabase.getInstance();
             sDatabase.setPersistenceEnabled(true);
         }
@@ -80,7 +82,7 @@ public class FirebaseDB {
      * @return DatabaseReference that refers to the users/uid database
      */
     public static DatabaseReference getUserDatabaseReference(String uid) {
-            sUsersDatabaseReference = sDatabase.getReference("users/" + uid);
+        sUsersDatabaseReference = sDatabase.getReference("users/" + uid);
         return sUsersDatabaseReference;
     }
 
@@ -108,9 +110,8 @@ public class FirebaseDB {
         // Get Current user saved in the phone, if it doesn't exist use a new one created for this
         Gson gson = new Gson();
         String json = mPrefs.getString(Constants.CURRENT_USER, "");
-        Log.d(TAG, json);
         User currentUser = gson.fromJson(json, User.class);
-        if (currentUser == null){
+        if (currentUser == null) {
             currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
         }
         final User[] user = {currentUser};
@@ -179,7 +180,8 @@ public class FirebaseDB {
 
     /**
      * Set the given journey to the given journey ID in firebaseDB
-     * @param jID ID that we want to link to the given journey
+     *
+     * @param jID     ID that we want to link to the given journey
      * @param journey
      * @return
      */
@@ -212,8 +214,9 @@ public class FirebaseDB {
 
     /**
      * Combine several users into one search and delete old searches
-     * @param sID search ID
-     * @param uID user ID
+     *
+     * @param sID      search ID
+     * @param uID      user ID
      * @param deleteID search to delete
      * @return boolean, return true if addition of user to search successful
      */
@@ -243,18 +246,17 @@ public class FirebaseDB {
     }
 
     /**
-     * #TODO MAAAAANNNUUUUUUUU, can you buy cookies?
-     * @param jID
-     * @param message
-     * @return
+     * Add message to the journey with the ID jID
+     *
+     * @param jID ID of the journey the message is added to
+     * @param message to add to the journey
+     * @return true if correctly added, false otherwise
      */
     public static boolean addMessageToJourney(String jID, ChatMessage message) {
         if (!isFirebaseInitialised()) return false;
         if (jID != null && message != null) {
             DatabaseReference databaseReference = sDatabase.getReference("journeys/" + jID + "/mMessages/");
             databaseReference.push().setValue(message);
-            //updateChatInUser(uid, databaseReference.getKey());
-
             return true;
         }
         return false;
@@ -314,7 +316,7 @@ public class FirebaseDB {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 User userToRate = snapshot.getValue(User.class);
-                userToRate.setNumOfRatings(userToRate.getNumOfRatings()+1);
+                userToRate.setNumOfRatings(userToRate.getNumOfRatings() + 1);
                 double userRating = ((userToRate.getRating() * (userToRate.getNumOfRatings() - 1))
                         + rating) / userToRate.getNumOfRatings();
                 userToRate.setRating(userRating);
@@ -351,6 +353,7 @@ public class FirebaseDB {
     /**
      * Whenever the class is sent to the server the timestamp is updated. See the data/Search class
      * for reference on how to use it
+     *
      * @return
      */
     public static HashMap<String, Object> getServerTime() {
@@ -368,26 +371,46 @@ public class FirebaseDB {
 
     /**
      * Retrieve every search from DB
+     *
      * @return List of all searches
      */
-    public List<Search> retrieveAllSearches() {
-        List<Search> searches = new ArrayList<>();
+    public static List<Search> retrieveSearchesBySearch(Search search) {
+        final List<Search> searches = new ArrayList<>();
         if (!isFirebaseInitialised()) return null;
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("searches");
-        ref.addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //Get map of users in datasnapshot
-                        Log.e(TAG,dataSnapshot.getValue().toString());
-                        //calculateSearch((Map<String,Object>) dataSnapshot.getValue(),Search userSearch);
-                    }
+        final Loc startLocation = search.getStartLocation();
+        Loc endLocation = search.getEndLocation();
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        //handle databaseError
-                    }
-                });
+        //TODO: make method to change from number to meters to e.g. restrict to 500 meters
+        sSearchDatabase.child("startLocation/lat").startAt(startLocation.getLat() - 10)
+                .endAt(startLocation.getLat() + 10).startAt(startLocation.getLng() - 10)
+                .endAt(startLocation.getLng() + 10).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                Search searchResult = dataSnapshot.getValue(Search.class);
+                 Log.d(TAG,"S-Lng: " + searchResult.getStartLocation().getLng());
+                 Log.d(TAG,"S-Lat: " + searchResult.getStartLocation().getLat());
+                 Log.d(TAG,"E-Lng: " + searchResult.getEndLocation().getLng());
+                 Log.d(TAG,"E-Lat: " + searchResult.getEndLocation().getLat());
+                 Log.d(TAG,"Previous Search ID: " + prevChildKey);
+
+                searches.add(searchResult);
+            }
+
+            @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override public void onCancelled(DatabaseError databaseError) {
+            }
+
+        });
+
+        Log.d(TAG, String.valueOf(searches.size()));
 
         return searches;
     }
@@ -395,5 +418,4 @@ public class FirebaseDB {
 
 
 }
-
 

@@ -72,7 +72,15 @@ public class ProfileActivity extends AppCompatActivity {
         mTextViewUserName.setText(currentUser.getFullName());
         mTextViewUserEmail.setText(currentUser.getEmail());
         String gender = currentUser.getGender().toString();
-        mAddToGroup.setText(gender.substring(0, 1).toUpperCase() + gender.substring(1));
+
+        if(gender.equals("FEMALE")){
+
+            mAddToGroup.setText(R.string.gender_female);
+        }else if(gender.equals("MALE")){
+            mAddToGroup.setText(R.string.gender_male);
+        }else{
+            mAddToGroup.setText(R.string.any);
+        }
     }
 
     private void setRatingBarInfo(User user) {

@@ -21,6 +21,8 @@ public class Search {
     private HashMap<String, Object> timeCreated;
 
 
+    public Search(){}
+
     public Search(Preferences iPreferences, Loc iStartLocation, Loc iEndLocation) {
         this.userId = FirebaseDB.getCurrentUserUid();
         this.additionalUsers = new ArrayList<>();

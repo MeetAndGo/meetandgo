@@ -26,9 +26,9 @@
     <string name="hello_commute">Hello Commute</string>
     <string name="hello_journey_history">Hello journey history</string>
     <string name="gender_array" />
-    <string name="any">Tous</string>
-    <string name="gender_male">Uniquement homme</string>
-    <string name="gender_female">Uniquement femme</string>
+    <string name="any">Autre</string>
+    <string name="gender_male">Homme</string>
+    <string name="gender_female">Femme</string>
     <string name="mode_walk">Marche</string>
     <string name="mode_car">Voiture</string>
     <string name="mode_taxi" >Taxi</string>

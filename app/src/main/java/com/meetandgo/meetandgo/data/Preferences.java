@@ -16,14 +16,16 @@ public class Preferences implements Serializable {
     private Gender userGender = Gender.ANY;
     private Mode mode = Mode.ANY;
 
+    public Preferences(){}
+
     public Preferences(User currentUser){
         this.userGender = currentUser.getGender();
     }
 
-    public Preferences(Gender preferred_gender, Mode mode, Gender user_gender){
-        this.preferredGender = preferred_gender;
+    public Preferences(Gender preferredGender, Mode mode, Gender userGender){
+        this.preferredGender = preferredGender;
         this.mode = mode;
-        this.userGender = user_gender;
+        this.userGender = userGender;
     }
 
     public Gender getPreferredGender() {
