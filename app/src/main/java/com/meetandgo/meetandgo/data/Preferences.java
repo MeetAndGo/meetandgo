@@ -12,16 +12,16 @@ public class Preferences implements Serializable {
     public enum Gender {ANY, MALE, FEMALE}
     public enum Mode {ANY, WALK, TAXI}
 
-    public Gender preferredGender = Gender.ANY;
-    public Gender userGender = Gender.ANY;
-    public Mode mode = Mode.ANY;
+    private Gender preferredGender = Gender.ANY;
+    private Gender userGender = Gender.ANY;
+    private Mode mode = Mode.ANY;
 
     public Preferences(User currentUser){
-        this.userGender = currentUser.gender;
+        this.userGender = currentUser.getGender();
     }
 
-    public Preferences(Gender gender, Mode mode, Gender user_gender){
-        this.preferredGender = gender;
+    public Preferences(Gender preferred_gender, Mode mode, Gender user_gender){
+        this.preferredGender = preferred_gender;
         this.mode = mode;
         this.userGender = user_gender;
     }
@@ -62,12 +62,11 @@ public class Preferences implements Serializable {
     }
 
     /**
-     *
      * @param m1 preferred mode of user 1
      * @param m2 preferred mode of user 2
      * @return true if mode ok false otherwise
      */
-    private static boolean checkMode(Mode m1, Mode m2)
+    public static boolean checkMode(Mode m1, Mode m2)
     {
         if (m1 == Mode.ANY || m2 == Mode.ANY || m1 == m2)
         {
@@ -79,14 +78,26 @@ public class Preferences implements Serializable {
     }
 
     /**
-     *
-     * @param g1 preferred mode of user 1
-     * @param g2 preferred mode of user 2
-     * @return true if mode ok false otherwise
+     * @param prefGender1 preferred gender of user 1
+     * @param prefGender2 preferred gender of user 2
+     * @param userGender1 gender of user 1
+     * @param userGender2 gender of user 2
+     * @return true if gender match preferences, false otherwise
      */
-    private static boolean checkGender(Gender g1, Gender g2)
+    public static boolean checkGender(Gender prefGender1, Gender prefGender2,
+                                       Gender userGender1, Gender userGender2)
     {
-        return true;
+        if (prefGender1 == Gender.ANY && prefGender2 == Gender.ANY) {
+            return true;
+        } else if (prefGender1 == Gender.ANY && prefGender2 == userGender1) {
+            return true;
+        } else if (prefGender1 == userGender2 && prefGender2 == Gender.ANY) {
+            return true;
+        } else if (prefGender1 == userGender2 && prefGender2 == userGender1) {
+            return true;
+        } else{
+            return false;
+        }
     }
 
     /**
@@ -95,12 +106,8 @@ public class Preferences implements Serializable {
      * @return boolean if match
      */
     public boolean checkPreferences(Preferences otherPreferences) {
-        //if(checkMode(this.mode, otherPreferences.mode))
-        if(this.preferredGender == Gender.ANY && this.mode == otherPreferences.mode)
-            return true;
-        else if(this.preferredGender.ordinal() == otherPreferences.userGender.ordinal() && this.mode == otherPreferences.mode)
-            return true;
-        else
-            return false;
+        return (checkMode(this.mode, otherPreferences.mode)
+                && checkGender(this.preferredGender, otherPreferences.preferredGender,
+                this.userGender, otherPreferences.userGender));
     }
 }

@@ -1,17 +1,19 @@
 package com.meetandgo.meetandgo.data;
 
 import android.location.Location;
+
 /**
  * Class to save the information of the user
  */
 public class User {
-    public String fullName;
-    public String email;
-    public double rating;
-    public int numOfRatings;
-    public Location position;
-    public int numOfTrips;
-    public Preferences.Gender gender;
+
+    private String fullName;
+    private String email;
+    private double rating;
+    private int numOfRatings;
+    private Location position;
+    private int numOfTrips;
+    private Preferences.Gender gender;
 
     public User() {
         this.fullName = "";
@@ -32,4 +34,61 @@ public class User {
         this.numOfTrips = 0;
         this.gender = null;
     }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public int getNumOfRatings() {
+        return numOfRatings;
+    }
+
+    public void setNumOfRatings(int numOfRatings) {
+        this.numOfRatings = numOfRatings;
+    }
+
+    public Location getPosition() {
+        return position;
+    }
+
+    public void setPosition(Location position) {
+        this.position = position;
+    }
+
+    public int getNumOfTrips() {
+        return numOfTrips;
+    }
+
+    public void setNumOfTrips(int numOfTrips) {
+        this.numOfTrips = numOfTrips;
+    }
+
+    public Preferences.Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Preferences.Gender gender) {
+        this.gender = gender;
+    }
+
 }

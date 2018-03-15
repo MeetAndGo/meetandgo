@@ -79,7 +79,7 @@ public class ChatsFragment extends Fragment {
 
                 if (messageText.equals("")) return;
 
-                ChatMessage message1 = new ChatMessage(messageText, FirebaseDB.getCurrentUser().fullName, FirebaseDB.getCurrentUserUid());
+                ChatMessage message1 = new ChatMessage(messageText, FirebaseDB.getCurrentUser().getFullName(), FirebaseDB.getCurrentUserUid());
                 mListMessages.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 
                 // Read the input field and push a new instance
@@ -182,7 +182,7 @@ public class ChatsFragment extends Fragment {
                 messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", model.getTimestampCreatedLong()));
 
                 // Handle the case when the message if from the current user
-                if (model.getMessageUser().equals(FirebaseDB.getCurrentUser().fullName)) {
+                if (model.getMessageUser().equals(FirebaseDB.getCurrentUser().getFullName())) {
                     colorLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.myMessageColor));
                     rightMarginLayout.setVisibility(View.GONE);
                     leftMarginLayout.setVisibility(View.VISIBLE);

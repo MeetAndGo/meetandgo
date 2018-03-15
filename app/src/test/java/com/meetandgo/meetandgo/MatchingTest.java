@@ -26,6 +26,26 @@ public class MatchingTest {
     SearchUtil searchUtil = new SearchUtil();
 
     @Test
+    public void checkModeTest() throws Exception {
+        assertTrue(Preferences.checkMode(Preferences.Mode.ANY, Preferences.Mode.TAXI));
+        assertTrue(Preferences.checkMode(Preferences.Mode.WALK, Preferences.Mode.ANY));
+        assertTrue(Preferences.checkMode(Preferences.Mode.ANY, Preferences.Mode.ANY));
+        assertFalse(Preferences.checkMode(Preferences.Mode.WALK, Preferences.Mode.TAXI));
+    }
+
+    @Test
+    public void checkGenderTest() throws Exception {
+        assertTrue(Preferences.checkGender(Preferences.Gender.ANY, Preferences.Gender.ANY, Preferences.Gender.MALE, Preferences.Gender.FEMALE));
+        assertTrue(Preferences.checkGender(Preferences.Gender.ANY, Preferences.Gender.MALE, Preferences.Gender.MALE, Preferences.Gender.FEMALE));
+        assertTrue(Preferences.checkGender(Preferences.Gender.FEMALE, Preferences.Gender.ANY, Preferences.Gender.MALE, Preferences.Gender.FEMALE));
+        assertTrue(Preferences.checkGender(Preferences.Gender.FEMALE, Preferences.Gender.MALE, Preferences.Gender.MALE, Preferences.Gender.FEMALE));
+        assertFalse(Preferences.checkGender(Preferences.Gender.FEMALE, Preferences.Gender.FEMALE, Preferences.Gender.MALE, Preferences.Gender.FEMALE));
+        assertFalse(Preferences.checkGender(Preferences.Gender.MALE, Preferences.Gender.MALE, Preferences.Gender.MALE, Preferences.Gender.FEMALE));
+        assertFalse(Preferences.checkGender(Preferences.Gender.MALE, Preferences.Gender.MALE, Preferences.Gender.MALE, Preferences.Gender.ANY));
+        assertTrue(Preferences.checkGender(Preferences.Gender.MALE, Preferences.Gender.ANY, Preferences.Gender.ANY, Preferences.Gender.MALE));
+    }
+
+    @Test
     public void checkPreferenceTest() throws Exception {
         Preferences curr_pref = new Preferences(Preferences.Gender.MALE, Preferences.Mode.ANY, Preferences.Gender.MALE);
         Preferences search1_pref = new Preferences(Preferences.Gender.MALE, Preferences.Mode.ANY, Preferences.Gender.FEMALE);
