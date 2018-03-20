@@ -19,6 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:layout_weight="3"
             android:layout_margin="5dp"
             android:orientation="horizontal">
@@ -45,11 +46,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="15dp"
-                    android:layout_marginBottom="3dp"
+                    android:layout_marginBottom="6dp"
                     android:text="Wiliam@gmail.com" />
 
                 <TextView
-                    android:id="@+id/toTextView"
+                    android:id="@+id/startTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -57,13 +58,6 @@
                     android:paddingLeft="15dp"
                     android:text="Wiliam@gmail.com" />
 
-                <TextView
-                    android:id="@+id/timeTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:text="Wiliam@gmail.com" />
             </LinearLayout>
 
             <LinearLayout

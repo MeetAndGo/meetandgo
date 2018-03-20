@@ -71,8 +71,8 @@ public class ChatsFragment extends Fragment {
         users.add("Paddy");
 
         curr_journey = new Journey(curr_loc, start, users);
-        //curr_journey.setmJid(FirebaseDB.addNewJourney(curr_journey));
-        curr_journey.setmJid("Viva Espana");
+        //curr_journey.setjId(FirebaseDB.addNewJourney(curr_journey));
+        curr_journey.setjId("Viva Espana");
         journey_key = FirebaseDB.addNewJourney(curr_journey);
         curr_user=FirebaseDB.getCurrentUser();
         curr_user.journeyIDs.add(journey_key);
@@ -183,7 +183,7 @@ public class ChatsFragment extends Fragment {
                 RelativeLayout leftMarginLayout = v.findViewById(R.id.left_margin);
                 RelativeLayout rightMarginLayout = v.findViewById(R.id.right_margin);
 
-                // Set their text
+                // Set their fromTextView
                 messageText.setText(model.getMessageText());
                 messageUser.setText(model.getMessageUser());
 

@@ -11,7 +11,7 @@
         <item>Female</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholfromTextViewtext -->
     <string name="gender_array" />
     <string name="mode_taxi" />
     <string name="stars" />

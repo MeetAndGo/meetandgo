@@ -2,6 +2,7 @@ package com.meetandgo.meetandgo.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,14 +31,19 @@ public class JourneyHistoryFragment extends Fragment {
     private static final String TAG = JourneyHistoryFragment.class.getSimpleName();
 
     private View view;
-    @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
+    @BindView(R.id.swiperefresh) SwipeRefreshLayout mSwipeRefreshLayout;
     private LinearLayoutManager mLayoutManager;
     private JourneyHistoryAdapter mAdapter;
     private ArrayList<Journey> mJourneyHistory = new ArrayList<>();
     public static Bus bus;
     private User mUser;
-    private ValueEventListener childEventListener;
+    private ValueEventListener valueEventListener;
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,10 +60,10 @@ public class JourneyHistoryFragment extends Fragment {
     }
 
     private void setUpEventListener() {
-        childEventListener = new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                //Log.d(TAG, "Something asd: " + dataSnapshot.getValue());
+                Log.d(TAG, dataSnapshot.toString());
                 Journey journey = dataSnapshot.getValue(Journey.class);
                 mAdapter.add(journey);
             }
@@ -85,19 +91,21 @@ public class JourneyHistoryFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         mUser = FirebaseDB.getCurrentUser(bus);
-        Log.e(TAG, mUser.toString());
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mUser = FirebaseDB.getCurrentUser(bus);
+            }
+        });
     }
 
     @Subscribe
     public void userLoadedListener(User user) {
         mUser = user;
         Log.d(TAG, "Something sklajdfasdfas: " + user.journeyIDs.toString());
-        FirebaseDB.getJourneys(user.journeyIDs, childEventListener);
-    }
+        FirebaseDB.getJourneys(user.journeyIDs, valueEventListener);
+        mSwipeRefreshLayout.setRefreshing(false);
 
-    @Subscribe
-    public void newJourney(Journey journey) {
-        Log.d(TAG, "Something asd: " + journey.getmJid().toString());
     }
 
 

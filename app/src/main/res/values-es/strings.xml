@@ -20,7 +20,7 @@
     <string name="drawer_close">Cerrar Navegación</string>
     <string name="menu_option_sign_out">Cerrar sesión</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholfromTextViewtext -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hello_journey_start">Hello journey start</string>
     <string name="hello_chats">Hello Chats</string>

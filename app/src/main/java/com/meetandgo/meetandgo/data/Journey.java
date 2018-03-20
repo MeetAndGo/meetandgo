@@ -5,87 +5,116 @@ import java.util.List;
 
 public class Journey {
 
-    private String mJid;
-    private Loc mStartLocation;
+    private String jId;
+    private Loc startLocation;
 
-    private long mStartTime;
-    private List<String> mUsers;
-    private List<ChatMessage> mMessages;
-    private boolean mActive;
+    private long startTime;
+    private List<String> users;
+    private List<ChatMessage> messages;
+    private Preferences.Mode mode;
+
+    private boolean active;
 
     public Journey() {
-        this.mJid = "";
-        this.mStartLocation = null;
-        this.mStartTime = -1;
-        this.mUsers = new ArrayList<String>();
-        this.mMessages = new ArrayList<ChatMessage>();
-        this.mActive=true;
+        this.jId = "";
+        this.startLocation = null;
+        this.startTime = -1;
+        this.users = new ArrayList<String>();
+        this.messages = new ArrayList<ChatMessage>();
+        this.active =true;
+        this.mode = Preferences.Mode.WALK;
     }
 
-    public Journey(Loc mStartPosition, long mStartTime, List<String> mUsers) {
-        this.mJid = "";
-        this.mStartLocation = mStartPosition;
-        this.mStartTime = mStartTime;
-        this.mUsers = mUsers;
-        this.mMessages = new ArrayList<ChatMessage>();
-        this.mActive=true;
+    public Journey(Loc mStartPosition, long startTime, List<String> users) {
+        this.jId = "";
+        this.startLocation = mStartPosition;
+        this.startTime = startTime;
+        this.users = users;
+        this.messages = new ArrayList<ChatMessage>();
+        this.active =true;
     }
 
-    public Journey(Loc mStartPosition, long mStartTime, List<String> mUsers, List<ChatMessage> mMessages) {
-        this.mJid = "";
-        this.mStartLocation = mStartPosition;
-        this.mStartTime = mStartTime;
-        this.mUsers = mUsers;
-        this.mMessages = mMessages ;
-        this.mActive=true;
+    public Journey(Loc mStartPosition, long startTime, List<String> users, List<ChatMessage> mMessages) {
+        this.jId = "";
+        this.startLocation = mStartPosition;
+        this.startTime = startTime;
+        this.users = users;
+        this.messages = mMessages ;
+        this.active =true;
     }
 
     public void deactivateJourney(){
-        this.mActive=false;
+        this.active =false;
 
     }
-    public String getmJid() {
-        return mJid;
+    public String getjId() {
+        return jId;
     }
 
-    public void setmJid(String journey_id) {
-        this.mJid = journey_id;
+    public void setjId(String journey_id) {
+        this.jId = journey_id;
     }
 
-    public Loc getmStartLocation() {
-        return mStartLocation;
+    public Loc getStartLocation() {
+        return startLocation;
     }
 
-    public void setmStartLocation(Loc start_location) {
-        this.mStartLocation = start_location;
+    public void setStartLocation(Loc start_location) {
+        this.startLocation = start_location;
     }
 
-    public long getmStartTime() {
-        return mStartTime;
+    public long getStartTime() {
+        return startTime;
     }
 
-    public void setmStartTime(long start_time) {
-        this.mStartTime = start_time;
+    public void setStartTime(long start_time) {
+        this.startTime = start_time;
     }
 
-    public List<String> getmUsers() {
-        return mUsers;
+    public List<String> getUsers() {
+        return users;
     }
 
-    public void setmUsers(List<String> mUsers) {
-        this.mUsers = mUsers;
+    public void setUsers(List<String> users) {
+        this.users = users;
     }
 
-    public List<ChatMessage> getmMessages() { return mMessages; }
+    public List<ChatMessage> getMessages() { return messages; }
 
-    public void setmMessages(List<ChatMessage> mMessages) { this.mMessages = mMessages; }
+    public void setMessages(List<ChatMessage> messages) { this.messages = messages; }
 
     public void addUser(String uId) {
-        mUsers.add(uId);
+        users.add(uId);
     }
 
     public void addMessage(ChatMessage message) {
-        mMessages.add(message);
+        messages.add(message);
+    }
+
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void update(Journey o) {
+        startLocation = o.getStartLocation();
+        startTime = o.getStartTime();
+        users = o.getUsers();
+        messages = o.getMessages();
+        active = o.isActive();
+    }
+
+
+    public Preferences.Mode getMode() {
+        return mode;
+    }
+
+    public void setMode(Preferences.Mode mode) {
+        this.mode = mode;
     }
 
 }
