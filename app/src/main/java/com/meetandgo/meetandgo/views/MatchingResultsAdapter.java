@@ -27,9 +27,7 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
         notifyItemInserted(mSearches.size()-1);
 
     }
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
+
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MatchingResultsAdapter(ArrayList<Search> searchesList, OnItemClickListener listener) {
@@ -68,8 +66,8 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
 
         public ViewHolder(View itemView) {
             super(itemView);
-            text = (TextView) itemView.findViewById(R.id.searchTextView);
-            image = (ImageView) itemView.findViewById(R.id.searchImageView);
+            text = (TextView) itemView.findViewById(R.id.fromTextView);
+            image = (ImageView) itemView.findViewById(R.id.walkImageView);
         }
 
         public void bind(final Search search, final OnItemClickListener listener) {

@@ -25,6 +25,7 @@ import com.squareup.otto.Bus;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -119,6 +120,45 @@ public class FirebaseDB {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 user[0] = snapshot.getValue(User.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+
+        getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
+        return user[0];
+    }
+
+
+    /**
+     * Give the current user, if the user does not exist on the database, we create the User with the
+     * data from the FirebaseUser object.
+     *
+     * @param bus Event bus handler when you want to do something after reading the user.
+     * @return the current user
+     */
+    public static User getCurrentUser(final Bus bus) {
+        if (!isFirebaseInitialised()) return null;
+
+        String uid = getCurrentUserUid();
+        FirebaseUser firebaseUser = sAuth.getCurrentUser();
+        if (firebaseUser == null) return null;
+
+        // Get Current user saved in the phone, if it doesn't exist use a new one created for this
+        Gson gson = new Gson();
+        String json = mPrefs.getString(Constants.CURRENT_USER, "");
+        User currentUser = gson.fromJson(json, User.class);
+        if (currentUser == null) {
+            currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
+        }
+        final User[] user = {currentUser};
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                user[0] = snapshot.getValue(User.class);
+                bus.post(user[0]);
             }
 
             @Override
@@ -416,5 +456,11 @@ public class FirebaseDB {
     }
 
 
+    public static void getJourneys(List<String> journeyIDs, ValueEventListener childEventListener) {
+        for (String journeyID : journeyIDs){
+            sJourneyDatabase.child(journeyID).addValueEventListener(childEventListener);
+        }
+
+    }
 }
 

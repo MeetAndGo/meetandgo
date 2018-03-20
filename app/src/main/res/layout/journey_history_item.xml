@@ -24,7 +24,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/walkImageView"
+                android:id="@+id/journeyImageView"
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:padding="8dp"
@@ -81,10 +81,9 @@
                     android:id="@+id/numberOfPeopleTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:textSize="20sp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
+                    android:textSize="15sp"
+                    android:textAlignment="center"
+                    android:gravity="center"
                     android:text="0" />
             </LinearLayout>
 

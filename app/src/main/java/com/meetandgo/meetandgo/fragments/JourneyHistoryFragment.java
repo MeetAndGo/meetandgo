@@ -2,62 +2,103 @@ package com.meetandgo.meetandgo.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.User;
+import com.meetandgo.meetandgo.views.JourneyHistoryAdapter;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+import com.squareup.otto.ThreadEnforcer;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class JourneyHistoryFragment extends Fragment {
 
-    private static final String TAG = "JourneyHistoryFragment";
-    private View mView;
+    private static final String TAG = JourneyHistoryFragment.class.getSimpleName();
+
+    private View view;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private JourneyHistoryAdapter mAdapter;
+    private ArrayList<Journey> mJourneyHistory = new ArrayList<>();
+    public static Bus bus;
     private User mUser;
-    @BindView(R.id.listHistoryJourneys) ListView listHistoryJourneys;
-    List<String>journey_history_ids;
-    ArrayAdapter adapter;
-
-    public JourneyHistoryFragment() {}
-
-    public static Fragment newInstance() {
-        JourneyHistoryFragment fragment = new JourneyHistoryFragment();
-        return fragment;
-    }
+    private ValueEventListener childEventListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        journey_history_ids = Arrays.asList(getResources().getStringArray(R.array.history));
-        mView = inflater.inflate(R.layout.fragment_journey_history, container, false);
-        ButterKnife.bind(this, mView);
+        view = inflater.inflate(R.layout.fragment_journey_history, container, false);
+        ButterKnife.bind(this, view);
 
+        bus = new Bus(ThreadEnforcer.MAIN);
+        bus.register(this);
 
-        mUser = FirebaseDB.getCurrentUser();
-        List<String> userJourneyIDs = mUser.journeyIDs;
-        userJourneyIDs.add("Viva Espana");
-        userJourneyIDs.add("Balamory");
-        userJourneyIDs.add("France Never Wins");
-        Log.e(TAG, mUser.journeyIDs.get(0));
-        if(userJourneyIDs.size() > 0) {
-            Log.e(TAG, userJourneyIDs.get(0));
-            adapter = new ArrayAdapter(getActivity().getApplicationContext(),
-                    R.layout.journey_history_list_item, userJourneyIDs);
-            listHistoryJourneys.setAdapter(adapter);
-
-            //mView = inflater.inflate(R.layout.fragment_journey_history, container, false);
-        }
-        return mView;
+        setUpEventListener();
+        setUpUI();
+        return view;
     }
+
+    private void setUpEventListener() {
+        childEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                //Log.d(TAG, "Something asd: " + dataSnapshot.getValue());
+                Journey journey = dataSnapshot.getValue(Journey.class);
+                mAdapter.add(journey);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        };
+    }
+
+    private void setUpUI() {
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        mAdapter = new JourneyHistoryAdapter(mJourneyHistory);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mUser = FirebaseDB.getCurrentUser(bus);
+        Log.e(TAG, mUser.toString());
+    }
+
+    @Subscribe
+    public void userLoadedListener(User user) {
+        mUser = user;
+        Log.d(TAG, "Something sklajdfasdfas: " + user.journeyIDs.toString());
+        FirebaseDB.getJourneys(user.journeyIDs, childEventListener);
+    }
+
+    @Subscribe
+    public void newJourney(Journey journey) {
+        Log.d(TAG, "Something asd: " + journey.getmJid().toString());
+    }
+
 
 }
