@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -26,13 +27,14 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MatchingResults extends AppCompatActivity {
-    private static final String TAG = MatchingResults.class.getSimpleName();
+public class MatchingResultsActivity extends AppCompatActivity {
+    private static final String TAG = MatchingResultsActivity.class.getSimpleName();
     @BindView(R.id.recyclerView)  RecyclerView mRecyclerView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     private LinearLayoutManager mLayoutManager;
     private MatchingResultsAdapter mAdapter;
     private ArrayList<Search> orderedSearches;
+    private MatchingResultsAdapter.OnItemClickListener listener;
     public static Bus bus;
 
 
@@ -43,8 +45,6 @@ public class MatchingResults extends AppCompatActivity {
 
         bus = new Bus(ThreadEnforcer.MAIN);
         bus.register(this);
-
-
 
         String json = getIntent().getStringExtra("currentUserSearch");
 
@@ -69,14 +69,30 @@ public class MatchingResults extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new MatchingResultsAdapter(orderedSearches);
+        mAdapter = new MatchingResultsAdapter(orderedSearches,listener);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(new MatchingResultsAdapter(orderedSearches, new MatchingResultsAdapter.OnItemClickListener() {
+            @Override public void onItemClick(Search search) {
+                Log.d(TAG,"clicked " + search.getUserId());
+            }
+        }));
+
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
     }
 
     @Subscribe
     public void nextMethod(Search o){
         mAdapter.add(o);
-
 
     }
 

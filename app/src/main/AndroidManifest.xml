@@ -57,7 +57,7 @@
 
         <!-- Matching Results Activity: Activity displaying the list of results from the search -->
         <activity
-            android:name=".activities.MatchingResults"
+            android:name=".activities.MatchingResultsActivity"
             android:screenOrientation="portrait" />
 
     </application>

@@ -48,7 +48,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
-import com.meetandgo.meetandgo.activities.MatchingResults;
+import com.meetandgo.meetandgo.activities.MatchingResultsActivity;
 import com.meetandgo.meetandgo.activities.PreferencesActivity;
 import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.Preferences;
@@ -439,7 +439,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void startMatchingResultsActivity(Search search) {
-        Intent matchingResultsIntent = new Intent(getActivity(), MatchingResults.class);
+        Intent matchingResultsIntent = new Intent(getActivity(), MatchingResultsActivity.class);
         Gson gson = new Gson();
         String json = gson.toJson(search);
         matchingResultsIntent.putExtra("currentUserSearch", json);

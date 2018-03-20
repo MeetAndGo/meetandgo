@@ -127,7 +127,8 @@ public class PreferencesActivity extends AppCompatActivity {
         getDelegate().invalidateOptionsMenu();
     }
 
-    @Override public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
         savePreferences();
         Intent intent = new Intent();
         intent.putExtra(PREFERENCES_EXTRA, mPreferences);

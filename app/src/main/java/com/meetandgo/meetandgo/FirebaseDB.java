@@ -384,13 +384,17 @@ public class FirebaseDB {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Search searchResult = dataSnapshot.getValue(Search.class);
-                Log.d(TAG,"S-Lng: " + searchResult.getStartLocation().getLng());
-                Log.d(TAG,"S-Lat: " + searchResult.getStartLocation().getLat());
-                Log.d(TAG,"E-Lng: " + searchResult.getEndLocation().getLng());
-                Log.d(TAG,"E-Lat: " + searchResult.getEndLocation().getLat());
-                Log.d(TAG,"Previous Search ID: " + prevChildKey);
-                searches.add(searchResult);
-                bus.post(searchResult);
+                Log.d(TAG, searchResult.getUserId());
+                Log.d(TAG, search.getUserId());
+                if (!searchResult.getUserId().equals(search.getUserId())) {
+                    Log.d(TAG, "S-Lng: " + searchResult.getStartLocation().getLng());
+                    Log.d(TAG, "S-Lat: " + searchResult.getStartLocation().getLat());
+                    Log.d(TAG, "E-Lng: " + searchResult.getEndLocation().getLng());
+                    Log.d(TAG, "E-Lat: " + searchResult.getEndLocation().getLat());
+                    Log.d(TAG, "Previous Search ID: " + prevChildKey);
+                    searches.add(searchResult);
+                    bus.post(searchResult);
+                }
             }
 
             @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {
