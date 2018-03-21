@@ -34,4 +34,9 @@ public class Loc {
         this.lng = lng;
     }
 
+
+    public String toString(){
+        return String.format("Lat: %s, Long: %s", getLat(), getLng());
+    }
+
 }

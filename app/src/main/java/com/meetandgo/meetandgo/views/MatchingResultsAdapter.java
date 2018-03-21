@@ -58,10 +58,6 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
         notifyDataSetChanged();
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(Search search);
-    }
-
     public void add(Search o) {
         mSearches.add(o);
         notifyItemInserted(mSearches.size()-1);
@@ -75,16 +71,14 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
 
         public ViewHolder(View itemView) {
             super(itemView);
-            text = (TextView) itemView.findViewById(R.id.fromTextView);
-            image = (ImageView) itemView.findViewById(R.id.walkImageView);
+            text = itemView.findViewById(R.id.fromTextView);
+            image = itemView.findViewById(R.id.walkImageView);
         }
 
         public void bind(final Search search, final OnItemClickListener listener) {
-            text.setText(search.getUserId());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     listener.onItemClick(search);
-                    //Log.d(TAG, search.toString());
                 }
             });
         }

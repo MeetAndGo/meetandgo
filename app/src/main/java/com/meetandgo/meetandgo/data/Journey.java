@@ -1,45 +1,39 @@
 package com.meetandgo.meetandgo.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Journey {
 
     private String jId;
     private Loc startLocation;
+    private String startLocationString;
 
     private long startTime;
     private List<String> users;
-    private List<ChatMessage> messages;
+    private HashMap<String, ChatMessage> messages;
     private Preferences.Mode mode;
-
     private boolean active;
 
     public Journey() {
         this.jId = "";
         this.startLocation = null;
+        this.startLocationString = "Location not found.";
         this.startTime = -1;
         this.users = new ArrayList<String>();
-        this.messages = new ArrayList<ChatMessage>();
+        this.messages = new HashMap<>();
         this.active =true;
         this.mode = Preferences.Mode.WALK;
     }
 
-    public Journey(Loc mStartPosition, long startTime, List<String> users) {
+    public Journey(Loc mStartPosition, String startLocationString, long startTime, List<String> users) {
+        this.startLocationString = startLocationString;
         this.jId = "";
         this.startLocation = mStartPosition;
         this.startTime = startTime;
         this.users = users;
-        this.messages = new ArrayList<ChatMessage>();
-        this.active =true;
-    }
-
-    public Journey(Loc mStartPosition, long startTime, List<String> users, List<ChatMessage> mMessages) {
-        this.jId = "";
-        this.startLocation = mStartPosition;
-        this.startTime = startTime;
-        this.users = users;
-        this.messages = mMessages ;
+        this.messages = new HashMap<>();
         this.active =true;
     }
 
@@ -79,18 +73,13 @@ public class Journey {
         this.users = users;
     }
 
-    public List<ChatMessage> getMessages() { return messages; }
+    public HashMap<String, ChatMessage> getMessages() { return messages; }
 
-    public void setMessages(List<ChatMessage> messages) { this.messages = messages; }
+    public void setMessages(HashMap<String, ChatMessage> messages) { this.messages = messages; }
 
     public void addUser(String uId) {
         users.add(uId);
     }
-
-    public void addMessage(ChatMessage message) {
-        messages.add(message);
-    }
-
 
     public boolean isActive() {
         return active;
@@ -117,4 +106,12 @@ public class Journey {
         this.mode = mode;
     }
 
+    public String getStartLocationString() {
+        return startLocationString;
+    }
+
+
+    public void setStartLocationString(String startLocationString) {
+        this.startLocationString = startLocationString;
+    }
 }

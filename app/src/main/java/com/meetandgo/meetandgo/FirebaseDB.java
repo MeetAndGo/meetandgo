@@ -294,7 +294,7 @@ public class FirebaseDB {
     public static boolean addMessageToJourney(String jID, ChatMessage message) {
         if (!isFirebaseInitialised()) return false;
         if (jID != null && message != null) {
-            DatabaseReference databaseReference = sDatabase.getReference("journeys/" + jID + "/mMessages/");
+            DatabaseReference databaseReference = sDatabase.getReference("journeys/" + jID + "/messages/");
             databaseReference.push().setValue(message);
             return true;
         }
@@ -402,8 +402,7 @@ public class FirebaseDB {
     }
 
     public static DatabaseReference getJourneyMessagesReference(String curr_journey) {
-
-        DatabaseReference journeyMessagesRef = sDatabase.getReference("journeys/" + curr_journey + "/mMessages");
+        DatabaseReference journeyMessagesRef = sDatabase.getReference("journeys/" + curr_journey + "/messages");
         journeyMessagesRef.keepSynced(true);
         return journeyMessagesRef;
     }
@@ -438,16 +437,20 @@ public class FirebaseDB {
                 }
             }
 
-            @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
             }
 
-            @Override public void onChildRemoved(DataSnapshot dataSnapshot) {
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
             }
 
-            @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
             }
 
-            @Override public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
 
         });
@@ -458,10 +461,47 @@ public class FirebaseDB {
 
 
     public static void getJourneys(List<String> journeyIDs, ValueEventListener childEventListener) {
-        for (String journeyID : journeyIDs){
+        for (String journeyID : journeyIDs) {
             sJourneyDatabase.child(journeyID).addValueEventListener(childEventListener);
         }
 
+    }
+
+    /**
+     * Adds the journey to the user given the user id
+     *
+     * @param uid     User Id
+     * @param journey Journey Object
+     */
+    public static void addJourneyToUser(final String uid, final Journey journey) {
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                if (user != null) {
+                    user.journeyIDs.add(journey.getjId());
+                    updateUser(uid, user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
+        Log.d(TAG, "uid");
+        getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
+    }
+
+    /**
+     * Updates a user given the user id with a new user object
+     * @param userID
+     * @param user
+     */
+    private static void updateUser(String userID, User user) {
+        if (userID != null && user != null) {
+            DatabaseReference userEntry = sDatabase.getReference("users/" + userID);
+            userEntry.setValue(user);
+        }
     }
 
     // TODO: Fix this function

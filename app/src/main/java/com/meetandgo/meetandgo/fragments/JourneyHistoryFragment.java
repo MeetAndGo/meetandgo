@@ -14,9 +14,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.activities.MainActivity;
 import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.views.JourneyHistoryAdapter;
+import com.meetandgo.meetandgo.views.OnItemClickListener;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
@@ -39,6 +41,8 @@ public class JourneyHistoryFragment extends Fragment {
     public static Bus bus;
     private User mUser;
     private ValueEventListener valueEventListener;
+    private OnItemClickListener mListener;
+
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -48,6 +52,7 @@ public class JourneyHistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         view = inflater.inflate(R.layout.fragment_journey_history, container, false);
         ButterKnife.bind(this, view);
 
@@ -78,7 +83,6 @@ public class JourneyHistoryFragment extends Fragment {
     }
 
     private void setUpUI() {
-
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -87,8 +91,16 @@ public class JourneyHistoryFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        mListener = new OnItemClickListener() {
+            @Override
+            public void onItemClick(Object object) {
+                Journey journey = (Journey) object;
+                startChatFragment(journey);
+            }
+        };
+
         // specify an adapter (see also next example)
-        mAdapter = new JourneyHistoryAdapter(mJourneyHistory);
+        mAdapter = new JourneyHistoryAdapter(mJourneyHistory, mListener);
         mRecyclerView.setAdapter(mAdapter);
 
         mUser = FirebaseDB.getCurrentUser(bus);
@@ -98,16 +110,17 @@ public class JourneyHistoryFragment extends Fragment {
                 mUser = FirebaseDB.getCurrentUser(bus);
             }
         });
+
     }
 
     @Subscribe
     public void userLoadedListener(User user) {
         mUser = user;
-        Log.d(TAG, "Something sklajdfasdfas: " + user.journeyIDs.toString());
         FirebaseDB.getJourneys(user.journeyIDs, valueEventListener);
         mSwipeRefreshLayout.setRefreshing(false);
-
     }
 
-
+    private void startChatFragment(Journey journey) {
+        ((MainActivity) getActivity()).openChatFragment(journey);
+    }
 }

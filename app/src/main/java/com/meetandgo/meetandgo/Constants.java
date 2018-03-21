@@ -13,4 +13,6 @@ public final class Constants {
     public static final String SHARED_PREFERENCES_NAME = "SHARED_PREFERENCES";
     public static final double SEARCH_RADIUS = 10.0;
     public static final int MAX_SEARCH_LIST_SIZE = 5;
+    public static final int JOURNEY_REQUEST_CODE = 1 ;
+    public static final String JOURNEY_ACTIVITY_EXTRA = "JOURNEY_ACTIVITY_EXTRA" ;
 }

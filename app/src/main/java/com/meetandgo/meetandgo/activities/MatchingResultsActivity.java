@@ -1,5 +1,6 @@
 package com.meetandgo.meetandgo.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -13,12 +14,14 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.google.gson.Gson;
+import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.utils.SearchUtil;
 import com.meetandgo.meetandgo.views.MatchingResultsAdapter;
+import com.meetandgo.meetandgo.views.OnItemClickListener;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
@@ -33,17 +36,21 @@ import butterknife.ButterKnife;
 public class MatchingResultsActivity extends AppCompatActivity {
 
     private static final String TAG = MatchingResultsActivity.class.getSimpleName();
-    @BindView(R.id.recyclerView)  RecyclerView mRecyclerView;
-    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
     private LinearLayoutManager mLayoutManager;
     private MatchingResultsAdapter mAdapter;
     private ArrayList<Search> orderedSearches = new ArrayList<>();
-    private MatchingResultsAdapter.OnItemClickListener listener;
+    private OnItemClickListener listener;
     public static Bus bus;
-    private  Search mCurrentUserSearch;
+    private Search mCurrentUserSearch;
     private ArrayList<Search> mSearches = new ArrayList<>();
 
-    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matching_results);
         ButterKnife.bind(this);
@@ -66,45 +73,59 @@ public class MatchingResultsActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        listener = new MatchingResultsAdapter.OnItemClickListener() {
-            @Override public void onItemClick(Search search) {
-                Log.d(TAG,"clicked " + search.getUserId());
+        listener = new OnItemClickListener() {
+            @Override
+            public void onItemClick(Object object) {
+                Search search = (Search) object;
+                Log.d(TAG, "clicked " + search.getUserId());
                 Journey journey = createJourney(search);
-                /*Intent intent = new Intent();
-                intent.putExtra(JOURNEY_EXTRA, journey);
-                setResult(0, intent);
-                finish();*/
+                updateJourneyUsers(journey);
+                startChatFragment(journey);
+
             }
         };
-        mAdapter = new MatchingResultsAdapter(orderedSearches,listener);
+        mAdapter = new MatchingResultsAdapter(orderedSearches, listener);
         mRecyclerView.setAdapter(mAdapter);
 
         //Matching algorithm
         FirebaseDB.retrieveSearchesBySearch(bus, mCurrentUserSearch);
 
         setUpToolbar();
-
-
-        //mRecyclerView.setAdapter(new MatchingResultsAdapter(orderedSearches, new MatchingResultsAdapter.OnItemClickListener() {
-        //    @Override public void onItemClick(Search search) {
-        //        Log.d(TAG,"clicked " + search.getUserId());
-        //    }
-        //}));
-
     }
 
     /**
+     * We add the journey id to the users that are currently in the journey, this is useful for having
+     * the journey in the history of journeys fragment and be able to access the chats.
+     * @param journey
+     */
+    private void updateJourneyUsers(Journey journey) {
+        for(String userID : journey.getUsers()){
+            FirebaseDB.addJourneyToUser(userID, journey);
+        }
+    }
+
+    private void startChatFragment(Journey journey) {
+        Intent mainActivityIntent = new Intent(this, MainActivity.class);
+        Gson gson = new Gson();
+        String json = gson.toJson(journey);
+        mainActivityIntent.putExtra(Constants.JOURNEY_EXTRA, json);
+        mainActivityIntent.putExtra(Constants.JOURNEY_ACTIVITY_EXTRA, "journey_activity");
+        startActivity(mainActivityIntent);
+        finish();
+    }
+    /**
      * Create journey (when clicking on match)
+     *
      * @param search (selected match)
      */
-    public Journey createJourney(Search search){
+    public Journey createJourney(Search search) {
         List<String> users = new ArrayList<String>();
         users.add(search.getUserId());
         users.add(mCurrentUserSearch.getUserId());
-        Journey journey = new Journey(search.getStartLocation(), new Date().getTime(),users);
+        Journey journey = new Journey(search.getStartLocation(), mCurrentUserSearch.getStartLocationString(),
+                new Date().getTime(), users);
         String journeyKey = FirebaseDB.addNewJourney(journey);
-        Log.e(TAG,journeyKey);
-        FirebaseDB.updateJourney(journeyKey,journey);
+        FirebaseDB.updateJourney(journeyKey, journey);
         return journey;
     }
 
@@ -119,10 +140,11 @@ public class MatchingResultsActivity extends AppCompatActivity {
 
     /**
      * The method with the @Subscribe decorator is called when we post from the bus object
+     *
      * @param search
      */
     @Subscribe
-    public void nextMethod(Search search){
+    public void nextMethod(Search search) {
         Log.e(TAG, search.getUserId());
         mSearches.add(search);
 

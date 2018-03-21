@@ -1,5 +1,6 @@
 package com.meetandgo.meetandgo.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -19,42 +21,38 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.activities.MainActivity;
 import com.meetandgo.meetandgo.data.ChatMessage;
 import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.JourneyHistory;
-import com.meetandgo.meetandgo.data.Loc;
-import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.utils.SerializationUtils;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.meetandgo.meetandgo.Constants.JOURNEY_EXTRA;
-
 public class ChatsFragment extends Fragment {
 
-    @BindView(R.id.msg_button) FloatingActionButton mSendMsgButton;
-    @BindView(R.id.input) EditText mTextInput;
-    @BindView(R.id.list_of_messages) ListView mListMessages;
-    @BindView(R.id.button_lets_go) Button mLetsGoButton;
-    @BindView(R.id.button_finish) Button mFinishButton;
+    @BindView(R.id.msg_button)
+    FloatingActionButton mSendMsgButton;
+    @BindView(R.id.input)
+    EditText mTextInput;
+    @BindView(R.id.list_of_messages)
+    ListView mListMessages;
+    @BindView(R.id.button_lets_go)
+    Button mLetsGoButton;
+    @BindView(R.id.button_finish)
+    Button mFinishButton;
 
     private static final String TAG = "ChatsFragment";
-    private static final int JOURNEY_REQUEST_CODE = 1;
     private View mView;
     private FirebaseListAdapter<ChatMessage> adapter;
 
     //TODO: Current journey should be given by the previous activity when matching
-    private Journey curr_journey;
-    private String journey_key;
-    private User curr_user;
+    private Journey mCurrentJourney;
+
     public ChatsFragment() {
     }
 
@@ -69,19 +67,17 @@ public class ChatsFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_chats, container, false);
         ButterKnife.bind(this, mView);
 
-        final Loc curr_loc = new Loc(12, 13);
-        long start = new Date().getTime();
-        List<String> users = new ArrayList<String>();
-        users.add("Paddy");
+        setUpEditText();
+        setUpBeginJourney();
+        setUpFinishJourney();
+        if (mCurrentJourney != null) {
+            updateClickListener();
+            displayChatMessages();
+        }
+        return mView;
+    }
 
-        curr_journey = new Journey(curr_loc, start, users);
-        //curr_journey.setjId(FirebaseDB.addNewJourney(curr_journey));
-        curr_journey.setjId("Viva Espana");
-        journey_key = FirebaseDB.addNewJourney(curr_journey);
-        curr_user=FirebaseDB.getCurrentUser();
-        curr_user.journeyIDs.add(journey_key);
-        FirebaseDB.addUser(curr_user);
-
+    private void updateClickListener() {
         mSendMsgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,10 +87,10 @@ public class ChatsFragment extends Fragment {
 
                 ChatMessage message1 = new ChatMessage(messageText, FirebaseDB.getCurrentUser().getFullName(), FirebaseDB.getCurrentUserUid());
                 mListMessages.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-
+                mListMessages.setStackFromBottom(true);
                 // Read the input field and push a new instance
                 // of ChatMessage to the Firebase database
-                FirebaseDB.addMessageToJourney(journey_key, message1);
+                FirebaseDB.addMessageToJourney(mCurrentJourney.getjId(), message1);
 
                 // Clear the input
                 mTextInput.setText("");
@@ -104,22 +100,13 @@ public class ChatsFragment extends Fragment {
 
             }
         });
-
-        setUpEditText();
-        setUpBeginJourney();
-        setUpFinishJourney();
-
-        //display message
-        displayChatMessages();
-
-        return mView;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, requestCode + " " + resultCode);
-        if (requestCode == JOURNEY_REQUEST_CODE) {
-            curr_journey = (Journey) data.getSerializableExtra(JOURNEY_EXTRA);
+        if (requestCode == Constants.JOURNEY_REQUEST_CODE) {
+            mCurrentJourney = (Journey) data.getSerializableExtra(Constants.JOURNEY_EXTRA);
 
         }
     }
@@ -145,39 +132,50 @@ public class ChatsFragment extends Fragment {
 
             }
 
-            @Override public void afterTextChanged(Editable editable) {
+            @Override
+            public void afterTextChanged(Editable editable) {
 
             }
         });
     }
+
     //TODO: Get searchID from current Journey
-    private void setUpBeginJourney(){
+    private void setUpBeginJourney() {
         mLetsGoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideKeyboard();
                 mLetsGoButton.setVisibility(View.GONE);
                 //test:
                 FirebaseDB.deleteSearch("-L7UbdMfY68vr_CFczoS");
                 mFinishButton.setVisibility(View.VISIBLE);
+
             }
         });
     }
 
-    private void setUpFinishJourney(){
+    private void hideKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private void setUpFinishJourney() {
         mFinishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                curr_journey.deactivateJourney();
+                mCurrentJourney.deactivateJourney();
 
                 MainActivity activity = (MainActivity) getActivity();
                 activity.setSelectedFragmentByMenuItem(R.id.menu_item_4);
-                JourneyHistory.journeyIDs.push(curr_journey);
+                JourneyHistory.journeyIDs.push(mCurrentJourney);
 
                 //update number of Journeys for all active users
-                for (int i=0; i<curr_journey.getUsers().size(); i++)
-                {
+                for (int i = 0; i < mCurrentJourney.getUsers().size(); i++) {
                     // TODO: Fix this function before uncommenting
-                    //FirebaseDB.incrementUserNumberOfJourney(curr_journey.getUsers().get(i));
+                    //FirebaseDB.incrementUserNumberOfJourney(mCurrentJourney.getUsers().get(i));
                 }
 
                 SerializationUtils sUtils = new SerializationUtils();
@@ -187,13 +185,9 @@ public class ChatsFragment extends Fragment {
     }
 
 
-    public void onStart() {
-        super.onStart();
-    }
-
     private void displayChatMessages() {
         adapter = new FirebaseListAdapter<ChatMessage>(getActivity(), ChatMessage.class,
-                R.layout.message, FirebaseDB.getJourneyMessagesReference(journey_key)) {
+                R.layout.message, FirebaseDB.getJourneyMessagesReference(mCurrentJourney.getjId())) {
             @Override
             protected void populateView(View v, ChatMessage model, int position) {
                 // Get references to the views of message.xml
@@ -227,7 +221,25 @@ public class ChatsFragment extends Fragment {
         };
 
         mListMessages.setAdapter(adapter);
+        scrollListViewToBottom();
     }
 
 
+    public void setJourney(Journey journey) {
+        this.mCurrentJourney = journey;
+        if (mCurrentJourney != null && mSendMsgButton !=null) {
+            updateClickListener();
+            displayChatMessages();
+        }
+    }
+
+    private void scrollListViewToBottom() {
+        mListMessages.post(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                mListMessages.setSelection(adapter.getCount() - 1);
+            }
+        });
+    }
 }

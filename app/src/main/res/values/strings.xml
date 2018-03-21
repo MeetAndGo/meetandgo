@@ -54,6 +54,7 @@
     <string name="confirm">Confirm</string>
     <string name="other">other</string>
     <string name="matching_results">Matching Results</string>
+    <string name="loc_not_found">Location not found.</string>
 
     <string-array name="gender_array">
         <item name="gender_any">Any</item>

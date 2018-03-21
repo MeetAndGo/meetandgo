@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Class of a user search, to store in firebase
  */
-public class Search implements Serializable{
+public class Search implements Serializable {
 
     private String userId;
     //additional users are those added to combine search between several users
@@ -18,11 +18,16 @@ public class Search implements Serializable{
     private Preferences userPreferences;
     private Loc startLocation = new Loc();
     private Loc endLocation = new Loc();
+    private String startLocationString;
+    private String endLocationString;
     private HashMap<String, Object> timeCreated;
 
-    public Search(){}
+    public Search() {
+    }
 
-    public Search(Preferences iPreferences, Loc iStartLocation, Loc iEndLocation) {
+    public Search(Preferences iPreferences, Loc iStartLocation, Loc iEndLocation, String startLocationString, String endLocationString) {
+        this.startLocationString = startLocationString;
+        this.endLocationString = endLocationString;
         this.userId = FirebaseDB.getCurrentUserUid();
         this.additionalUsers = new ArrayList<>();
         this.userPreferences = iPreferences;
@@ -32,8 +37,10 @@ public class Search implements Serializable{
     }
 
     // Test constructor
-    public Search(Preferences iPreferences, Loc iStartLocation, Loc iEndLocation, String userId) {
+    public Search(Preferences iPreferences, Loc iStartLocation, Loc iEndLocation, String userId, String startLocationString, String endLocationString) {
         this.userId = userId;
+        this.startLocationString = startLocationString;
+        this.endLocationString = endLocationString;
         this.additionalUsers = new ArrayList<>();
         this.userPreferences = iPreferences;
         this.startLocation = iStartLocation;
@@ -72,5 +79,19 @@ public class Search implements Serializable{
     public void setTimeCreated(HashMap<String, Object> time_created) {
         this.timeCreated = time_created;
     }
+    public String getStartLocationString() {
+        return startLocationString;
+    }
 
+    public void setStartLocationString(String startLocationString) {
+        this.startLocationString = startLocationString;
+    }
+
+    public String getEndLocationString() {
+        return endLocationString;
+    }
+
+    public void setEndLocationString(String endLocationString) {
+        this.endLocationString = endLocationString;
+    }
 }

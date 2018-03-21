@@ -1,5 +1,6 @@
 package com.meetandgo.meetandgo.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import com.google.gson.Gson;
 import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.fragments.ChatsFragment;
@@ -77,6 +80,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mToolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.toolbarColor));
+        String comingFromJourney = getIntent().getStringExtra(Constants.JOURNEY_ACTIVITY_EXTRA);
+        if(comingFromJourney != null && comingFromJourney.equals("journey_activity")){
+            // Get the journey from the intent
+            String json = getIntent().getStringExtra(Constants.JOURNEY_EXTRA);
+            Gson gson = new Gson();
+            Journey journey = gson.fromJson(json, Journey.class);
+            setSelectedFragmentByMenuItem(R.id.menu_item_2);
+            ((ChatsFragment)mChatsFragment).setJourney(journey);
+
+        }
     }
 
     @Override
@@ -133,8 +146,18 @@ public class MainActivity extends AppCompatActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             if (mDrawerLayout.isDrawerOpen(Gravity.START)) mDrawerLayout.closeDrawer(Gravity.START);
             else mDrawerLayout.openDrawer(Gravity.START);
+
+            hideKeyboard();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     /**
@@ -378,4 +401,12 @@ public class MainActivity extends AppCompatActivity {
         return (MapsFragment) mMapFragment;
     }
 
+    /**
+     * Opens the chat fragment substituting the chat to the journey chat
+     * @param journey
+     */
+    public void openChatFragment(Journey journey) {
+        setSelectedFragmentByMenuItem(R.id.menu_item_2);
+        ((ChatsFragment)mChatsFragment).setJourney(journey);
+    }
 }

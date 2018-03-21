@@ -18,6 +18,7 @@ import java.util.Objects;
 
 public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAdapter.ViewHolder> {
     private ArrayList<Journey> mJourneys = new ArrayList<>();
+    private OnItemClickListener mListener;
 
     public void add(Journey o) {
         boolean exists = false;
@@ -52,12 +53,21 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
             journeyImageView = itemView.findViewById(R.id.journeyImageView);
             numberOfUsersTextView = itemView.findViewById(R.id.numberOfPeopleTextView);
         }
+
+        public void bind(final Journey journey, final OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(journey);
+                }
+            });
+        }
     }
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public JourneyHistoryAdapter(ArrayList<Journey> journeysList) {
+    public JourneyHistoryAdapter(ArrayList<Journey> journeysList, OnItemClickListener listener) {
         mJourneys = journeysList;
+        mListener = listener;
     }
 
     // Create new views (invoked by the layout manager)
@@ -75,7 +85,7 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         Journey j = mJourneys.get(position);
-        holder.fromTextView.setText("Lat: " + j.getStartLocation().getLat() + ", Long: " + j.getStartLocation().getLng());
+        holder.fromTextView.setText("Start: " + j.getStartLocationString());
         holder.startTimeTextView.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", j.getStartTime()));
         holder.numberOfUsersTextView.setText(String.valueOf(j.getUsers().size()));
 
@@ -85,6 +95,8 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
             holder.journeyImageView.setImageResource(R.drawable.ic_directions_walk_black_48dp);
 
         }
+        // Bind the holder for having the click functionality
+        holder.bind(mJourneys.get(position), mListener);
 
     }
 

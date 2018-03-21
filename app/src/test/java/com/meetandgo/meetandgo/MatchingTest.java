@@ -99,26 +99,26 @@ public class MatchingTest {
         Loc user_start = new Loc(0.0,0.0);
         Loc user_end = new Loc(20.0,10.0);
         String user_id = "This is strange, indeed!";
-        Search userSearch = new Search(user_prefs, user_start, user_end, user_id);
+        Search userSearch = new Search(user_prefs,user_start,user_end, user_id, "My Start Street", "My End Street");
 
         // Firebase searches
         Preferences prefs1 = new Preferences(Preferences.Gender.FEMALE, Preferences.Mode.ANY, Preferences.Gender.MALE);
         Loc start1 = new Loc(0.0,0.0);
         Loc end1 = new Loc(20.0,10.0);
         String uid = "fjkhdzkfhsdjk";
-        Search search1 = new Search(prefs1,start1,end1,uid);
+        Search search1 = new Search(prefs1,start1,end1,uid, "My Start Street", "My End Street");
 
         Preferences prefs2 = new Preferences(Preferences.Gender.MALE, Preferences.Mode.ANY, Preferences.Gender.MALE);
         Loc start2 = new Loc(0.0,0.0);
         Loc end2 = new Loc(25.0,10.0);
         String uid2 = "sgsdgd";
-        Search search2 = new Search(prefs2,start2,end2,uid2);
+        Search search2 = new Search(prefs2,start2,end2,uid2, "My Start Street", "My End Street");
 
         Preferences prefs3 = new Preferences(Preferences.Gender.MALE, Preferences.Mode.ANY, Preferences.Gender.MALE);
         Loc start3 = new Loc(0.0,0.0);
         Loc end3 = new Loc(100.0,10.0);
         String uid3 = "gxdfs";
-        Search search3 = new Search(prefs3,start3,end3,uid3);
+        Search search3 = new Search(prefs3,start3,end3,uid3, "My Start Street", "My End Street");
 
         ArrayList<Search> searches = new ArrayList<>();
         searches.add(search1);

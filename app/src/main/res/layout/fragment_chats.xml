@@ -40,7 +40,8 @@
 
         android:background="#EEEEEE"
         android:divider="@android:color/transparent"
-        android:transcriptMode="alwaysScroll" />
+        android:transcriptMode="alwaysScroll"
+        android:stackFromBottom="true"/>
 
     <LinearLayout
         android:id="@+id/message_layout"
