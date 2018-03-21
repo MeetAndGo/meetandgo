@@ -463,5 +463,32 @@ public class FirebaseDB {
         }
 
     }
+
+    // TODO: Fix this function
+//    /**
+//     * Increment the uID number of journey after a journey is completed
+//     * (by clicking on the journey is over button in the chat fragment)
+//     *
+//     * @param uID user ID with a new journey completed
+//     */
+//    public static void incrementUserNumberOfJourney(String uID) {
+//        final DatabaseReference tempUserRef = sDatabase.getReference("users/" + uID +"/numOfTrips/");
+//
+//        Log.d(TAG, "in IncrementNumJourneys");
+//
+//        ValueEventListener valueEventListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                int tempNumberOfJourney = snapshot.getValue(int.class);
+//                tempUserRef.setValue(tempNumberOfJourney + 1);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        };
+//        tempUserRef.addListenerForSingleValueEvent(valueEventListener);
+//
+//    }
 }
 

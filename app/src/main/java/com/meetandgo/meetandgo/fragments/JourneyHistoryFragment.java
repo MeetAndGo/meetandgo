@@ -65,6 +65,7 @@ public class JourneyHistoryFragment extends Fragment {
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 Log.d(TAG, dataSnapshot.toString());
                 Journey journey = dataSnapshot.getValue(Journey.class);
+                Log.d(TAG, String.valueOf(journey));
                 mAdapter.add(journey);
             }
 
