@@ -33,9 +33,11 @@ public class MatchingResultsActivity extends AppCompatActivity {
     @BindView(R.id.toolbar) Toolbar mToolbar;
     private LinearLayoutManager mLayoutManager;
     private MatchingResultsAdapter mAdapter;
-    private ArrayList<Search> orderedSearches;
+    private ArrayList<Search> orderedSearches = new ArrayList<>();
     private MatchingResultsAdapter.OnItemClickListener listener;
     public static Bus bus;
+    private  Search mCurrentUserSearch;
+    private ArrayList<Search> mSearches = new ArrayList<>();
 
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,16 +51,8 @@ public class MatchingResultsActivity extends AppCompatActivity {
         String json = getIntent().getStringExtra("currentUserSearch");
 
         Gson gson = new Gson();
-        Search currentUserSearch = gson.fromJson(json, Search.class);
-        Log.d(TAG, currentUserSearch.getUserId());
-
-        //Matching algorithm
-        ArrayList<Search> searches = FirebaseDB.retrieveSearchesBySearch(bus, currentUserSearch);
-        orderedSearches = SearchUtil.calculateSearch(searches, currentUserSearch);
-
-        Log.d(TAG, String.valueOf(orderedSearches.size()));
-
-        setUpToolbar();
+        mCurrentUserSearch = gson.fromJson(json, Search.class);
+        Log.d(TAG, mCurrentUserSearch.getUserId());
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -69,13 +63,25 @@ public class MatchingResultsActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new MatchingResultsAdapter(orderedSearches,listener);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setAdapter(new MatchingResultsAdapter(orderedSearches, new MatchingResultsAdapter.OnItemClickListener() {
+        listener = new MatchingResultsAdapter.OnItemClickListener() {
             @Override public void onItemClick(Search search) {
                 Log.d(TAG,"clicked " + search.getUserId());
             }
-        }));
+        };
+        mAdapter = new MatchingResultsAdapter(orderedSearches,listener);
+        mRecyclerView.setAdapter(mAdapter);
+
+        //Matching algorithm
+        FirebaseDB.retrieveSearchesBySearch(bus, mCurrentUserSearch);
+
+        setUpToolbar();
+
+
+        //mRecyclerView.setAdapter(new MatchingResultsAdapter(orderedSearches, new MatchingResultsAdapter.OnItemClickListener() {
+        //    @Override public void onItemClick(Search search) {
+        //        Log.d(TAG,"clicked " + search.getUserId());
+        //    }
+        //}));
 
     }
 
@@ -90,9 +96,19 @@ public class MatchingResultsActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * The method with the @Subscribe decorator is called when we post from the bus object
+     * @param search
+     */
     @Subscribe
-    public void nextMethod(Search o){
-        mAdapter.add(o);
+    public void nextMethod(Search search){
+        Log.e(TAG, search.getUserId());
+        mSearches.add(search);
+
+        orderedSearches = SearchUtil.calculateSearch(mSearches, mCurrentUserSearch);
+        mAdapter.setListOfSearches(orderedSearches);
+
+        Log.e(TAG, String.valueOf(orderedSearches.size()));
 
     }
 

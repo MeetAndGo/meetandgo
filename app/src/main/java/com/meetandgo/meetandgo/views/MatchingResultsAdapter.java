@@ -15,19 +15,12 @@ import java.util.ArrayList;
 public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResultsAdapter.ViewHolder> {
 
     private static final String TAG = "MatchingResultsAdapter";
-
-    public interface OnItemClickListener {
-        void onItemClick(Search search);
-    }
     private ArrayList<Search> mSearches;
     private OnItemClickListener listener;
 
-    public void add(Search o) {
-        mSearches.add(o);
-        notifyItemInserted(mSearches.size()-1);
-
+    public ArrayList<Search> getSearches() {
+        return mSearches;
     }
-
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MatchingResultsAdapter(ArrayList<Search> searchesList, OnItemClickListener listener) {
@@ -57,6 +50,22 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
     @Override
     public int getItemCount() {
         return mSearches.size();
+    }
+
+
+    public void setListOfSearches(ArrayList<Search> searches) {
+        this.mSearches = searches;
+        notifyDataSetChanged();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Search search);
+    }
+
+    public void add(Search o) {
+        mSearches.add(o);
+        notifyItemInserted(mSearches.size()-1);
+
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

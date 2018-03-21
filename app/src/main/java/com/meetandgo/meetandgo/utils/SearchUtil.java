@@ -1,11 +1,15 @@
 package com.meetandgo.meetandgo.utils;
 
+import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.Search;
 
 import java.util.ArrayList;
 
 public final class SearchUtil {
+
+    private static final String TAG = "SearchUtil"; //SearchUtil.class.getSimpleName();
+
     /**
      * Calculates the Matching Score
      *
@@ -29,13 +33,11 @@ public final class SearchUtil {
 
     public static ArrayList<Search> calculateSearch(ArrayList<Search> searches, Search currentUserSearch) {
 
-        ArrayList<Search> results = new ArrayList<>();
         double[][] resultOrder = new double[searches.size()][2];
 
         int count = 0;
         int validIndexes = 0;
         for(Search search : searches){
-            results.add(search);
             //PROCESS SEARCH
             if (!search.getUserId().equals(currentUserSearch.getUserId())) {
                 //Check Preference
@@ -58,10 +60,15 @@ public final class SearchUtil {
         DataStructureUtils util = new DataStructureUtils();
         double[][] sortedResults = util.sort2DArray(resultOrder);
 
+        //Log.d(TAG, "in calculateSearch");
+        //Log.d(TAG, "searches size " + searches.size());
+
         //Create ArrayList of results
         ArrayList<Search> list = new ArrayList<>();
-        for (int i = sortedResults.length - validIndexes; i < sortedResults.length; i++) {
-            list.add(results.get((int) sortedResults[i][1]));
+        int resultCount = 0;
+        for (int i = sortedResults.length - validIndexes; i < sortedResults.length && resultCount < Constants.MAX_SEARCH_LIST_SIZE; i++, resultCount++) {
+            list.add(searches.get((int) sortedResults[i][1]));
+            //Log.d(TAG, String.valueOf(resultCount));
         }
         return list;
     }

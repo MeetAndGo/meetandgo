@@ -54,8 +54,7 @@ public class ChatsFragment extends Fragment {
     }
 
     public static Fragment newInstance() {
-        ChatsFragment fragment = new ChatsFragment();
-        return fragment;
+        return new ChatsFragment();
     }
 
     @Override

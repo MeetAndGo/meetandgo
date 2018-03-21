@@ -9,9 +9,8 @@ import com.meetandgo.meetandgo.utils.SearchUtil;
 
 import org.junit.Test;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -100,7 +99,7 @@ public class MatchingTest {
         Loc user_start = new Loc(0.0,0.0);
         Loc user_end = new Loc(20.0,10.0);
         String user_id = "This is strange, indeed!";
-        Search userSearch = new Search(user_prefs,user_start,user_end, user_id);
+        Search userSearch = new Search(user_prefs, user_start, user_end, user_id);
 
         // Firebase searches
         Preferences prefs1 = new Preferences(Preferences.Gender.FEMALE, Preferences.Mode.ANY, Preferences.Gender.MALE);
@@ -121,10 +120,10 @@ public class MatchingTest {
         String uid3 = "gxdfs";
         Search search3 = new Search(prefs3,start3,end3,uid3);
 
-        Map<String,Object> searches = new HashMap<>();
-        searches.put("SearchID1",search1);
-        searches.put("SearchID2",search2);
-        searches.put("SearchID3",search3);
+        ArrayList<Search> searches = new ArrayList<>();
+        searches.add(search1);
+        searches.add(search2);
+        searches.add(search3);
 
         List<Search> results = searchUtil.calculateSearch(searches,userSearch);
         assertEquals(results.get(0),search2);

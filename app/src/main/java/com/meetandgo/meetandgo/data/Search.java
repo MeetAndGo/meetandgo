@@ -38,7 +38,7 @@ public class Search implements Serializable{
         this.userPreferences = iPreferences;
         this.startLocation = iStartLocation;
         this.endLocation = iEndLocation;
-        this.timeCreated = FirebaseDB.getServerTime();
+        this.timeCreated = null;
     }
 
     public String getUserId() {
