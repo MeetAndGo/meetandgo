@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import com.google.gson.Gson;
 import com.meetandgo.meetandgo.FirebaseDB;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.utils.SearchUtil;
 import com.meetandgo.meetandgo.views.MatchingResultsAdapter;
@@ -23,11 +24,14 @@ import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MatchingResultsActivity extends AppCompatActivity {
+
     private static final String TAG = MatchingResultsActivity.class.getSimpleName();
     @BindView(R.id.recyclerView)  RecyclerView mRecyclerView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -38,7 +42,6 @@ public class MatchingResultsActivity extends AppCompatActivity {
     public static Bus bus;
     private  Search mCurrentUserSearch;
     private ArrayList<Search> mSearches = new ArrayList<>();
-
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,11 @@ public class MatchingResultsActivity extends AppCompatActivity {
         listener = new MatchingResultsAdapter.OnItemClickListener() {
             @Override public void onItemClick(Search search) {
                 Log.d(TAG,"clicked " + search.getUserId());
+                Journey journey = createJourney(search);
+                /*Intent intent = new Intent();
+                intent.putExtra(JOURNEY_EXTRA, journey);
+                setResult(0, intent);
+                finish();*/
             }
         };
         mAdapter = new MatchingResultsAdapter(orderedSearches,listener);
@@ -85,7 +93,20 @@ public class MatchingResultsActivity extends AppCompatActivity {
 
     }
 
-
+    /**
+     * Create journey (when clicking on match)
+     * @param search (selected match)
+     */
+    public Journey createJourney(Search search){
+        List<String> users = new ArrayList<String>();
+        users.add(search.getUserId());
+        users.add(mCurrentUserSearch.getUserId());
+        Journey journey = new Journey(search.getStartLocation(), new Date().getTime(),users);
+        String journeyKey = FirebaseDB.addNewJourney(journey);
+        Log.e(TAG,journeyKey);
+        FirebaseDB.updateJourney(journeyKey,journey);
+        return journey;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -124,4 +145,6 @@ public class MatchingResultsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(R.string.matching_results);
     }
+
+
 }

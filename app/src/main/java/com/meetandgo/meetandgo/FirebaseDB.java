@@ -228,6 +228,7 @@ public class FirebaseDB {
         if (!isFirebaseInitialised()) return "";
         if (jID != null && journey != null) {
             DatabaseReference journeyEntry = sDatabase.getReference("journeys/" + jID);
+            journey.setjId(jID);
             journeyEntry.setValue(journey);
             return journeyEntry.getKey();
         }

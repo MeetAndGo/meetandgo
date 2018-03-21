@@ -450,7 +450,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * Creates an intent, adds location data to it as an extra, and starts the intent service for
      * fetching an address.
      */
-    private void getLocationName(Location location) {
+    public void getLocationName(Location location) {
         // Create an intent for passing to the intent service responsible for fetching the address.
         Intent intent = new Intent(getActivity(), FetchAddressIntentService.class);
 

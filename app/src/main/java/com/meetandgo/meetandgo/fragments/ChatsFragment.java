@@ -1,5 +1,6 @@
 package com.meetandgo.meetandgo.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.meetandgo.meetandgo.Constants.JOURNEY_EXTRA;
+
 public class ChatsFragment extends Fragment {
 
     @BindView(R.id.msg_button) FloatingActionButton mSendMsgButton;
@@ -43,6 +47,7 @@ public class ChatsFragment extends Fragment {
     @BindView(R.id.button_finish) Button mFinishButton;
 
     private static final String TAG = "ChatsFragment";
+    private static final int JOURNEY_REQUEST_CODE = 1;
     private View mView;
     private FirebaseListAdapter<ChatMessage> adapter;
 
@@ -108,6 +113,15 @@ public class ChatsFragment extends Fragment {
         displayChatMessages();
 
         return mView;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, requestCode + " " + resultCode);
+        if (requestCode == JOURNEY_REQUEST_CODE) {
+            curr_journey = (Journey) data.getSerializableExtra(JOURNEY_EXTRA);
+
+        }
     }
 
     private void setUpEditText() {
