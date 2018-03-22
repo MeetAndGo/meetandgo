@@ -16,4 +16,6 @@
     <color name="myMessageColor">#c3e7ff</color>
     <color name="othersMessageColor">#a7ffcc</color>
     <color name="colorSoftSoftBlue">#f1f1f1</color>
+    <color name="activeJourney">#27ae60</color>
+    <color name="inactiveJourney">#c0392b</color>
 </resources>

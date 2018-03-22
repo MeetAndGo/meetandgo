@@ -1,6 +1,7 @@
 package com.meetandgo.meetandgo.views;
 
 import android.annotation.SuppressLint;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAdapter.ViewHolder> {
     private ArrayList<Journey> mJourneys = new ArrayList<>();
@@ -65,7 +68,8 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
 
         public void bind(final Journey journey, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     listener.onItemClick(journey);
                 }
             });
@@ -98,11 +102,16 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
         holder.startTimeTextView.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", j.getStartTime()));
         holder.numberOfUsersTextView.setText(String.valueOf(j.getUsers().size()));
 
-        if (j.getMode() == Preferences.Mode.TAXI){
+        if (j.getMode() == Preferences.Mode.TAXI) {
             holder.journeyImageView.setImageResource(R.drawable.ic_local_taxi_black_48dp);
-        }else if (j.getMode() == Preferences.Mode.WALK){
+        } else if (j.getMode() == Preferences.Mode.WALK) {
             holder.journeyImageView.setImageResource(R.drawable.ic_directions_walk_black_48dp);
 
+        }
+        if (j.isActive()) {
+            holder.journeyImageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.activeJourney));
+        } else {
+            holder.journeyImageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.inactiveJourney));
         }
         // Bind the holder for having the click functionality
         holder.bind(mJourneys.get(position), mListener);
@@ -116,7 +125,8 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
     }
 
     public class CustomComparator implements Comparator<Journey> {
-        @Override public int compare(Journey j1, Journey j2) {
+        @Override
+        public int compare(Journey j1, Journey j2) {
             return Long.compare(j1.getStartTime(), j2.getStartTime());
         }
     }

@@ -175,7 +175,7 @@ public class ChatsFragment extends Fragment {
                 activity.setSelectedFragmentByMenuItem(R.id.menu_item_journey_history);
                 JourneyHistory.journeyIDs.push(mCurrentJourney);
 
-
+                FirebaseDB.updateJourney(mCurrentJourney.getjId(),mCurrentJourney);
 
                 SerializationUtils sUtils = new SerializationUtils();
                 sUtils.serializeJourneyHistory(getContext());
