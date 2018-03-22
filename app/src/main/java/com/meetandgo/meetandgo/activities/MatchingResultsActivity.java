@@ -120,18 +120,18 @@ public class MatchingResultsActivity extends AppCompatActivity {
      * @param search
      */
     private void askConfirmation(final Search search) {
-
         new LovelyStandardDialog(this, LovelyStandardDialog.ButtonLayout.HORIZONTAL)
                 .setTopColorRes(R.color.colorPrimaryDark)
                 .setButtonsColorRes(R.color.colorPrimary)
                 // TODO: Change Icon to something related to journeys
-                .setIcon(R.drawable.ic_face_white_48dp)
+                .setIcon(R.drawable.ic_chat_black_48dp)
                 .setMessage(R.string.confirmation_message)
                 .setPositiveButton(android.R.string.yes, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Journey journey = createJourney(search);
                         updateJourneyUsers(journey);
+                        combineAndUpdateSearch();
                         startChatFragment(journey);
 
                     }
@@ -141,8 +141,14 @@ public class MatchingResultsActivity extends AppCompatActivity {
     }
 
     /**
+     * Combines the two searches from the two or more users that are in the search adding the new user
+     * and deleting the previous user search.
+     */
+    private void combineAndUpdateSearch() {
+    }
+
+    /**
      * Create journey (when clicking on match)
-     *
      * @param search (selected match)
      */
     public Journey createJourney(Search search) {
@@ -167,7 +173,6 @@ public class MatchingResultsActivity extends AppCompatActivity {
 
     /**
      * The method with the @Subscribe decorator is called when we post from the bus object
-     *
      * @param search
      */
     @Subscribe

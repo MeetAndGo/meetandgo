@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             if (mDrawerLayout.isDrawerOpen(Gravity.START)) mDrawerLayout.closeDrawer(Gravity.START);
             else mDrawerLayout.openDrawer(Gravity.START);
-
             hideKeyboard();
         }
         return super.onOptionsItemSelected(item);

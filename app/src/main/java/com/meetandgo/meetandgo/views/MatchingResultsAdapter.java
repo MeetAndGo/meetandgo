@@ -33,7 +33,7 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
     // Create new views (invoked by the layout manager)
     @Override
     public MatchingResultsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+                                                                int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.matching_results_item, parent, false);
         return new ViewHolder(v);
     }
@@ -49,13 +49,11 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
         holder.numberOfUsersTextView.setText(String.valueOf(search.getAdditionalUsers().size() + 1));
         holder.startTimeTextView.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", (Long) search.getTimeCreated().get("timestamp")));
 
-        if (search.getUserPreferences().getMode() == Preferences.Mode.TAXI){
+        if (search.getUserPreferences().getMode() == Preferences.Mode.TAXI) {
             holder.journeyImageView.setImageResource(R.drawable.ic_local_taxi_black_48dp);
-        }else if (search.getUserPreferences().getMode() == Preferences.Mode.WALK){
+        } else if (search.getUserPreferences().getMode() == Preferences.Mode.WALK) {
             holder.journeyImageView.setImageResource(R.drawable.ic_directions_walk_black_48dp);
-
         }
-        // TODO: COLOR HERE!
         holder.bind(mSearches.get(position), listener);
 
     }
@@ -83,7 +81,7 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
      */
     public void add(Search o) {
         mSearches.add(o);
-        notifyItemInserted(mSearches.size()-1);
+        notifyItemInserted(mSearches.size() - 1);
 
     }
 

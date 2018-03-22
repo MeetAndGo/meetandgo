@@ -35,7 +35,7 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
         boolean exists = false;
         for (int i = 0; i < mJourneys.size(); i++) {
             Journey j = mJourneys.get(i);
-            if (Objects.equals(j.getjId(), o.getjId())) {
+            if (Objects.equals(j.getjID(), o.getjID())) {
                 j.update(o);
                 notifyItemChanged(i);
                 exists = true;
@@ -112,7 +112,6 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
             holder.journeyImageView.setImageResource(R.drawable.ic_local_taxi_black_48dp);
         } else if (j.getMode() == Preferences.Mode.WALK) {
             holder.journeyImageView.setImageResource(R.drawable.ic_directions_walk_black_48dp);
-
         }
         if (j.isActive()) {
             holder.journeyImageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.activeJourney));

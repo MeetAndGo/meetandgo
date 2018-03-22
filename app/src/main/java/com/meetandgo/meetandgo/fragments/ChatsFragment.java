@@ -96,7 +96,7 @@ public class ChatsFragment extends Fragment {
                 mListMessages.setStackFromBottom(true);
                 // Read the input field and push a new instance
                 // of ChatMessage to the Firebase database
-                FirebaseDB.addMessageToJourney(mCurrentJourney.getjId(), message1);
+                FirebaseDB.addMessageToJourney(mCurrentJourney.getjID(), message1);
 
                 // Clear the input
                 mTextInput.setText("");
@@ -165,8 +165,9 @@ public class ChatsFragment extends Fragment {
             public void onClick(View view) {
                 hideKeyboard();
                 mLetsGoButton.setVisibility(View.GONE);
-                //test:
-                FirebaseDB.deleteSearch("-L7UbdMfY68vr_CFczoS");
+                // TODO: Delete the search but we dont have it in this class, maybe have the searchID,
+                // that generated the Journey???
+                FirebaseDB.deleteSearch("");
                 mFinishButton.setVisibility(View.VISIBLE);
 
             }
@@ -197,7 +198,7 @@ public class ChatsFragment extends Fragment {
                 activity.setSelectedFragmentByMenuItem(R.id.menu_item_journey_history);
                 JourneyHistory.journeyIDs.push(mCurrentJourney);
 
-                FirebaseDB.updateJourney(mCurrentJourney.getjId(),mCurrentJourney);
+                FirebaseDB.updateJourney(mCurrentJourney.getjID(),mCurrentJourney);
 
                 SerializationUtils sUtils = new SerializationUtils();
                 sUtils.serializeJourneyHistory(getContext());
@@ -210,7 +211,7 @@ public class ChatsFragment extends Fragment {
      */
     private void displayChatMessages() {
         adapter = new FirebaseListAdapter<ChatMessage>(getActivity(), ChatMessage.class,
-                R.layout.message, FirebaseDB.getJourneyMessagesReference(mCurrentJourney.getjId())) {
+                R.layout.message, FirebaseDB.getJourneyMessagesReference(mCurrentJourney.getjID())) {
             @Override
             protected void populateView(View v, ChatMessage model, int position) {
                 // Get references to the views of message.xml

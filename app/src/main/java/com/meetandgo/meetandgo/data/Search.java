@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class Search implements Serializable {
 
+    private String sID;
     private String userId;
     //additional users are those added to combine search between several users
     private ArrayList<String> additionalUsers = new ArrayList<>();
@@ -101,5 +102,13 @@ public class Search implements Serializable {
 
     public void setAdditionalUsers(ArrayList<String> additionalUsers) {
         this.additionalUsers = additionalUsers;
+    }
+
+    public String getsID() {
+        return sID;
+    }
+
+    public void setsID(String sID) {
+        this.sID = sID;
     }
 }

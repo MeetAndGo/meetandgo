@@ -196,11 +196,12 @@ public class FirebaseDB {
      * @return String, return the key of this search in firebase database, if unsuccessful in
      * adding Search return empty string
      */
-    public static String addSearch(Search newSearch) {
+    public static String addNewSearch(Search newSearch) {
         if (!isFirebaseInitialised()) return null;
         if (newSearch != null) {
-            sSearchDatabase.push().setValue(newSearch);
-            return sSearchDatabase.getKey();
+            DatabaseReference searchEntry = sSearchDatabase.push();
+            searchEntry.setValue(newSearch);
+            return searchEntry.getKey();
         }
         return null;
     }
@@ -209,17 +210,17 @@ public class FirebaseDB {
     /**
      * Add a Journey to Firebase Database
      *
-     * @return String, return the key of this search in firebase database, if unsuccessful in
-     * adding Search return empty string
+     * @return String, return the key of this search in Firebase database, if unsuccessful in
+     * adding Journey return empty string
      */
     public static String addNewJourney(Journey journey) {
-        if (!isFirebaseInitialised()) return "";
+        if (!isFirebaseInitialised()) return null;
         if (journey != null) {
             DatabaseReference journeyEntry = sJourneyDatabase.push();
             journeyEntry.setValue(journey);
             return journeyEntry.getKey();
         }
-        return "";
+        return null;
     }
 
     /**
@@ -233,9 +234,20 @@ public class FirebaseDB {
         if (!isFirebaseInitialised()) return "";
         if (jID != null && journey != null) {
             DatabaseReference journeyEntry = sDatabase.getReference("journeys/" + jID);
-            journey.setjId(jID);
+            journey.setjID(jID);
             journeyEntry.setValue(journey);
             return journeyEntry.getKey();
+        }
+        return "";
+    }
+
+    public static String updateSearch(String sID, Search search) {
+        if (!isFirebaseInitialised()) return "";
+        if (sID != null && search != null) {
+            DatabaseReference searchEntry = sDatabase.getReference("search/" + sID);
+            search.setsID(sID);
+            searchEntry.setValue(search);
+            return searchEntry.getKey();
         }
         return "";
     }
@@ -479,7 +491,7 @@ public class FirebaseDB {
                 User user = snapshot.getValue(User.class);
                 user.numOfTrips = user.getJourneyIDs().size() + 1;
                 if (user != null) {
-                    user.journeyIDs.add(journey.getjId());
+                    user.journeyIDs.add(journey.getjID());
                     updateUser(uid, user);
                 }
             }

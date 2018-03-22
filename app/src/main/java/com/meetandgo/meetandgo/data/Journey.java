@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Journey {
 
-    private String jId;
+    private String jID;
     private Loc startLocation;
     private String startLocationString;
 
@@ -17,7 +17,7 @@ public class Journey {
     private boolean active;
 
     public Journey() {
-        this.jId = "";
+        this.jID = "";
         this.startLocation = null;
         this.startLocationString = "Location not found.";
         this.startTime = -1;
@@ -29,7 +29,7 @@ public class Journey {
 
     public Journey(Loc mStartPosition, String startLocationString, long startTime, List<String> users) {
         this.startLocationString = startLocationString;
-        this.jId = "";
+        this.jID = "";
         this.startLocation = mStartPosition;
         this.startTime = startTime;
         this.users = users;
@@ -41,12 +41,12 @@ public class Journey {
         this.active =false;
 
     }
-    public String getjId() {
-        return jId;
+    public String getjID() {
+        return jID;
     }
 
-    public void setjId(String journey_id) {
-        this.jId = journey_id;
+    public void setjID(String journey_id) {
+        this.jID = journey_id;
     }
 
     public Loc getStartLocation() {
