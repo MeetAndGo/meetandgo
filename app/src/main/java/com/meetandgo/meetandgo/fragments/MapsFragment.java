@@ -135,6 +135,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     }
 
+    /**
+     * Sets up preferences for the current user
+     */
     private void setUpPreferences() {
         User currenUser = FirebaseDB.getCurrentUser();
         Gson gson = new Gson();
@@ -309,6 +312,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
+    /**
+     * Sets up the map for the fragment
+     */
     private void setUpMap() {
         // Map Fragment containing the Google MAP is added to the content layout
         FragmentManager manager = getFragmentManager();
@@ -377,6 +383,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         return mLocationPermissionGranted;
     }
 
+    /**
+     * After performing the permission checks this method allows to access user location
+     */
     private void setMyLocationEnabled() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -425,7 +434,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     /**
-     *
+     * Actions performed upon clicking the search button
      */
     private void clickSearchButton() {
         resultSearches.clear();
@@ -438,6 +447,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     }
 
+    /**
+     * Starts the matching results activity after a button is click
+     *
+     * @param search current user search
+     */
     private void startMatchingResultsActivity(Search search) {
         Intent matchingResultsIntent = new Intent(getActivity(), MatchingResultsActivity.class);
         Gson gson = new Gson();
@@ -525,17 +539,34 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         };
     }
 
+    /**
+     * Converts Latitude and Longitude to Pixel values
+     * @param latLng Latitude and Longitude object
+     * @return Pixel point
+     */
     public Point convertLatLngToPixels(LatLng latLng) {
         Projection projection = mMap.getProjection();
         Point point = projection.toScreenLocation(latLng);
         return point;
     }
 
+    /**
+     * Converts pixel position to latitude and longitude
+     *
+     * @param point pixel position
+     * @return LatLng object
+     */
     public LatLng convertPixelsToLatLng(Point point) {
         Projection projection = mMap.getProjection();
         return projection.fromScreenLocation(point);
     }
 
+    /**
+     * Converts latitude and longitude to location object
+     *
+     * @param latLng LatLng object
+     * @return Location object
+     */
     private Location convertLatLngToLocation(LatLng latLng) {
         Location newLocation = new Location("");
         newLocation.setLatitude(latLng.latitude);
@@ -543,26 +574,51 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         return newLocation;
     }
 
+    /**
+     * Adds marker to specific latitude and longitude
+     *
+     * @param latLng latitude and longitude to be set
+     */
     private void putMarkerOnLocation(@NonNull LatLng latLng) {
         mLastKnownMarkerLocation = convertLatLngToLocation(latLng);
         mMarkerDestination.setPosition(latLng);
     }
 
+    /**
+     * Add marker on pixel point
+     *
+     * @param point pixel point
+     */
     private void putMarkerOnPoint(Point point) {
         LatLng latLng = convertPixelsToLatLng(point);
         putMarkerOnLocation(latLng);
     }
 
+    /**
+     * Animates the camera from current location to the new location
+     *
+     * @param location Location object the camera animates towards
+     */
     private void animateCameraToLocation(Location location) {
         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM));
     }
 
+    /**
+     * Move camera from current location to new location
+     *
+     * @param location Location object the camera moves to
+     */
     private void moveCameraToLocation(Location location) {
         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM));
     }
 
+    /**
+     * Sets address inside the maps fragment for the user to see
+     *
+     * @param address String with the written address
+     */
     public void setAddressInView(String address) {
         if (mTextViewCurrentFocus == null) return;
         mTextViewCurrentFocus.setText(address);

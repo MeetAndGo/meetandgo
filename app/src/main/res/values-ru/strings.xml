@@ -13,8 +13,48 @@
 
     <!-- TODO: Remove or change this placeholfromTextViewtext -->
     <string name="gender_array" />
-    <string name="mode_taxi" />
-    <string name="stars" />
-    <string name="confirmation_message">Are you sure you want to join this Journey?</string>
+    <string name="mode_taxi" >Такси</string>
+    <string name="stars" >Звёзд</string>
+    <string name="title_activity_preferences">Настройки</string>
+    <string name="sign_out">Выйти</string>
+    <string name="menu_option_map">Начать Поездку</string>
+    <string name="menu_option_chats">Чат</string>
+    <string name="menu_option_commute">Дневные поездки</string>
+    <string name="menu_option_history">История Поездок</string>
+    <string name="menu_option_sign_out">Выйти</string>
+    <string name="drawer_open">Открыть Меню</string>
+    <string name="drawer_close">Закрыть Меню</string>
+    <string name="dialog_needed_location_permission">Этой программе нужна ваша позицыя</string>
+    <string name="allow_permission">Разрешыть</string>
+    <string name="deny_permission">Запретить</string>
+    <string name="no_location_data_provided">Ваша позицыя небыла разрешына</string>
+    <string name="service_not_available">Сервиз местонахождения не доступен</string>
+    <string name="invalid_lat_long_used">Плохая Позицыя</string>
+    <string name="no_address_found">Адрес не найден</string>
+    <string name="address_found">Адрес найден</string>
+    <string name="gender_selection">Выбор Пола</string>
+    <string name="any">Любой</string>
+    <string name="gender_male">Мужщина</string>
+    <string name="gender_female">Женщина</string>
+    <string name="mode_selection">Вибор Поездки</string>
+    <string name="mode_walk">Пешком</string>
+    <string name="mode_car">Машина</string>
+    <string name="start_location">Начало</string>
+    <string name="end_location">Цель</string>
+    <string name="search_button">Поиск</string>
+    <string name="preferences_button">Настройки</string>
+    <string name="null_text">null</string>
+    <string name="num_of_votes">Голосов</string>
+    <string name="profile">Профиль</string>
+    <string name="number_of_trips">%d Поездки</string>
+    <string name="change_password">Поменять Пароль</string>
+    <string name="number_of_ratings">%d Рейтингов</string>
+    <string name="gobutton">Начать Поезку</string>
+    <string name="finishbutton">Закончить Поезку</string>
+    <string name="rate_message">Какой Ваш Пол?</string>
+    <string name="confirm">Окай</string>
+    <string name="other">Другое</string>
+    <string name="matching_results">Результаты</string>
+    <string name="loc_not_found">Место не найдено</string>
 
 </resources>

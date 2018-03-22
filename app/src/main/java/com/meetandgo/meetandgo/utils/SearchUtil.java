@@ -31,6 +31,14 @@ public final class SearchUtil {
         return score;
     }
 
+    /**
+     * Calculates the list of searches to be displayed in the results along with sorting them.
+     * --This is the main matching algorithm--
+     *
+     * @param searches List of searches to process.
+     * @param currentUserSearch User search data to identify compatibility
+     * @return sorted and processed list based on the matching algorithm
+     */
     public static ArrayList<Search> calculateSearch(ArrayList<Search> searches, Search currentUserSearch) {
 
         double[][] resultOrder = new double[searches.size()][2];

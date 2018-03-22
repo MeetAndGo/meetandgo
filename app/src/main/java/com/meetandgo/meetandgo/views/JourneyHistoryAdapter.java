@@ -22,6 +22,12 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
     private ArrayList<Journey> mJourneys = new ArrayList<>();
     private OnItemClickListener mListener;
 
+    /**
+     * Add journey to journey history list by notifying the fragment that a new journey has been
+     * added
+     *
+     * @param o The journey to be added
+     */
     public void add(Journey o) {
         boolean exists = false;
         for (int i = 0; i < mJourneys.size(); i++) {

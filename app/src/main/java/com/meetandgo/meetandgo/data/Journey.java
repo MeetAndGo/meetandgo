@@ -89,15 +89,6 @@ public class Journey {
         this.active = active;
     }
 
-    public void update(Journey o) {
-        startLocation = o.getStartLocation();
-        startTime = o.getStartTime();
-        users = o.getUsers();
-        messages = o.getMessages();
-        active = o.isActive();
-    }
-
-
     public Preferences.Mode getMode() {
         return mode;
     }
@@ -110,8 +101,20 @@ public class Journey {
         return startLocationString;
     }
 
-
     public void setStartLocationString(String startLocationString) {
         this.startLocationString = startLocationString;
+    }
+
+    /**
+     * Updates the journey data with a passed in journey object
+     *
+     * @param o new journey object
+     */
+    public void update(Journey o) {
+        startLocation = o.getStartLocation();
+        startTime = o.getStartTime();
+        users = o.getUsers();
+        messages = o.getMessages();
+        active = o.isActive();
     }
 }

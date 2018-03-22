@@ -66,12 +66,21 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
         return mSearches.size();
     }
 
-
+    /**
+     * Set the searches to a passed in variable
+     *
+     * @param searches The new updated searches to be replaced with.
+     */
     public void setListOfSearches(ArrayList<Search> searches) {
         this.mSearches = searches;
         notifyDataSetChanged();
     }
 
+    /**
+     * Add search and notify fragment.
+     *
+     * @param o Search to be added.
+     */
     public void add(Search o) {
         mSearches.add(o);
         notifyItemInserted(mSearches.size()-1);
