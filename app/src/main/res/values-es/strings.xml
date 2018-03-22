@@ -39,5 +39,6 @@
     <string name="null_text">null</string>
     <string name="stars" />
     <string name="num_of_votes">Votes</string>
+    <string name="confirmation_message">Are you sure you want to join this Journey?</string>
 
 </resources>

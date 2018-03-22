@@ -172,11 +172,7 @@ public class ChatsFragment extends Fragment {
                 activity.setSelectedFragmentByMenuItem(R.id.menu_item_4);
                 JourneyHistory.journeyIDs.push(mCurrentJourney);
 
-                //update number of Journeys for all active users
-                for (int i = 0; i < mCurrentJourney.getUsers().size(); i++) {
-                    // TODO: Fix this function before uncommenting
-                    //FirebaseDB.incrementUserNumberOfJourney(mCurrentJourney.getUsers().get(i));
-                }
+
 
                 SerializationUtils sUtils = new SerializationUtils();
                 sUtils.serializeJourneyHistory(getContext());

@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -25,6 +26,7 @@ import com.meetandgo.meetandgo.views.OnItemClickListener;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,9 +80,7 @@ public class MatchingResultsActivity extends AppCompatActivity {
             public void onItemClick(Object object) {
                 Search search = (Search) object;
                 Log.d(TAG, "clicked " + search.getUserId());
-                Journey journey = createJourney(search);
-                updateJourneyUsers(journey);
-                startChatFragment(journey);
+                askConfirmation(search);
 
             }
         };
@@ -113,6 +113,32 @@ public class MatchingResultsActivity extends AppCompatActivity {
         startActivity(mainActivityIntent);
         finish();
     }
+
+    /**
+     * Get user's confirmation to join journey
+     * @param search
+     */
+    private void askConfirmation(final Search search) {
+
+        new LovelyStandardDialog(this, LovelyStandardDialog.ButtonLayout.HORIZONTAL)
+                .setTopColorRes(R.color.colorPrimaryDark)
+                .setButtonsColorRes(R.color.colorPrimary)
+                // TODO: Change Icon to something related to journeys
+                .setIcon(R.drawable.ic_face_white_48dp)
+                .setMessage(R.string.confirmation_message)
+                .setPositiveButton(android.R.string.yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Journey journey = createJourney(search);
+                        updateJourneyUsers(journey);
+                        startChatFragment(journey);
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .show();
+    }
+
     /**
      * Create journey (when clicking on match)
      *

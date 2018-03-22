@@ -478,6 +478,7 @@ public class FirebaseDB {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
+                user.numOfTrips = user.getJourneyIDs().size() + 1;
                 if (user != null) {
                     user.journeyIDs.add(journey.getjId());
                     updateUser(uid, user);
@@ -494,10 +495,14 @@ public class FirebaseDB {
 
     /**
      * Updates a user given the user id with a new user object
+     *
      * @param userID
      * @param user
      */
-    private static void updateUser(String userID, User user) {
+
+    public static void updateUser(String userID, User user) {
+        Log.e(TAG, userID);
+        Log.e(TAG, user.toString());
         if (userID != null && user != null) {
             DatabaseReference userEntry = sDatabase.getReference("users/" + userID);
             userEntry.setValue(user);

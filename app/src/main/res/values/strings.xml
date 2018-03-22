@@ -55,6 +55,7 @@
     <string name="other">other</string>
     <string name="matching_results">Matching Results</string>
     <string name="loc_not_found">Location not found.</string>
+    <string name="confirmation_message">Are you sure you want to join this Journey?</string>
 
     <string-array name="gender_array">
         <item name="gender_any">Any</item>

@@ -42,7 +42,7 @@ public class BootActivity extends AppCompatActivity {
         askForPermissions();
     }
 
-    /**
+    /**F
      * OnActivityResult needed to handle the login activity by firebase.
      * @param requestCode
      * @param resultCode

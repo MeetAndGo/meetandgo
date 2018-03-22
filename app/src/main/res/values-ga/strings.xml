@@ -15,5 +15,6 @@
     <string name="gender_array" />
     <string name="mode_taxi" />
     <string name="stars" />
+    <string name="confirmation_message">Are you sure you want to join this Journey?</string>
 
 </resources>

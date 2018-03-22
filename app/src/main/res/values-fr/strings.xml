@@ -46,5 +46,6 @@
     <string name="preferences_button">Préférences</string>
     <string name="mode_selection">Choisir mode de déplacement</string>
     <string name="gender_selection">Choisir genre</string>
+    <string name="confirmation_message">Are you sure you want to join this Journey?</string>
 
 </resources>
