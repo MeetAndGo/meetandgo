@@ -1,11 +1,11 @@
 package com.meetandgo.meetandgo.data;
 
+import com.google.firebase.database.Exclude;
 import com.meetandgo.meetandgo.FirebaseDB;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Class of a user search, to store in firebase
@@ -22,11 +22,12 @@ public class Search implements Serializable {
     private String startLocationString;
     private String endLocationString;
     private HashMap<String, Object> timeCreated;
+    private String journeyID;
 
     public Search() {
     }
 
-    public Search(Preferences iPreferences, Loc iStartLocation, Loc iEndLocation, String startLocationString, String endLocationString) {
+    public Search(Preferences iPreferences, String journeyID, Loc iStartLocation, Loc iEndLocation, String startLocationString, String endLocationString) {
         this.startLocationString = startLocationString;
         this.endLocationString = endLocationString;
         this.userId = FirebaseDB.getCurrentUserUid();
@@ -35,6 +36,7 @@ public class Search implements Serializable {
         this.startLocation = iStartLocation;
         this.endLocation = iEndLocation;
         this.timeCreated = FirebaseDB.getServerTime();
+        this.journeyID = journeyID;
     }
 
     // Test constructor
@@ -47,6 +49,7 @@ public class Search implements Serializable {
         this.startLocation = iStartLocation;
         this.endLocation = iEndLocation;
         this.timeCreated = null;
+        this.journeyID = "";
     }
 
     public String getUserId() {
@@ -96,7 +99,7 @@ public class Search implements Serializable {
         this.endLocationString = endLocationString;
     }
 
-    public List<String> getAdditionalUsers() {
+    public ArrayList<String> getAdditionalUsers() {
         return additionalUsers;
     }
 
@@ -110,5 +113,22 @@ public class Search implements Serializable {
 
     public void setsID(String sID) {
         this.sID = sID;
+    }
+
+    public void addUser(String userId) {
+        this.additionalUsers.add(userId);
+    }
+
+    public String getJourneyID() {
+        return journeyID;
+    }
+
+    public void setJourneyID(String journeyID) {
+        this.journeyID = journeyID;
+    }
+
+    @Exclude
+    public boolean hasJourney(){
+        return !journeyID.equals("");
     }
 }

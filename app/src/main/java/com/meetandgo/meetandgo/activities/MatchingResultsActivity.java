@@ -64,7 +64,7 @@ public class MatchingResultsActivity extends AppCompatActivity {
 
         Gson gson = new Gson();
         mCurrentUserSearch = gson.fromJson(json, Search.class);
-        Log.d(TAG, mCurrentUserSearch.getUserId());
+        //Log.d(TAG, mCurrentUserSearch.getUserId());
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -79,7 +79,6 @@ public class MatchingResultsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Object object) {
                 Search search = (Search) object;
-                Log.d(TAG, "clicked " + search.getUserId());
                 askConfirmation(search);
 
             }
@@ -108,7 +107,7 @@ public class MatchingResultsActivity extends AppCompatActivity {
     private void startChatFragment(Journey journey) {
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         Gson gson = new Gson();
-        String json = gson.toJson(journey);
+        String json = gson.toJson(journey);        Log.d(TAG, "Json Journey sent to the chat" + json);
         mainActivityIntent.putExtra(Constants.JOURNEY_EXTRA, json);
         mainActivityIntent.putExtra(Constants.JOURNEY_ACTIVITY_EXTRA, "journey_activity");
         startActivity(mainActivityIntent);
@@ -124,14 +123,16 @@ public class MatchingResultsActivity extends AppCompatActivity {
                 .setTopColorRes(R.color.colorPrimaryDark)
                 .setButtonsColorRes(R.color.colorPrimary)
                 // TODO: Change Icon to something related to journeys
-                .setIcon(R.drawable.ic_chat_black_48dp)
+                .setIcon(R.drawable.ic_info_outline_white_48dp)
                 .setMessage(R.string.confirmation_message)
                 .setPositiveButton(android.R.string.yes, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Log.d(TAG, search.getJourneyID());
                         Journey journey = createJourney(search);
+                        search.setJourneyID(journey.getjID());
                         updateJourneyUsers(journey);
-                        combineAndUpdateSearch();
+                        combineAndUpdateSearch(search, journey);
                         startChatFragment(journey);
 
                     }
@@ -141,26 +142,38 @@ public class MatchingResultsActivity extends AppCompatActivity {
     }
 
     /**
-     * Combines the two searches from the two or more users that are in the search adding the new user
-     * and deleting the previous user search.
+     * Create journey (when clicking on match), when the search has a journey attached to it, it won't
+     * create a new journey but it will update the current journey adding the user to it.
+     * @param joinedSearch (selected match)
      */
-    private void combineAndUpdateSearch() {
+    public Journey createJourney(Search joinedSearch) {
+        List<String> users = new ArrayList<>();
+        users.add(joinedSearch.getUserId());
+        users.add(mCurrentUserSearch.getUserId());
+        String journeyKey;
+        Journey journey = new Journey(joinedSearch.getStartLocation(), joinedSearch.getStartLocationString(),
+                new Date().getTime(), users);
+        if(joinedSearch.hasJourney()){
+            journeyKey = joinedSearch.getJourneyID();
+        }else {
+            journeyKey = FirebaseDB.addNewJourney(journey);
+        }
+        journey.setjID(journeyKey);
+        FirebaseDB.updateJourneyID(journeyKey, journey);
+        return journey;
     }
 
     /**
-     * Create journey (when clicking on match)
-     * @param search (selected match)
+     * Combines the two searches from the two or more users that are in the search adding the new user
+     * and deleting the previous user search.
      */
-    public Journey createJourney(Search search) {
-        List<String> users = new ArrayList<String>();
-        users.add(search.getUserId());
-        users.add(mCurrentUserSearch.getUserId());
-        Journey journey = new Journey(search.getStartLocation(), mCurrentUserSearch.getStartLocationString(),
-                new Date().getTime(), users);
-        String journeyKey = FirebaseDB.addNewJourney(journey);
-        FirebaseDB.updateJourney(journeyKey, journey);
-        return journey;
+    private void combineAndUpdateSearch(Search joinedSearch, Journey newJourney) {
+        joinedSearch.addUser(mCurrentUserSearch.getUserId());
+        joinedSearch.setJourneyID(newJourney.getjID());
+        FirebaseDB.deleteSearch(mCurrentUserSearch.getsID());
+        FirebaseDB.updateSearch(joinedSearch.getsID(), joinedSearch);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -177,13 +190,9 @@ public class MatchingResultsActivity extends AppCompatActivity {
      */
     @Subscribe
     public void nextMethod(Search search) {
-        Log.e(TAG, search.getUserId());
-        mSearches.add(search);
-
-        orderedSearches = SearchUtil.calculateSearch(mSearches, mCurrentUserSearch);
-        mAdapter.setListOfSearches(orderedSearches);
-
-        Log.e(TAG, String.valueOf(orderedSearches.size()));
+            mSearches.add(search);
+            orderedSearches = SearchUtil.calculateSearch(mSearches, mCurrentUserSearch);
+            mAdapter.setListOfSearches(orderedSearches);
 
     }
 

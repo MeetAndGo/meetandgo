@@ -2,6 +2,7 @@ package com.meetandgo.meetandgo;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
@@ -114,17 +115,13 @@ public class FirebaseDB {
         if (firebaseUser == null) return null;
 
         // Get Current user saved in the phone, if it doesn't exist use a new one created for this
-        Gson gson = new Gson();
-        String json = mPrefs.getString(Constants.CURRENT_USER, "");
-        User currentUser = gson.fromJson(json, User.class);
-        if (currentUser == null) {
-            currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
-        }
+        User currentUser = getLocalStorageUser(firebaseUser);
         final User[] user = {currentUser};
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 user[0] = snapshot.getValue(User.class);
+                saveUserInLocalStorage(user[0]);
             }
 
             @Override
@@ -134,6 +131,14 @@ public class FirebaseDB {
 
         getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
         return user[0];
+    }
+
+    private static void saveUserInLocalStorage(User user) {
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+        prefsEditor.putString(Constants.CURRENT_USER, json);
+        prefsEditor.apply();
     }
 
 
@@ -150,20 +155,16 @@ public class FirebaseDB {
         String uid = getCurrentUserUid();
         FirebaseUser firebaseUser = sAuth.getCurrentUser();
         if (firebaseUser == null) return null;
+        User currentUser = getLocalStorageUser(firebaseUser);
 
-        // Get Current user saved in the phone, if it doesn't exist use a new one created for this
-        Gson gson = new Gson();
-        String json = mPrefs.getString(Constants.CURRENT_USER, "");
-        User currentUser = gson.fromJson(json, User.class);
-        if (currentUser == null) {
-            currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
-        }
+
         final User[] user = {currentUser};
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 user[0] = snapshot.getValue(User.class);
                 bus.post(user[0]);
+                saveUserInLocalStorage(user[0]);
             }
 
             @Override
@@ -173,6 +174,17 @@ public class FirebaseDB {
 
         getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
         return user[0];
+    }
+
+    @NonNull private static User getLocalStorageUser(FirebaseUser firebaseUser) {
+        // Get Current user saved in the phone, if it doesn't exist use a new one created for this
+        Gson gson = new Gson();
+        String json = mPrefs.getString(Constants.CURRENT_USER, "");
+        User currentUser = gson.fromJson(json, User.class);
+        if (currentUser == null) {
+            currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
+        }
+        return currentUser;
     }
 
     /**
@@ -240,6 +252,15 @@ public class FirebaseDB {
         }
         return "";
     }
+
+    public static void updateJourneyID(String jID, Journey journey) {
+        if (!isFirebaseInitialised()) return;
+        if (jID != null && journey != null) {
+            DatabaseReference journeyEntry = sDatabase.getReference("journeys/" + jID + "/jID");
+            journeyEntry.setValue(journey.getjID());
+        }
+    }
+
 
     public static String updateSearch(String sID, Search search) {
         if (!isFirebaseInitialised()) return "";
@@ -519,6 +540,7 @@ public class FirebaseDB {
             userEntry.setValue(user);
         }
     }
+
 
     // TODO: Fix this function
 //    /**

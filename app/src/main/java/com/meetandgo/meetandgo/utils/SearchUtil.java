@@ -5,6 +5,7 @@ import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.Search;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public final class SearchUtil {
 
@@ -35,7 +36,7 @@ public final class SearchUtil {
      * Calculates the list of searches to be displayed in the results along with sorting them.
      * --This is the main matching algorithm--
      *
-     * @param searches List of searches to process.
+     * @param searches          List of searches to process.
      * @param currentUserSearch User search data to identify compatibility
      * @return sorted and processed list based on the matching algorithm
      */
@@ -45,9 +46,20 @@ public final class SearchUtil {
 
         int count = 0;
         int validIndexes = 0;
-        for(Search search : searches){
+        for (Search search : searches) {
             //PROCESS SEARCH
             if (!search.getUserId().equals(currentUserSearch.getUserId())) {
+                boolean isEqual = false;
+                for (int i = 0; i < search.getAdditionalUsers().size(); i++) {
+                    if (Objects.equals(currentUserSearch.getUserId(), search.getAdditionalUsers().get(i)))
+                        isEqual = true;
+                }
+                if (isEqual) {
+                    resultOrder[count][0] = -1.0;
+                    resultOrder[count][1] = count;
+                    count++;
+                    continue;
+                }
                 //Check Preference
                 if (currentUserSearch.getUserPreferences().checkPreferences(search.getUserPreferences())) {
                     //Calculate Score
@@ -62,14 +74,12 @@ public final class SearchUtil {
                     resultOrder[count][1] = count;
                 }
                 count++;
+
             }
         }
 
         DataStructureUtils util = new DataStructureUtils();
         double[][] sortedResults = util.sort2DArray(resultOrder);
-
-        //Log.d(TAG, "in calculateSearch");
-        //Log.d(TAG, "searches size " + searches.size());
 
         //Create ArrayList of results
         ArrayList<Search> list = new ArrayList<>();

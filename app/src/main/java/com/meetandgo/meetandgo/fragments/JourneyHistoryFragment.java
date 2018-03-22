@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,10 +70,8 @@ public class JourneyHistoryFragment extends Fragment {
         valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                Log.d(TAG, dataSnapshot.toString());
                 Journey journey = dataSnapshot.getValue(Journey.class);
-                Log.d(TAG, String.valueOf(journey));
-                mAdapter.add(journey);
+                if(journey!=null) mAdapter.add(journey);
             }
 
             @Override
