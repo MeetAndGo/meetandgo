@@ -18,6 +18,13 @@ import java.util.Stack;
  */
 
 public final class SerializationUtils {
+
+    /**
+     * Method of serialization of journey histories (Obsolete)
+     *
+     * @param context context of class
+     * @return if successful
+     */
     public boolean serializeJourneyHistory(Context context)
     {
         try {
@@ -33,6 +40,12 @@ public final class SerializationUtils {
         return true;
     }
 
+    /**
+     * Method of deserialization of journey histories (Obsolete)
+     *
+     * @param context context of class
+     * @return if successful
+     */
     public boolean unserializeJourneyHistory(Context context)
     {
         try {

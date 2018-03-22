@@ -64,6 +64,9 @@ public class JourneyHistoryFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Sets up the event listener for retrieving data from the Firebase
+     */
     private void setUpEventListener() {
         valueEventListener = new ValueEventListener() {
             @Override
@@ -82,6 +85,9 @@ public class JourneyHistoryFragment extends Fragment {
         };
     }
 
+    /**
+     * Sets up UI
+     */
     private void setUpUI() {
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView

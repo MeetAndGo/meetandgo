@@ -50,6 +50,9 @@ public class ProfileActivity extends AppCompatActivity {
         setUpUser();
     }
 
+    /**
+     * Sets up the
+     */
     private void setUpUser() {
         final User currentUser = FirebaseDB.getCurrentUser();
 
@@ -82,6 +85,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets up the info of the ratings of the user
+     *
+     * @param user User object to retrieve the ratings
+     */
     private void setRatingBarInfo(User user) {
         //Check if it its already logged in
         mRatingBarRating.setRating((float) user.getRating());
@@ -93,10 +101,18 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets the number of trips
+     *
+     * @param user User object with data
+     */
     public void setNumberOfTrips(User user) {
         mNumberOfTrips.setText(getString(R.string.number_of_trips, user.getNumOfTrips()));
     }
 
+    /**
+     * Sets up the toolbar
+     */
     private void setUpToolbar() {
         setSupportActionBar(mToolbar);
         mToolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.toolbarColor));

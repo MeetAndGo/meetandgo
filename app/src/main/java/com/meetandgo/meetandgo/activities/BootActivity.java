@@ -44,6 +44,7 @@ public class BootActivity extends AppCompatActivity {
 
     /**F
      * OnActivityResult needed to handle the login activity by firebase.
+     *
      * @param requestCode
      * @param resultCode
      * @param data Intent with that data that comes back from the activity that was called

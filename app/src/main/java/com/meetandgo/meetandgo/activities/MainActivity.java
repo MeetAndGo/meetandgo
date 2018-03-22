@@ -154,6 +154,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Hides the users phone keyboard
+     */
     private void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -198,6 +201,11 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Adds the user to the database
+     *
+     * @param user The user to be added
+     */
     private void addUserToDatabase(User user) {
         // Save it to database
         FirebaseDB.addUser(user);
@@ -231,6 +239,9 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Sets up all the different elements of the UI
+     */
     private void setupUI() {
         mNavView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

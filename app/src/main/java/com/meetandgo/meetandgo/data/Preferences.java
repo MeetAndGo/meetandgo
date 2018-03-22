@@ -64,6 +64,8 @@ public class Preferences implements Serializable {
     }
 
     /**
+     * Checks if modes match
+     *
      * @param m1 preferred mode of user 1
      * @param m2 preferred mode of user 2
      * @return true if mode ok false otherwise
@@ -80,6 +82,8 @@ public class Preferences implements Serializable {
     }
 
     /**
+     * Checks if genders match
+     *
      * @param prefGender1 preferred gender of user 1
      * @param prefGender2 preferred gender of user 2
      * @param userGender1 gender of user 1
@@ -104,6 +108,7 @@ public class Preferences implements Serializable {
 
     /**
      * Checks if other user matches our search criteria
+     *
      * @param otherPreferences other user preferences
      * @return boolean if match
      */

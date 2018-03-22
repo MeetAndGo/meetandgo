@@ -56,6 +56,11 @@ public class FirebaseDB {
     }
 
     // TODO: Refactor
+
+    /**
+     * Initializes Database References that are then also synced with local storage
+     *
+     */
     private static void initializeDatabaseReferences() {
         String uid = getCurrentUserUid();
         if (sDatabase == null) {
@@ -257,6 +262,12 @@ public class FirebaseDB {
         return false;
     }
 
+    /**
+     * Remove search from database
+     *
+     * @param sID search ID to remove
+     * @return if outcome was successful
+     */
     public static boolean deleteSearch(String sID) {
         if (!isFirebaseInitialised()) return false;
         if (sID != null) {
@@ -442,7 +453,12 @@ public class FirebaseDB {
         return searches;
     }
 
-
+    /**
+     * Add eventListeners to journeys
+     *
+     * @param journeyIDs array of journeys to add listeners to
+     * @param childEventListener the listener to be added to the journeys
+     */
     public static void getJourneys(List<String> journeyIDs, ValueEventListener childEventListener) {
         for (String journeyID : journeyIDs) {
             sJourneyDatabase.child(journeyID).addValueEventListener(childEventListener);

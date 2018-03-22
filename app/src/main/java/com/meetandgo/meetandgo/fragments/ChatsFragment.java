@@ -80,6 +80,9 @@ public class ChatsFragment extends Fragment {
         return mView;
     }
 
+    /**
+     * Updates the click listener responsible for sending a message.
+     */
     private void updateClickListener() {
         mSendMsgButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +108,12 @@ public class ChatsFragment extends Fragment {
         });
     }
 
+    /**
+     * Method for retrieving serialized data from other fragments
+     * @param requestCode code on request
+     * @param resultCode code on result
+     * @param data data retrieved
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, requestCode + " " + resultCode);
@@ -114,6 +123,9 @@ public class ChatsFragment extends Fragment {
         }
     }
 
+    /**
+     * Allows the editing of the current message you are typing
+     */
     private void setUpEditText() {
         mSendMsgButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(), R.color.colorGrey));
         mSendMsgButton.setEnabled(false);
@@ -143,6 +155,10 @@ public class ChatsFragment extends Fragment {
     }
 
     //TODO: Get searchID from current Journey
+
+    /**
+     * Performs operations when a journey is started
+     */
     private void setUpBeginJourney() {
         mLetsGoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +173,9 @@ public class ChatsFragment extends Fragment {
         });
     }
 
+    /**
+     * Hides the users keyboard
+     */
     private void hideKeyboard() {
         View view = getActivity().getCurrentFocus();
         if (view != null) {
@@ -165,6 +184,9 @@ public class ChatsFragment extends Fragment {
         }
     }
 
+    /**
+     * Does operations when a journey is finished
+     */
     private void setUpFinishJourney() {
         mFinishButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,7 +205,9 @@ public class ChatsFragment extends Fragment {
         });
     }
 
-
+    /**
+     * Displays all chat messages for this journey
+     */
     private void displayChatMessages() {
         adapter = new FirebaseListAdapter<ChatMessage>(getActivity(), ChatMessage.class,
                 R.layout.message, FirebaseDB.getJourneyMessagesReference(mCurrentJourney.getjId())) {
@@ -223,7 +247,11 @@ public class ChatsFragment extends Fragment {
         scrollListViewToBottom();
     }
 
-
+    /**
+     * Sets which journey the user will be chatting with
+     *
+     * @param journey journey to be set
+     */
     public void setJourney(Journey journey) {
         this.mCurrentJourney = journey;
         if (mCurrentJourney != null && mSendMsgButton != null) {
@@ -234,6 +262,9 @@ public class ChatsFragment extends Fragment {
         }
     }
 
+    /**
+     *  Scrolls the chats to the bottom
+     */
     private void scrollListViewToBottom() {
         mListMessages.post(new Runnable() {
             @Override

@@ -96,6 +96,7 @@ public class MatchingResultsActivity extends AppCompatActivity {
     /**
      * We add the journey id to the users that are currently in the journey, this is useful for having
      * the journey in the history of journeys fragment and be able to access the chats.
+     *
      * @param journey
      */
     private void updateJourneyUsers(Journey journey) {
@@ -181,6 +182,9 @@ public class MatchingResultsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Sets up the toolbar
+     */
     private void setUpToolbar() {
         setSupportActionBar(mToolbar);
         mToolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.toolbarColor));
