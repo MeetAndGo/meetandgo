@@ -50,9 +50,9 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
         holder.startTimeTextView.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", (Long) search.getTimeCreated().get("timestamp")));
 
         if (search.getUserPreferences().getMode() == Preferences.Mode.TAXI) {
-            holder.journeyImageView.setImageResource(R.drawable.ic_local_taxi_black_48dp);
+            holder.walkImageView.setImageResource(R.drawable.ic_local_taxi_black_48dp);
         } else if (search.getUserPreferences().getMode() == Preferences.Mode.WALK) {
-            holder.journeyImageView.setImageResource(R.drawable.ic_directions_walk_black_48dp);
+            holder.walkImageView.setImageResource(R.drawable.ic_directions_walk_black_48dp);
         }
         holder.bind(mSearches.get(position), listener);
 
@@ -90,7 +90,7 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
         public TextView fromTextView;
         public TextView toTextView;
         public TextView startTimeTextView;
-        public ImageView journeyImageView;
+        public ImageView walkImageView;
         public TextView numberOfUsersTextView;
 
         public ViewHolder(View itemView) {
@@ -98,7 +98,7 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
             fromTextView = itemView.findViewById(R.id.fromTextView);
             toTextView = itemView.findViewById(R.id.toTextView);
             startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
-            journeyImageView = itemView.findViewById(R.id.journeyImageView);
+            walkImageView = itemView.findViewById(R.id.walkImageView);
             numberOfUsersTextView = itemView.findViewById(R.id.numberOfPeopleTextView);
         }
 

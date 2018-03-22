@@ -68,9 +68,8 @@ public class ChatsFragment extends Fragment {
         ButterKnife.bind(this, mView);
 
         setUpEditText();
-        setUpBeginJourney();
-        setUpFinishJourney();
         if (mCurrentJourney != null) {
+            updateButtonsStatus();
             updateClickListener();
             displayChatMessages();
             ((MainActivity) getActivity()).setChatMenuItemVisibility(true);
@@ -78,6 +77,23 @@ public class ChatsFragment extends Fragment {
             ((MainActivity) getActivity()).setChatMenuItemVisibility(false);
         }
         return mView;
+    }
+
+    private void updateButtonsStatus() {
+        Log.e(TAG,Boolean.toString(mCurrentJourney.isActive()));
+        Log.e(TAG,Boolean.toString(mCurrentJourney.isActive()));
+        if(mCurrentJourney.isActive() &&
+                (FirebaseDB.getCurrentUserUid().equals(mCurrentJourney.getUsers().get(0)))) {
+            mLetsGoButton.setVisibility(View.VISIBLE);
+            mFinishButton.setVisibility(View.GONE);
+            setUpBeginJourney();
+            setUpFinishJourney();
+        }
+        else
+        {
+            mLetsGoButton.setVisibility(View.GONE);
+            mFinishButton.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -202,6 +218,7 @@ public class ChatsFragment extends Fragment {
 
                 SerializationUtils sUtils = new SerializationUtils();
                 sUtils.serializeJourneyHistory(getContext());
+
             }
         });
     }
@@ -256,10 +273,10 @@ public class ChatsFragment extends Fragment {
     public void setJourney(Journey journey) {
         this.mCurrentJourney = journey;
         if (mCurrentJourney != null && mSendMsgButton != null) {
+            updateButtonsStatus();
             updateClickListener();
             displayChatMessages();
             ((MainActivity) getActivity()).setChatMenuItemVisibility(true);
-
         }
     }
 
