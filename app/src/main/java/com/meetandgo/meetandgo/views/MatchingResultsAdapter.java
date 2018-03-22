@@ -1,6 +1,7 @@
 package com.meetandgo.meetandgo.views;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.data.Search;
 
 import java.util.ArrayList;
@@ -41,7 +43,19 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.text.setText(String.valueOf((mSearches.get(position).getUserId())));
+        Search search = mSearches.get(position);
+        holder.fromTextView.setText(search.getStartLocationString());
+        holder.toTextView.setText(search.getEndLocationString());
+        holder.numberOfUsersTextView.setText(String.valueOf(search.getAdditionalUsers().size() + 1));
+        holder.startTimeTextView.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", (Long) search.getTimeCreated().get("timestamp")));
+
+        if (search.getUserPreferences().getMode() == Preferences.Mode.TAXI){
+            holder.journeyImageView.setImageResource(R.drawable.ic_local_taxi_black_48dp);
+        }else if (search.getUserPreferences().getMode() == Preferences.Mode.WALK){
+            holder.journeyImageView.setImageResource(R.drawable.ic_directions_walk_black_48dp);
+
+        }
+        // TODO: COLOR HERE!
         holder.bind(mSearches.get(position), listener);
 
     }
@@ -66,13 +80,19 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView text;
-        private ImageView image;
+        public TextView fromTextView;
+        public TextView toTextView;
+        public TextView startTimeTextView;
+        public ImageView journeyImageView;
+        public TextView numberOfUsersTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            text = itemView.findViewById(R.id.fromTextView);
-            image = itemView.findViewById(R.id.walkImageView);
+            fromTextView = itemView.findViewById(R.id.fromTextView);
+            toTextView = itemView.findViewById(R.id.toTextView);
+            startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
+            journeyImageView = itemView.findViewById(R.id.journeyImageView);
+            numberOfUsersTextView = itemView.findViewById(R.id.numberOfPeopleTextView);
         }
 
         public void bind(final Search search, final OnItemClickListener listener) {

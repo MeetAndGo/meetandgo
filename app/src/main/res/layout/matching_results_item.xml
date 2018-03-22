@@ -50,7 +50,7 @@
                     android:text="Wiliam@gmail.com" />
 
                 <TextView
-                    android:id="@+id/startTimeTextView"
+                    android:id="@+id/toTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -59,7 +59,7 @@
                     android:text="Wiliam@gmail.com" />
 
                 <TextView
-                    android:id="@+id/timeTextView"
+                    android:id="@+id/startTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

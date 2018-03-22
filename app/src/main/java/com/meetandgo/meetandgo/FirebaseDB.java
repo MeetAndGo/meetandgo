@@ -236,23 +236,6 @@ public class FirebaseDB {
     }
 
     /**
-     * @param jID journey ID
-     * @param uID user ID
-     * @return boolean, return true if addition of user to journey successful
-     */
-    public static boolean addUserToJourney(String jID, String uID) {
-        if (!isFirebaseInitialised()) return false;
-        if (jID != null && uID != null) {
-            DatabaseReference databaseReference = sDatabase.getReference("journeys/" + jID + "/mUsers/" + uID);
-            databaseReference.setValue(true);
-            //updateChatInUser(uid, databaseReference.getKey());
-
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Combine several users into one search and delete old searches
      *
      * @param sID      search ID

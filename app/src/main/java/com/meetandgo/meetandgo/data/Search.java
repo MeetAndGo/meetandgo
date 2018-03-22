@@ -14,7 +14,7 @@ public class Search implements Serializable {
 
     private String userId;
     //additional users are those added to combine search between several users
-    private List<String> additionalUsers;
+    private ArrayList<String> additionalUsers = new ArrayList<>();
     private Preferences userPreferences;
     private Loc startLocation = new Loc();
     private Loc endLocation = new Loc();
@@ -93,5 +93,13 @@ public class Search implements Serializable {
 
     public void setEndLocationString(String endLocationString) {
         this.endLocationString = endLocationString;
+    }
+
+    public List<String> getAdditionalUsers() {
+        return additionalUsers;
+    }
+
+    public void setAdditionalUsers(ArrayList<String> additionalUsers) {
+        this.additionalUsers = additionalUsers;
     }
 }

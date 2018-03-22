@@ -73,6 +73,9 @@ public class ChatsFragment extends Fragment {
         if (mCurrentJourney != null) {
             updateClickListener();
             displayChatMessages();
+            ((MainActivity) getActivity()).setChatMenuItemVisibility(true);
+        } else {
+            ((MainActivity) getActivity()).setChatMenuItemVisibility(false);
         }
         return mView;
     }
@@ -169,7 +172,7 @@ public class ChatsFragment extends Fragment {
                 mCurrentJourney.deactivateJourney();
 
                 MainActivity activity = (MainActivity) getActivity();
-                activity.setSelectedFragmentByMenuItem(R.id.menu_item_4);
+                activity.setSelectedFragmentByMenuItem(R.id.menu_item_journey_history);
                 JourneyHistory.journeyIDs.push(mCurrentJourney);
 
 
@@ -223,9 +226,11 @@ public class ChatsFragment extends Fragment {
 
     public void setJourney(Journey journey) {
         this.mCurrentJourney = journey;
-        if (mCurrentJourney != null && mSendMsgButton !=null) {
+        if (mCurrentJourney != null && mSendMsgButton != null) {
             updateClickListener();
             displayChatMessages();
+            ((MainActivity) getActivity()).setChatMenuItemVisibility(true);
+
         }
     }
 
@@ -238,4 +243,6 @@ public class ChatsFragment extends Fragment {
             }
         });
     }
+
+
 }

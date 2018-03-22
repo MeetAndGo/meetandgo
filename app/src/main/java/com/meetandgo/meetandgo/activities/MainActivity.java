@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -81,13 +83,13 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         mToolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.toolbarColor));
         String comingFromJourney = getIntent().getStringExtra(Constants.JOURNEY_ACTIVITY_EXTRA);
-        if(comingFromJourney != null && comingFromJourney.equals("journey_activity")){
+        if (comingFromJourney != null && comingFromJourney.equals("journey_activity")) {
             // Get the journey from the intent
             String json = getIntent().getStringExtra(Constants.JOURNEY_EXTRA);
             Gson gson = new Gson();
             Journey journey = gson.fromJson(json, Journey.class);
-            setSelectedFragmentByMenuItem(R.id.menu_item_2);
-            ((ChatsFragment)mChatsFragment).setJourney(journey);
+            setSelectedFragmentByMenuItem(R.id.menu_item_chat);
+            ((ChatsFragment) mChatsFragment).setJourney(journey);
 
         }
     }
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         setUpUser();
 
         // Set the maps fragment as a default fragment on Start
-        setSelectedFragmentByMenuItem(R.id.menu_item_1);
+        setSelectedFragmentByMenuItem(R.id.menu_item_map);
     }
 
     /**
@@ -155,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     private void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
@@ -346,13 +348,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private Fragment getFragment(int menuItemId) {
         switch (menuItemId) {
-            case R.id.menu_item_1:
+            case R.id.menu_item_map:
                 return mMapFragment;
-            case R.id.menu_item_2:
+            case R.id.menu_item_chat:
                 return mChatsFragment;
-            case R.id.menu_item_3:
+            case R.id.menu_item_daily_commute:
                 return mCommuteFragment;
-            case R.id.menu_item_4:
+            case R.id.menu_item_journey_history:
                 return mJourneyHistoryFragment;
             case R.id.navigation_sign_out:
                 signOut();
@@ -403,10 +405,41 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Opens the chat fragment substituting the chat to the journey chat
+     *
      * @param journey
      */
     public void openChatFragment(Journey journey) {
-        setSelectedFragmentByMenuItem(R.id.menu_item_2);
-        ((ChatsFragment)mChatsFragment).setJourney(journey);
+        setSelectedFragmentByMenuItem(R.id.menu_item_chat);
+        ((ChatsFragment) mChatsFragment).setJourney(journey);
+    }
+
+    /**
+     * Sets the visibility of the chat menu item to either true or false depending if there is any
+     * active chat.
+     *
+     * @param b
+     */
+    public void setChatMenuItemVisibility(boolean b) {
+        Menu nav_Menu = mNavView.getMenu();
+        nav_Menu.findItem(R.id.menu_item_chat).setVisible(b);
+    }
+
+    /**
+     * Custom onBackPressed for changing the fragment
+     */
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            if (mCurrentFragment.getTag() == mChatsFragment.getClass().getName()) {
+                setSelectedFragmentByMenuItem(R.id.menu_item_journey_history);
+            } else if (mCurrentFragment.getTag() == mJourneyHistoryFragment.getClass().getName()) {
+                setSelectedFragmentByMenuItem(R.id.menu_item_map);
+            } else {
+                super.onBackPressed();
+            }
+        }
+
     }
 }

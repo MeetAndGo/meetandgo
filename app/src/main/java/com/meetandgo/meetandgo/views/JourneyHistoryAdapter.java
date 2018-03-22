@@ -14,6 +14,8 @@ import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Preferences;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAdapter.ViewHolder> {
@@ -34,6 +36,13 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
             mJourneys.add(o);
             notifyItemInserted(mJourneys.size() - 1);
         }
+        orderJourneyList();
+
+    }
+
+    private void orderJourneyList() {
+        Collections.sort(mJourneys, new CustomComparator());
+        Collections.reverse(mJourneys);
 
     }
 
@@ -104,5 +113,11 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
     @Override
     public int getItemCount() {
         return mJourneys.size();
+    }
+
+    public class CustomComparator implements Comparator<Journey> {
+        @Override public int compare(Journey j1, Journey j2) {
+            return Long.compare(j1.getStartTime(), j2.getStartTime());
+        }
     }
 }
