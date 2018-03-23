@@ -1,19 +1,19 @@
 package com.meetandgo.meetandgo.data;
 
 import com.google.firebase.database.Exclude;
-import com.meetandgo.meetandgo.FirebaseDB;
+import com.meetandgo.meetandgo.FireBaseDB;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Class of a user search, to store in firebase
+ * Class of a user search, to store in FireBase
  */
 public class Search implements Serializable {
 
-    private String sID;
-    private String userId;
+    private String searchID;
+    private String userID;
     //additional users are those added to combine search between several users
     private ArrayList<String> additionalUsers = new ArrayList<>();
     private Preferences userPreferences;
@@ -27,33 +27,33 @@ public class Search implements Serializable {
     public Search() {
     }
 
-    public Search(Preferences iPreferences, String journeyID, Loc iStartLocation, Loc iEndLocation, String startLocationString, String endLocationString) {
+    public Search(Preferences preferences, String journeyID, Loc startLocation, Loc endLocation, String startLocationString, String endLocationString) {
         this.startLocationString = startLocationString;
         this.endLocationString = endLocationString;
-        this.userId = FirebaseDB.getCurrentUserUid();
+        this.userID = FireBaseDB.getCurrentUserID();
         this.additionalUsers = new ArrayList<>();
-        this.userPreferences = iPreferences;
-        this.startLocation = iStartLocation;
-        this.endLocation = iEndLocation;
-        this.timeCreated = FirebaseDB.getServerTime();
+        this.userPreferences = preferences;
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
+        this.timeCreated = FireBaseDB.getServerTime();
         this.journeyID = journeyID;
     }
 
     // Test constructor
-    public Search(Preferences iPreferences, Loc iStartLocation, Loc iEndLocation, String userId, String startLocationString, String endLocationString) {
-        this.userId = userId;
+    public Search(Preferences preferences, Loc startLocation, Loc endLocation, String userID, String startLocationString, String endLocationString) {
+        this.userID = userID;
         this.startLocationString = startLocationString;
         this.endLocationString = endLocationString;
         this.additionalUsers = new ArrayList<>();
-        this.userPreferences = iPreferences;
-        this.startLocation = iStartLocation;
-        this.endLocation = iEndLocation;
+        this.userPreferences = preferences;
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
         this.timeCreated = null;
         this.journeyID = "";
     }
 
-    public String getUserId() {
-        return this.userId;
+    public String getUserID() {
+        return this.userID;
     }
 
     public Preferences getUserPreferences() {
@@ -107,12 +107,12 @@ public class Search implements Serializable {
         this.additionalUsers = additionalUsers;
     }
 
-    public String getsID() {
-        return sID;
+    public String getSearchID() {
+        return searchID;
     }
 
-    public void setsID(String sID) {
-        this.sID = sID;
+    public void setSearchID(String searchID) {
+        this.searchID = searchID;
     }
 
     public void addUser(String userId) {

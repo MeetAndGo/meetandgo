@@ -20,9 +20,19 @@
             android:theme="@style/AppToolbar" />
 
         <FrameLayout
-            android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <nl.dionsegijn.konfetti.KonfettiView
+                android:id="@+id/konfetti_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
     </LinearLayout>
     <!-- The navigation drawer -->
     <android.support.design.widget.NavigationView

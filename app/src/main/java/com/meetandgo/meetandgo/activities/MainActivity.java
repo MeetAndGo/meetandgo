@@ -36,7 +36,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.meetandgo.meetandgo.Constants;
-import com.meetandgo.meetandgo.FirebaseDB;
+import com.meetandgo.meetandgo.FireBaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Preferences;
@@ -52,6 +52,9 @@ import java.security.NoSuchAlgorithmException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
     NavigationView mNavView;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    private View mHeaderLayout;
+    @BindView(R.id.konfetti_view)
+    KonfettiView mKonfettiView;
+
     private TextView mTextViewUserName;
     private TextView mTextViewUserEmail;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -75,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
     private Fragment mCommuteFragment;
 
     private Toast mToast;
-    private ValueEventListener mUserValueEventListener;
     private SharedPreferences mPrefs;
 
     @Override
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         // Get the debug KeyHash for facebook login (Not useful on release version)
         getDebugKeyHash();
         setUpMenuFragments();
-        FirebaseDB.initializeApp(this);
+        FireBaseDB.initializeApp(this);
 
         setupUI();
         setUpUser();
@@ -119,15 +123,15 @@ public class MainActivity extends AppCompatActivity {
      * the UI for the current user
      */
     private void setUpUser() {
-        final User currentUser = FirebaseDB.getCurrentUser();
+        final User currentUser = FireBaseDB.getCurrentUser();
         // ValueEventListener needed to get the return of asking the database for the user
-        mUserValueEventListener = new ValueEventListener() {
+        ValueEventListener mUserValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.e(TAG, "in OnDataChange from event listener" + snapshot.toString());
                 if (snapshot.getValue(User.class) == null) {
                     askGender(currentUser);
-                } else if (FirebaseDB.getCurrentUserUid() == null) startBootActivity();
+                } else if (FireBaseDB.getCurrentUserID() == null) startBootActivity();
             }
 
             @Override
@@ -135,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         // Add current user to the database
-        FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), mUserValueEventListener);
+        FireBaseDB.isUserInDB(FireBaseDB.getCurrentUserID(), mUserValueEventListener);
 
         // UpdateUI based on the current user that is using the app
         mTextViewUserName.setText(currentUser.getFullName());
@@ -168,12 +172,11 @@ public class MainActivity extends AppCompatActivity {
      * Checks what preferredGender the user is.
      */
     private void askGender(final User mUser) {
-
         new LovelyStandardDialog(this, LovelyStandardDialog.ButtonLayout.HORIZONTAL)
                 .setTopColorRes(R.color.colorPrimaryDark)
                 .setButtonsColorRes(R.color.colorPrimary)
                 .setIcon(R.drawable.ic_face_white_48dp)
-                .setMessage(R.string.rate_message)
+                .setMessage(R.string.gender_message)
                 .setPositiveButton(R.string.gender_male, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -201,13 +204,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Adds the user to the database
+     * Adds the user to the database, and also saves the user to the local storage in order to be
+     * easier to retrieve once there is no internet connection.
      *
      * @param user The user to be added
      */
     private void addUserToDatabase(User user) {
         // Save it to database
-        FirebaseDB.addUser(user);
+        FireBaseDB.addUser(user);
         // Save a copy to the local storage
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
@@ -257,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.setStatusBarBackgroundColor(statusBarColor);
 
         // Set the header details based on the user information retrieved from the server
-        mHeaderLayout = mNavView.getHeaderView(0);
+        View mHeaderLayout = mNavView.getHeaderView(0);
         mTextViewUserName = mHeaderLayout.findViewById(R.id.user_name);
         mTextViewUserEmail = mHeaderLayout.findViewById(R.id.user_email);
 
@@ -432,6 +436,21 @@ public class MainActivity extends AppCompatActivity {
     public void setChatMenuItemVisibility(boolean b) {
         Menu nav_Menu = mNavView.getMenu();
         nav_Menu.findItem(R.id.menu_item_chat).setVisible(b);
+    }
+
+    public void runKonfettiAnimation() {
+        mKonfettiView.build()
+                .addColors(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary),
+                        ContextCompat.getColor(getApplicationContext(), R.color.activeJourney),
+                        ContextCompat.getColor(getApplicationContext(), R.color.inactiveJourney))
+                .setDirection(0, 180)
+                .setSpeed(4f, 10f)
+                .setFadeOutEnabled(true)
+                .setTimeToLive(3000L)
+                .addShapes(Shape.RECT)
+                .addSizes(new Size(10, 6f))
+                .setPosition(-50f, mKonfettiView.getWidth() + 50f, -50f, -50f)
+                .stream(50, 1000L);
     }
 
     /**

@@ -3,7 +3,6 @@ package com.meetandgo.meetandgo;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,17 +26,16 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * This static class is handling all the interactions with the Firebase database
+ * This static class is handling all the interactions with the FireBase database
  * In java only nested classes can be static so here all methods will be set to static
- * TODO: Massive refactor - divide functions by object type by creating e.g. UserFirebaseDB
+ * TODO: Massive refactor - divide functions by object type by creating e.g. UserFireBaseDB
  */
-public class FirebaseDB {
-    private static final String TAG = "FirebaseDB";
+public class FireBaseDB {
+    private static final String TAG = "FireBaseDB";
     private static FirebaseAuth sAuth;
     public static FirebaseDatabase sDatabase;
     private static boolean sInitialised;
@@ -45,7 +43,6 @@ public class FirebaseDB {
     private static DatabaseReference sSearchDatabase;
     private static DatabaseReference sJourneyDatabase;
     private static SharedPreferences mPrefs;
-    private final CountDownLatch loginLatch = new CountDownLatch(1);
 
     public static void initializeApp(Activity activity) {
         FirebaseApp.initializeApp(activity);
@@ -60,16 +57,15 @@ public class FirebaseDB {
 
     /**
      * Initializes Database References that are then also synced with local storage
-     *
      */
     private static void initializeDatabaseReferences() {
-        String uid = getCurrentUserUid();
+        String userID = getCurrentUserID();
         if (sDatabase == null) {
             sDatabase = FirebaseDatabase.getInstance();
             sDatabase.setPersistenceEnabled(true);
         }
-        if (uid != null) {
-            sUsersDatabaseReference = getUserDatabaseReference(uid);
+        if (userID != null) {
+            sUsersDatabaseReference = getUserDatabaseReference(userID);
             // Set the keepSync method to true in order to have local storage
             sUsersDatabaseReference.keepSynced(true);
         }
@@ -93,8 +89,8 @@ public class FirebaseDB {
         return sUsersDatabaseReference;
     }
 
-    public static String getCurrentUserUid() {
-        if (!isFirebaseInitialised()) return null;
+    public static String getCurrentUserID() {
+        if (!isFireBaseInitialized()) return null;
 
         FirebaseUser user = sAuth.getCurrentUser();
         if (user != null) return user.getUid();
@@ -103,14 +99,14 @@ public class FirebaseDB {
 
     /**
      * Give the current user, if the user does not exist on the database, we create the User with the
-     * data from the FirebaseUser object.
+     * data from the FireBaseUser object.
      *
      * @return the current user
      */
     public static User getCurrentUser() {
-        if (!isFirebaseInitialised()) return null;
+        if (!isFireBaseInitialized()) return null;
 
-        String uid = getCurrentUserUid();
+        String uid = getCurrentUserID();
         FirebaseUser firebaseUser = sAuth.getCurrentUser();
         if (firebaseUser == null) return null;
 
@@ -146,25 +142,22 @@ public class FirebaseDB {
      * Give the current user, if the user does not exist on the database, we create the User with the
      * data from the FirebaseUser object.
      *
-     * @param bus Event bus handler when you want to do something after reading the user.
+     * @param bus Event mBus handler when you want to do something after reading the user.
      * @return the current user
      */
-    public static User getCurrentUser(final Bus bus) {
-        if (!isFirebaseInitialised()) return null;
+    public static void getCurrentUser(final Bus bus) {
+        if (!isFireBaseInitialized()) return;
 
-        String uid = getCurrentUserUid();
+        String uid = getCurrentUserID();
         FirebaseUser firebaseUser = sAuth.getCurrentUser();
-        if (firebaseUser == null) return null;
-        User currentUser = getLocalStorageUser(firebaseUser);
-
-
-        final User[] user = {currentUser};
+        if (firebaseUser == null) return;
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                user[0] = snapshot.getValue(User.class);
-                bus.post(user[0]);
-                saveUserInLocalStorage(user[0]);
+                User user = snapshot.getValue(User.class);
+                if (user == null) return;
+                bus.post(user);
+                saveUserInLocalStorage(user);
             }
 
             @Override
@@ -173,10 +166,10 @@ public class FirebaseDB {
         };
 
         getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
-        return user[0];
     }
 
-    @NonNull private static User getLocalStorageUser(FirebaseUser firebaseUser) {
+    @NonNull
+    private static User getLocalStorageUser(FirebaseUser firebaseUser) {
         // Get Current user saved in the phone, if it doesn't exist use a new one created for this
         Gson gson = new Gson();
         String json = mPrefs.getString(Constants.CURRENT_USER, "");
@@ -188,14 +181,14 @@ public class FirebaseDB {
     }
 
     /**
-     * Add user to Firebase Database
+     * Add user to FireBase Database
      *
      * @return boolean, true if user successfully added, false otherwise
      */
     public static boolean addUser(User newUser) {
-        if (!isFirebaseInitialised()) return false;
+        if (!isFireBaseInitialized()) return false;
         if (newUser != null) {
-            String uid = getCurrentUserUid();
+            String uid = getCurrentUserID();
             getUserDatabaseReference(uid).setValue(newUser);
             return true;
         }
@@ -203,13 +196,13 @@ public class FirebaseDB {
     }
 
     /**
-     * Add a user Search to Firebase Database
+     * Add a user Search to FireBase Database
      *
-     * @return String, return the key of this search in firebase database, if unsuccessful in
+     * @return String, return the key of this search in FireBase database, if unsuccessful in
      * adding Search return empty string
      */
     public static String addNewSearch(Search newSearch) {
-        if (!isFirebaseInitialised()) return null;
+        if (!isFireBaseInitialized()) return null;
         if (newSearch != null) {
             DatabaseReference searchEntry = sSearchDatabase.push();
             searchEntry.setValue(newSearch);
@@ -220,13 +213,13 @@ public class FirebaseDB {
 
 
     /**
-     * Add a Journey to Firebase Database
+     * Add a Journey to FireBase Database
      *
-     * @return String, return the key of this search in Firebase database, if unsuccessful in
+     * @return String, return the key of this search in FireBase database, if unsuccessful in
      * adding Journey return empty string
      */
     public static String addNewJourney(Journey journey) {
-        if (!isFirebaseInitialised()) return null;
+        if (!isFireBaseInitialized()) return null;
         if (journey != null) {
             DatabaseReference journeyEntry = sJourneyDatabase.push();
             journeyEntry.setValue(journey);
@@ -238,55 +231,53 @@ public class FirebaseDB {
     /**
      * Set the given journey to the given journey ID in firebaseDB
      *
-     * @param jID     ID that we want to link to the given journey
-     * @param journey
+     * @param journeyID ID that we want to link to the given journey
+     * @param journey   Journey object that will be updated
      * @return
      */
-    public static String updateJourney(String jID, Journey journey) {
-        if (!isFirebaseInitialised()) return "";
-        if (jID != null && journey != null) {
-            DatabaseReference journeyEntry = sDatabase.getReference("journeys/" + jID);
-            journey.setjID(jID);
+    public static void updateJourney(String journeyID, Journey journey) {
+        if (!isFireBaseInitialized()) return;
+        if (journeyID != null && journey != null) {
+            DatabaseReference journeyEntry = sDatabase.getReference("journeys/" + journeyID);
+            journey.setJourneyID(journeyID);
             journeyEntry.setValue(journey);
-            return journeyEntry.getKey();
-        }
-        return "";
-    }
-
-    public static void updateJourneyID(String jID, Journey journey) {
-        if (!isFirebaseInitialised()) return;
-        if (jID != null && journey != null) {
-            DatabaseReference journeyEntry = sDatabase.getReference("journeys/" + jID + "/jID");
-            journeyEntry.setValue(journey.getjID());
+            journeyEntry.getKey();
         }
     }
 
+    public static void updateJourneyID(String journeyID, Journey journey) {
+        if (!isFireBaseInitialized()) return;
+        if (journeyID != null && journey != null) {
+            DatabaseReference journeyEntry = sDatabase.getReference("journeys/" + journeyID + "/journeyID");
+            journeyEntry.setValue(journey.getJourneyID());
+        }
+    }
 
-    public static String updateSearch(String sID, Search search) {
-        if (!isFirebaseInitialised()) return "";
-        if (sID != null && search != null) {
-            DatabaseReference searchEntry = sDatabase.getReference("search/" + sID);
-            search.setsID(sID);
+
+    public static void updateSearch(String searchID, Search search) {
+        if (!isFireBaseInitialized()) return;
+        if (searchID != null && search != null) {
+            DatabaseReference searchEntry = sDatabase.getReference("search/" + searchID);
+            search.setSearchID(searchID);
             searchEntry.setValue(search);
-            return searchEntry.getKey();
+            searchEntry.getKey();
         }
-        return "";
     }
 
     /**
      * Combine several users into one search and delete old searches
      *
-     * @param sID      search ID
-     * @param uID      user ID
+     * @param searchID search ID
+     * @param userID   user ID
      * @param deleteID search to delete
      * @return boolean, return true if addition of user to search successful
      */
     //TODO: this needs to be tested as soon as the matching is over
-    public static boolean addUserToSearch(String sID, String uID, String deleteID) {
-        if (!isFirebaseInitialised()) return false;
-        if (sID != null && uID != null && deleteID != null) {
-            DatabaseReference databaseReference = sDatabase.getReference("search/" + sID + "/additionalUsers/");
-            databaseReference.push().setValue(uID);
+    public static boolean addUserToSearch(String searchID, String userID, String deleteID) {
+        if (!isFireBaseInitialized()) return false;
+        if (searchID != null && userID != null && deleteID != null) {
+            DatabaseReference databaseReference = sDatabase.getReference("search/" + searchID + "/additionalUsers/");
+            databaseReference.push().setValue(userID);
             //delete search with deleteID
             DatabaseReference searchReference = sDatabase.getReference("search/" + deleteID);
             searchReference.removeValue();
@@ -298,13 +289,13 @@ public class FirebaseDB {
     /**
      * Remove search from database
      *
-     * @param sID search ID to remove
+     * @param searchID search ID to remove
      * @return if outcome was successful
      */
-    public static boolean deleteSearch(String sID) {
-        if (!isFirebaseInitialised()) return false;
-        if (sID != null) {
-            DatabaseReference searchReference = sDatabase.getReference("search/" + sID);
+    public static boolean deleteSearch(String searchID) {
+        if (!isFireBaseInitialized()) return false;
+        if (searchID != null) {
+            DatabaseReference searchReference = sDatabase.getReference("search/" + searchID);
             searchReference.removeValue();
             return true;
         }
@@ -312,16 +303,16 @@ public class FirebaseDB {
     }
 
     /**
-     * Add message to the journey with the ID jID
+     * Add message to the journey with the ID journeyID
      *
-     * @param jID     ID of the journey the message is added to
-     * @param message to add to the journey
+     * @param journeyID ID of the journey the message is added to
+     * @param message   to add to the journey
      * @return true if correctly added, false otherwise
      */
-    public static boolean addMessageToJourney(String jID, ChatMessage message) {
-        if (!isFirebaseInitialised()) return false;
-        if (jID != null && message != null) {
-            DatabaseReference databaseReference = sDatabase.getReference("journeys/" + jID + "/messages/");
+    public static boolean addMessageToJourney(String journeyID, ChatMessage message) {
+        if (!isFireBaseInitialized()) return false;
+        if (journeyID != null && message != null) {
+            DatabaseReference databaseReference = sDatabase.getReference("journeys/" + journeyID + "/messages/");
             databaseReference.push().setValue(message);
             return true;
         }
@@ -330,11 +321,11 @@ public class FirebaseDB {
 
 
     /**
-     * Check to see if firebase was initialized or not
+     * Check to see if FireBase was initialized or not
      *
-     * @return Boolean variable indicating if firebase has been initialized or not
+     * @return Boolean variable indicating if FireBase has been initialized or not
      */
-    public static boolean isFirebaseInitialised() {
+    public static boolean isFireBaseInitialized() {
         if (sAuth == null) return false;
         if (sDatabase == null) return false;
         return sInitialised;
@@ -342,27 +333,24 @@ public class FirebaseDB {
 
     /**
      * Checks if the user is in database, not in the Authentication database but in the users one
-     * TODO: The result is running in other thread, the return will always be false.
      * //Do we really need that? Try doing callback one last time
      *
      * @param uid String corresponding to the user unique id that needs to be checked
      * @return Boolean value indicating if the user was found or not
      */
-    public static boolean isUserInDB(String uid, ValueEventListener valueEventListener) {
-        final boolean[] result = {false};
-        // Run the search for the user based on his userId
+    public static void isUserInDB(String uid, ValueEventListener valueEventListener) {
+        // Run the search for the user based on his userID
         getUserDatabaseReference(uid).addValueEventListener(valueEventListener);
-        return result[0];
     }
 
     /**
-     * Removes a user from the Firebase Database
+     * Removes a user from the FireBase Database
      *
-     * @param uid ID of user to be removed
+     * @param userID ID of user to be removed
      */
-    public static void removeUser(String uid) {
+    public static void removeCurrentUser(String userID) {
         // Remove user from the "users" database
-        getUserDatabaseReference(uid).removeValue();
+        getUserDatabaseReference(userID).removeValue();
         // Remove user from the auth database
         FirebaseUser firebaseUser = sAuth.getCurrentUser();
         firebaseUser.delete();
@@ -372,12 +360,10 @@ public class FirebaseDB {
     /**
      * Adds rating to user uid
      * Note: if several addRating() launched sequentially, risk of over writing the previous call
-     *
-     * @param uid    String corresponding to the user unique id that is rated
+     *  @param userID String corresponding to the user unique id that is rated
      * @param rating The rating that is given
      */
-    public static void addRating(final String uid, final int rating) {
-        if (uid == null) return;
+    public static void addRating(final String userID, final float rating) {
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -389,38 +375,38 @@ public class FirebaseDB {
                 //trim the rating number to 2 decimal values
                 DecimalFormat df = new DecimalFormat("#.##");
                 userToRate.setRating(Double.parseDouble(df.format(userToRate.getRating())));
-                getUserDatabaseReference(uid).setValue(userToRate);
+                getUserDatabaseReference(userID).setValue(userToRate);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         };
-        getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
+        getUserDatabaseReference(userID).addListenerForSingleValueEvent(valueEventListener);
     }
 
-    public static void getRating(String uid, final User user) {
-
+    public static void getRating(String userID, final User user) {
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                User DatabaseUser = snapshot.getValue(User.class);
-                user.setRating(DatabaseUser.getRating());
-                user.setRating(DatabaseUser.getNumOfRatings());
+                User databaseUser = snapshot.getValue(User.class);
+                if (databaseUser == null) return;
+                user.setRating(databaseUser.getRating());
+                user.setRating(databaseUser.getNumOfRatings());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         };
-        getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
+        getUserDatabaseReference(userID).addListenerForSingleValueEvent(valueEventListener);
     }
 
     /**
      * Whenever the class is sent to the server the timestamp is updated. See the data/Search class
      * for reference on how to use it
      *
-     * @return
+     * @return HashMap<String, Object> where the object is the timestamp
      */
     public static HashMap<String, Object> getServerTime() {
         HashMap<String, Object> timestampNow = new HashMap<>();
@@ -428,20 +414,18 @@ public class FirebaseDB {
         return timestampNow;
     }
 
-    public static DatabaseReference getJourneyMessagesReference(String curr_journey) {
-        DatabaseReference journeyMessagesRef = sDatabase.getReference("journeys/" + curr_journey + "/messages");
+    public static DatabaseReference getJourneyMessagesReference(String journeyID) {
+        DatabaseReference journeyMessagesRef = sDatabase.getReference("journeys/" + journeyID + "/messages");
         journeyMessagesRef.keepSynced(true);
         return journeyMessagesRef;
     }
 
     /**
-     * Retrieve every search from DB
-     *
-     * @return List of all searches
+     * Retrieve every search from DB and calls the mBus post method once it's done
      */
-    public static ArrayList<Search> retrieveSearchesBySearch(final Bus bus, final Search search) {
+    public static void retrieveSearchesBySearch(final Bus bus, final Search search) {
         final ArrayList<Search> searches = new ArrayList<>();
-        if (!isFirebaseInitialised()) return null;
+        if (!isFireBaseInitialized()) return;
         final Loc startLocation = search.getStartLocation();
         final Loc endLocation = search.getEndLocation();
 
@@ -451,14 +435,13 @@ public class FirebaseDB {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Search searchResult = dataSnapshot.getValue(Search.class);
-                Log.d(TAG, searchResult.getUserId());
-                Log.d(TAG, search.getUserId());
-                if (!searchResult.getUserId().equals(search.getUserId())) {
-                    Log.d(TAG, "S-Lng: " + searchResult.getStartLocation().getLng());
+                if (searchResult == null) return;
+                if (!searchResult.getUserID().equals(search.getUserID())) {
+                    /*Log.d(TAG, "S-Lng: " + searchResult.getStartLocation().getLng());
                     Log.d(TAG, "S-Lat: " + searchResult.getStartLocation().getLat());
                     Log.d(TAG, "E-Lng: " + searchResult.getEndLocation().getLng());
                     Log.d(TAG, "E-Lat: " + searchResult.getEndLocation().getLat());
-                    Log.d(TAG, "Previous Search ID: " + prevChildKey);
+                    Log.d(TAG, "Previous Search ID: " + prevChildKey);*/
                     searches.add(searchResult);
                     bus.post(searchResult);
                 }
@@ -481,15 +464,12 @@ public class FirebaseDB {
             }
 
         });
-
-        Log.d(TAG, String.valueOf(searches.size()));
-        return searches;
     }
 
     /**
      * Add eventListeners to journeys
      *
-     * @param journeyIDs array of journeys to add listeners to
+     * @param journeyIDs         array of journeys to add listeners to
      * @param childEventListener the listener to be added to the journeys
      */
     public static void getJourneys(List<String> journeyIDs, ValueEventListener childEventListener) {
@@ -502,55 +482,61 @@ public class FirebaseDB {
     /**
      * Adds the journey to the user given the user id
      *
-     * @param uid     User Id
+     * @param userID  User Id
      * @param journey Journey Object
      */
-    public static void addJourneyToUser(final String uid, final Journey journey) {
+    public static void addJourneyToUser(final String userID, final Journey journey) {
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                user.numOfTrips = user.getJourneyIDs().size() + 1;
-                if (user != null) {
-                    user.journeyIDs.add(journey.getjID());
-                    updateUser(uid, user);
-                }
+                if (user == null) return;
+                user.setNumOfTrips(user.getJourneyIDs().size() + 1);
+                user.addJourneyID(journey.getJourneyID());
+                updateUser(userID, user);
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         };
-        Log.d(TAG, "uid");
-        getUserDatabaseReference(uid).addListenerForSingleValueEvent(valueEventListener);
+        getUserDatabaseReference(userID).addListenerForSingleValueEvent(valueEventListener);
     }
 
     /**
      * Updates a user given the user id with a new user object
      *
-     * @param userID
-     * @param user
+     * @param userID String with the user ID of the user that you want to update
      */
-
     public static void updateUser(String userID, User user) {
-        Log.e(TAG, userID);
-        Log.e(TAG, user.toString());
-        if (userID != null && user != null) {
-            DatabaseReference userEntry = sDatabase.getReference("users/" + userID);
-            userEntry.setValue(user);
-        }
+        if (user == null) return;
+        DatabaseReference userEntry = sDatabase.getReference("users/" + userID);
+        userEntry.setValue(user);
+
+    }
+
+    public static void deleteJourneyFromUser(String userID, String journeyID) {
+        User user = getCurrentUser();
+        if (user == null) return;
+        user.removeJourney(journeyID);
+        updateUser(userID, user);
+    }
+
+    public static void getUser(String userID, ValueEventListener valueEventListener) {
+        getUserDatabaseReference(userID).addListenerForSingleValueEvent(valueEventListener);
     }
 
 
     // TODO: Fix this function
 //    /**
-//     * Increment the uID number of journey after a journey is completed
+//     * Increment the userID number of journey after a journey is completed
 //     * (by clicking on the journey is over button in the chat fragment)
 //     *
-//     * @param uID user ID with a new journey completed
+//     * @param userID user ID with a new journey completed
 //     */
-//    public static void incrementUserNumberOfJourney(String uID) {
-//        final DatabaseReference tempUserRef = sDatabase.getReference("users/" + uID +"/numOfTrips/");
+//    public static void incrementUserNumberOfJourney(String userID) {
+//        final DatabaseReference tempUserRef = sDatabase.getReference("users/" + userID +"/numOfTrips/");
 //
 //        Log.d(TAG, "in IncrementNumJourneys");
 //

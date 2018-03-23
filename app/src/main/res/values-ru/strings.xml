@@ -49,9 +49,9 @@
     <string name="number_of_trips">%d Поездки</string>
     <string name="change_password">Поменять Пароль</string>
     <string name="number_of_ratings">%d Рейтингов</string>
-    <string name="gobutton">Начать Поезку</string>
-    <string name="finishbutton">Закончить Поезку</string>
-    <string name="rate_message">Какой Ваш Пол?</string>
+    <string name="go_button">Начать Поезку</string>
+    <string name="finish_button">Закончить Поезку</string>
+    <string name="gender_message">Какой Ваш Пол?</string>
     <string name="confirm">Окай</string>
     <string name="other">Другое</string>
     <string name="matching_results">Результаты</string>

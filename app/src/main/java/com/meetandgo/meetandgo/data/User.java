@@ -2,21 +2,22 @@ package com.meetandgo.meetandgo.data;
 
 import android.location.Location;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class to save the information of the user
  */
 public class User {
-    public String fullName;
-    public String email;
-    public double rating;
-    public int numOfRatings;
-    public Location position;
-    public int numOfTrips;
-    public Preferences.Gender gender;
-    public List<String> journeyIDs;
+    private String fullName;
+    private String email;
+    private double rating;
+    private int numOfRatings;
+    private Location position;
+    private int numOfTrips;
+    private Preferences.Gender gender;
+    private ArrayList<String> journeyIDs;
 
     public User() {
         this.fullName = "";
@@ -26,7 +27,7 @@ public class User {
         this.position = null;
         this.numOfTrips = 0;
         this.gender = null;
-        this.journeyIDs = new ArrayList<String>();
+        this.journeyIDs = new ArrayList<>();
     }
 
     public User(String fullName, String email) {
@@ -37,7 +38,7 @@ public class User {
         this.position = null;
         this.numOfTrips = 0;
         this.gender = null;
-        this.journeyIDs = new ArrayList<String>();
+        this.journeyIDs = new ArrayList<>();
     }
 
     public String getFullName() {
@@ -96,8 +97,17 @@ public class User {
         this.gender = gender;
     }
 
-    public List<String> getJourneyIDs() { return journeyIDs; }
+    public ArrayList<String> getJourneyIDs() { return journeyIDs; }
 
-    public void setJourneyIDs(List<String> journeyIDs) { this.journeyIDs = journeyIDs; }
+    public void setJourneyIDs(ArrayList<String> journeyIDs) { this.journeyIDs = journeyIDs; }
 
+    @Exclude
+    public void addJourneyID(String journeyID) {
+        journeyIDs.add(journeyID);
+    }
+
+    @Exclude
+    public void removeJourney(String journeyID) {
+        journeyIDs.remove(journeyID);
+    }
 }

@@ -2,35 +2,37 @@ package com.meetandgo.meetandgo.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Journey {
 
-    private String jID;
+    private String journeyID;
+    private String searchID;
     private Loc startLocation;
     private String startLocationString;
 
     private long startTime;
-    private List<String> users;
+    private ArrayList<String> users;
     private HashMap<String, ChatMessage> messages;
     private Preferences.Mode mode;
     private boolean active;
 
     public Journey() {
-        this.jID = "";
+        this.journeyID = "";
+        this.searchID = "";
         this.startLocation = null;
         this.startLocationString = "Location not found.";
         this.startTime = -1;
-        this.users = new ArrayList<String>();
+        this.users = new ArrayList<>();
         this.messages = new HashMap<>();
         this.active =true;
         this.mode = Preferences.Mode.WALK;
     }
 
-    public Journey(Loc mStartPosition, String startLocationString, long startTime, List<String> users) {
+    public Journey(String searchID, Loc startLocation, String startLocationString, long startTime, ArrayList<String> users) {
         this.startLocationString = startLocationString;
-        this.jID = "";
-        this.startLocation = mStartPosition;
+        this.searchID = searchID;
+        this.journeyID = "";
+        this.startLocation = startLocation;
         this.startTime = startTime;
         this.users = users;
         this.messages = new HashMap<>();
@@ -41,12 +43,12 @@ public class Journey {
         this.active =false;
 
     }
-    public String getjID() {
-        return jID;
+    public String getJourneyID() {
+        return journeyID;
     }
 
-    public void setjID(String journey_id) {
-        this.jID = journey_id;
+    public void setJourneyID(String journey_id) {
+        this.journeyID = journey_id;
     }
 
     public Loc getStartLocation() {
@@ -65,11 +67,11 @@ public class Journey {
         this.startTime = start_time;
     }
 
-    public List<String> getUsers() {
+    public ArrayList<String> getUsers() {
         return users;
     }
 
-    public void setUsers(List<String> users) {
+    public void setUsers(ArrayList<String> users) {
         this.users = users;
     }
 
@@ -105,6 +107,14 @@ public class Journey {
         this.startLocationString = startLocationString;
     }
 
+    public String getSearchID() {
+        return searchID;
+    }
+
+    public void setSearchID(String searchID) {
+        this.searchID = searchID;
+    }
+
     /**
      * Updates the journey data with a passed in journey object
      *
@@ -117,4 +127,5 @@ public class Journey {
         messages = o.getMessages();
         active = o.isActive();
     }
+
 }

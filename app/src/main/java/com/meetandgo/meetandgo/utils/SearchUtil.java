@@ -48,10 +48,10 @@ public final class SearchUtil {
         int validIndexes = 0;
         for (Search search : searches) {
             //PROCESS SEARCH
-            if (!search.getUserId().equals(currentUserSearch.getUserId())) {
+            if (!search.getUserID().equals(currentUserSearch.getUserID())) {
                 boolean isEqual = false;
                 for (int i = 0; i < search.getAdditionalUsers().size(); i++) {
-                    if (Objects.equals(currentUserSearch.getUserId(), search.getAdditionalUsers().get(i)))
+                    if (Objects.equals(currentUserSearch.getUserID(), search.getAdditionalUsers().get(i)))
                         isEqual = true;
                 }
                 if (isEqual) {

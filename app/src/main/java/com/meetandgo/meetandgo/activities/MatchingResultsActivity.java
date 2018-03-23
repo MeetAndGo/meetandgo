@@ -2,21 +2,24 @@ package com.meetandgo.meetandgo.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.meetandgo.meetandgo.Constants;
-import com.meetandgo.meetandgo.FirebaseDB;
+import com.meetandgo.meetandgo.FireBaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Search;
@@ -26,14 +29,14 @@ import com.meetandgo.meetandgo.views.OnItemClickListener;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
-import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.meetandgo.meetandgo.fragments.JourneyHistoryFragment.mBus;
 
 public class MatchingResultsActivity extends AppCompatActivity {
 
@@ -42,11 +45,10 @@ public class MatchingResultsActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    private LinearLayoutManager mLayoutManager;
+    @BindView(R.id.swipeRefresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private MatchingResultsAdapter mAdapter;
     private ArrayList<Search> orderedSearches = new ArrayList<>();
-    private OnItemClickListener listener;
-    public static Bus bus;
     private Search mCurrentUserSearch;
     private ArrayList<Search> mSearches = new ArrayList<>();
 
@@ -57,39 +59,72 @@ public class MatchingResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_matching_results);
         ButterKnife.bind(this);
 
-        bus = new Bus(ThreadEnforcer.MAIN);
-        bus.register(this);
+        // Register the mBus that will be called when a new search is found
+        mBus = new Bus(ThreadEnforcer.MAIN);
+        mBus.register(this);
 
-        String json = getIntent().getStringExtra("currentUserSearch");
+        mCurrentUserSearch = getSearchFromCallingActivity();
+        //Log.d(TAG, mCurrentUserSearch.getUserID());
+        setUpUI();
 
-        Gson gson = new Gson();
-        mCurrentUserSearch = gson.fromJson(json, Search.class);
-        //Log.d(TAG, mCurrentUserSearch.getUserId());
+        FireBaseDB.retrieveSearchesBySearch(mBus, mCurrentUserSearch);
 
-        // use this setting to improve performance if you know that changes
+    }
+
+    /**
+     * Set Ups all the UI elements of the activity, and all the listeners of the views
+     */
+    private void setUpUI() {
+        setUpRecyclerView();
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                FireBaseDB.retrieveSearchesBySearch(mBus, mCurrentUserSearch);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+        setUpToolbar();
+    }
+
+    /**
+     * Starts and setups the RecyclerView and click listeners of the elements on the list
+     */
+    private void setUpRecyclerView() {
+        // Use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        listener = new OnItemClickListener() {
+        OnItemClickListener listener = new OnItemClickListener() {
             @Override
             public void onItemClick(Object object) {
                 Search search = (Search) object;
                 askConfirmation(search);
+            }
 
+            @Override
+            public void onItemLongClick(Object object) {
             }
         };
         mAdapter = new MatchingResultsAdapter(orderedSearches, listener);
         mRecyclerView.setAdapter(mAdapter);
+    }
 
-        //Matching algorithm
-        FirebaseDB.retrieveSearchesBySearch(bus, mCurrentUserSearch);
-
-        setUpToolbar();
+    /**
+     * From the activity that is calling this one, we should get the search that was made to start
+     * the matching results activity.
+     *
+     * @return Search object that was sent to this activity
+     */
+    private Search getSearchFromCallingActivity() {
+        String json = getIntent().getStringExtra(Constants.CURRENT_USER_SEARCH);
+        Gson gson = new Gson();
+        return gson.fromJson(json, Search.class);
     }
 
     /**
@@ -99,15 +134,21 @@ public class MatchingResultsActivity extends AppCompatActivity {
      * @param journey
      */
     private void updateJourneyUsers(Journey journey) {
-        for(String userID : journey.getUsers()){
-            FirebaseDB.addJourneyToUser(userID, journey);
+        for (String userID : journey.getUsers()) {
+            FireBaseDB.addJourneyToUser(userID, journey);
         }
     }
 
+    /**
+     * Starts the MainActivity and from there the ChatFragment is activated, and also sends the
+     * journey object that was created when clicking the search.
+     *
+     * @param journey
+     */
     private void startChatFragment(Journey journey) {
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         Gson gson = new Gson();
-        String json = gson.toJson(journey);        Log.d(TAG, "Json Journey sent to the chat" + json);
+        String json = gson.toJson(journey);
         mainActivityIntent.putExtra(Constants.JOURNEY_EXTRA, json);
         mainActivityIntent.putExtra(Constants.JOURNEY_ACTIVITY_EXTRA, "journey_activity");
         startActivity(mainActivityIntent);
@@ -116,50 +157,54 @@ public class MatchingResultsActivity extends AppCompatActivity {
 
     /**
      * Get user's confirmation to join journey
-     * @param search
+     *
+     * @param search Search object in order to combine the searches into just one
      */
     private void askConfirmation(final Search search) {
-        new LovelyStandardDialog(this, LovelyStandardDialog.ButtonLayout.HORIZONTAL)
-                .setTopColorRes(R.color.colorPrimaryDark)
-                .setButtonsColorRes(R.color.colorPrimary)
-                // TODO: Change Icon to something related to journeys
-                .setIcon(R.drawable.ic_info_outline_white_48dp)
-                .setMessage(R.string.confirmation_message)
-                .setPositiveButton(android.R.string.yes, new View.OnClickListener() {
+        new MaterialDialog.Builder(this)
+                .content(R.string.confirmation_message)
+                .positiveText(android.R.string.yes)
+                .negativeText(android.R.string.no)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         Log.d(TAG, search.getJourneyID());
                         Journey journey = createJourney(search);
-                        search.setJourneyID(journey.getjID());
+                        search.setJourneyID(journey.getJourneyID());
                         updateJourneyUsers(journey);
                         combineAndUpdateSearch(search, journey);
                         startChatFragment(journey);
-
                     }
                 })
-                .setNegativeButton(android.R.string.no, null)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
                 .show();
     }
 
     /**
      * Create journey (when clicking on match), when the search has a journey attached to it, it won't
      * create a new journey but it will update the current journey adding the user to it.
+     *
      * @param joinedSearch (selected match)
      */
     public Journey createJourney(Search joinedSearch) {
-        List<String> users = new ArrayList<>();
-        users.add(joinedSearch.getUserId());
-        users.add(mCurrentUserSearch.getUserId());
+        ArrayList<String> users = new ArrayList<>();
+        users.add(joinedSearch.getUserID());
+        users.add(mCurrentUserSearch.getUserID());
         String journeyKey;
-        Journey journey = new Journey(joinedSearch.getStartLocation(), joinedSearch.getStartLocationString(),
+        Journey journey = new Journey(joinedSearch.getSearchID(), joinedSearch.getStartLocation(), joinedSearch.getStartLocationString(),
                 new Date().getTime(), users);
-        if(joinedSearch.hasJourney()){
+        if (joinedSearch.hasJourney()) {
             journeyKey = joinedSearch.getJourneyID();
-        }else {
-            journeyKey = FirebaseDB.addNewJourney(journey);
+        } else {
+            journeyKey = FireBaseDB.addNewJourney(journey);
         }
-        journey.setjID(journeyKey);
-        FirebaseDB.updateJourneyID(journeyKey, journey);
+        journey.setJourneyID(journeyKey);
+        FireBaseDB.updateJourneyID(journeyKey, journey);
         return journey;
     }
 
@@ -168,10 +213,10 @@ public class MatchingResultsActivity extends AppCompatActivity {
      * and deleting the previous user search.
      */
     private void combineAndUpdateSearch(Search joinedSearch, Journey newJourney) {
-        joinedSearch.addUser(mCurrentUserSearch.getUserId());
-        joinedSearch.setJourneyID(newJourney.getjID());
-        FirebaseDB.deleteSearch(mCurrentUserSearch.getsID());
-        FirebaseDB.updateSearch(joinedSearch.getsID(), joinedSearch);
+        joinedSearch.addUser(mCurrentUserSearch.getUserID());
+        joinedSearch.setJourneyID(newJourney.getJourneyID());
+        FireBaseDB.deleteSearch(mCurrentUserSearch.getSearchID());
+        FireBaseDB.updateSearch(joinedSearch.getSearchID(), joinedSearch);
     }
 
 
@@ -185,19 +230,23 @@ public class MatchingResultsActivity extends AppCompatActivity {
     }
 
     /**
-     * The method with the @Subscribe decorator is called when we post from the bus object
+     * The method with the @Subscribe decorator is called when we post from the mBus object
+     *
      * @param search
      */
     @Subscribe
     public void nextMethod(Search search) {
-            mSearches.add(search);
-            orderedSearches = SearchUtil.calculateSearch(mSearches, mCurrentUserSearch);
-            mAdapter.setListOfSearches(orderedSearches);
-
+        // If already exists on the list we dont add it.
+        for (Search s : mSearches) {
+            if (s.getSearchID().equals(search.getSearchID())) return;
+        }
+        mSearches.add(search);
+        orderedSearches = SearchUtil.calculateSearch(mSearches, mCurrentUserSearch);
+        mAdapter.setListOfSearches(orderedSearches);
     }
 
     /**
-     * Sets up the toolbar
+     * Sets up the toolbar, the color and all its components
      */
     private void setUpToolbar() {
         setSupportActionBar(mToolbar);
@@ -211,6 +260,5 @@ public class MatchingResultsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(R.string.matching_results);
     }
-
 
 }

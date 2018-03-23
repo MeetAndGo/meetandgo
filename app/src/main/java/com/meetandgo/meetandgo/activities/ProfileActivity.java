@@ -15,7 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.meetandgo.meetandgo.FirebaseDB;
+import com.meetandgo.meetandgo.FireBaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.data.User;
 
@@ -27,13 +27,22 @@ import butterknife.ButterKnife;
  */
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
-    @BindView(R.id.user_name) TextView mTextViewUserName;
-    @BindView(R.id.user_email) TextView mTextViewUserEmail;
-    @BindView(R.id.number_of_ratings) TextView mTextViewNumberOfRatings;
-    @BindView(R.id.rating) RatingBar mRatingBarRating;
-    @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.number_of_trips) TextView mNumberOfTrips;
-    @BindView(R.id.user_add_to_group) TextView mAddToGroup;
+
+    @BindView(R.id.user_name)
+    TextView mTextViewUserName;
+    @BindView(R.id.user_email)
+    TextView mTextViewUserEmail;
+    @BindView(R.id.number_of_ratings)
+    TextView mTextViewNumberOfRatings;
+    @BindView(R.id.rating)
+    RatingBar mRatingBarRating;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.number_of_trips)
+    TextView mNumberOfTrips;
+    @BindView(R.id.user_add_to_group)
+    TextView mAddToGroup;
+
     private ValueEventListener mUserValueEventListener;
 
     @Override
@@ -54,12 +63,12 @@ public class ProfileActivity extends AppCompatActivity {
      * Sets up the
      */
     private void setUpUser() {
-        final User currentUser = FirebaseDB.getCurrentUser();
+        final User currentUser = FireBaseDB.getCurrentUser();
 
         mUserValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.e(TAG, "in ondatachange from event listener" + snapshot.toString());
+                Log.e(TAG, "in OnDataChange from event listener" + snapshot.toString());
                 User user = snapshot.getValue(User.class);
                 if (user != null) {
                     setRatingBarInfo(user);
@@ -71,17 +80,26 @@ public class ProfileActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         };
-        FirebaseDB.isUserInDB(FirebaseDB.getCurrentUserUid(), mUserValueEventListener);
+
+        // We check if the user is in the database and then execute the method that is in the
+        // value event listener.
+        FireBaseDB.isUserInDB(FireBaseDB.getCurrentUserID(), mUserValueEventListener);
+        if (currentUser == null) return;
         mTextViewUserName.setText(currentUser.getFullName());
         mTextViewUserEmail.setText(currentUser.getEmail());
         String gender = currentUser.getGender().toString();
 
-        if(gender.equals("FEMALE")){
-            mAddToGroup.setText(R.string.gender_female);
-        }else if(gender.equals("MALE")){
-            mAddToGroup.setText(R.string.gender_male);
-        }else{
-            mAddToGroup.setText(R.string.any);
+        // Change string on the profile based on the gender
+        switch (gender) {
+            case "FEMALE":
+                mAddToGroup.setText(R.string.gender_female);
+                break;
+            case "MALE":
+                mAddToGroup.setText(R.string.gender_male);
+                break;
+            default:
+                mAddToGroup.setText(R.string.any);
+                break;
         }
     }
 
@@ -94,15 +112,10 @@ public class ProfileActivity extends AppCompatActivity {
         //Check if it its already logged in
         mRatingBarRating.setRating((float) user.getRating());
         mTextViewNumberOfRatings.setText(getString(R.string.number_of_ratings, user.getNumOfRatings()));
-        if (user.getRating() >= 4 && user.getNumOfRatings() >= 10) {
-            //mRatingBarRating.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorYellow)));
-            //mRatingBarRating.setSecondaryProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark)));
-
-        }
     }
 
     /**
-     * Sets the number of trips
+     * Sets the number of trips string in the profile page
      *
      * @param user User object with data
      */
@@ -111,7 +124,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the toolbar
+     * Sets up the toolbar and all the components of it, like color and title
      */
     private void setUpToolbar() {
         setSupportActionBar(mToolbar);
@@ -121,6 +134,7 @@ public class ProfileActivity extends AppCompatActivity {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(statusBarColor);
+        if(getSupportActionBar() == null) return;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(R.string.profile);
@@ -142,9 +156,13 @@ public class ProfileActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * When we destroy the app, we remove the event listener in order to not update this activity
+     * anymore with the information of the user.
+     */
     @Override
     protected void onDestroy() {
-        DatabaseReference databaseReference = FirebaseDB.getUserDatabaseReference(FirebaseDB.getCurrentUserUid());
+        DatabaseReference databaseReference = FireBaseDB.getUserDatabaseReference(FireBaseDB.getCurrentUserID());
         databaseReference.removeEventListener(mUserValueEventListener);
         super.onDestroy();
     }

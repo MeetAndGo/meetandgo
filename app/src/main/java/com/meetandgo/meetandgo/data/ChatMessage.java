@@ -1,7 +1,7 @@
 package com.meetandgo.meetandgo.data;
 
 import com.google.firebase.database.Exclude;
-import com.meetandgo.meetandgo.FirebaseDB;
+import com.meetandgo.meetandgo.FireBaseDB;
 
 import java.util.HashMap;
 
@@ -19,8 +19,7 @@ public class ChatMessage {
         this.userID = userID;
 
         // Initialize to current time
-        HashMap<String, Object> timestampNow = FirebaseDB.getServerTime();
-        this.timestampCreated = timestampNow;
+        this.timestampCreated = FireBaseDB.getServerTime();
     }
 
     public ChatMessage(){}

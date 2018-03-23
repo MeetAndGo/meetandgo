@@ -1,5 +1,7 @@
 package com.meetandgo.meetandgo;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public final class Constants {
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
@@ -15,4 +17,7 @@ public final class Constants {
     public static final int MAX_SEARCH_LIST_SIZE = 5;
     public static final int JOURNEY_REQUEST_CODE = 1 ;
     public static final String JOURNEY_ACTIVITY_EXTRA = "JOURNEY_ACTIVITY_EXTRA" ;
+    public static final LatLng DEFAULT_LOCATION = new LatLng(53.341563, -6.253010);;
+    public static final float DEFAULT_ZOOM = 13;
+    public static final String CURRENT_USER_SEARCH = "currentUserSearch";
 }

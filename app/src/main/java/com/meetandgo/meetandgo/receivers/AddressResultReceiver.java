@@ -1,9 +1,5 @@
 package com.meetandgo.meetandgo.receivers;
 
-/**
- * Created by ManuGil on 2/9/2018.
- */
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;

@@ -48,14 +48,17 @@
     <string name="number_of_trips">%d Trips</string>
     <string name="change_password">Change Password</string>
     <string name="number_of_ratings">%d Ratings</string>
-    <string name="gobutton">Let\'s Go!</string>
-    <string name="finishbutton">Journey is over!</string>
-    <string name="rate_message">What preferredGender do you MOST feel like?</string>
+    <string name="go_button">Let\'s Go!</string>
+    <string name="finish_button">Journey is over!</string>
+    <string name="gender_message">What preferredGender do you MOST feel like?</string>
     <string name="confirm">Confirm</string>
     <string name="other">other</string>
     <string name="matching_results">Matching Results</string>
     <string name="loc_not_found">Location not found.</string>
     <string name="confirmation_message">Are you sure you want to join this Journey?</string>
+    <string name="refresh">Refresh</string>
+    <string name="menu_rate_users">Rate journey users</string>
+    <string name="menu_delete">Delete journey</string>
 
     <string-array name="gender_array">
         <item name="gender_any">Any</item>

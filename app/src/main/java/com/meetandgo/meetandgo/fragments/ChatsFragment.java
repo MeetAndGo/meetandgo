@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.meetandgo.meetandgo.Constants;
-import com.meetandgo.meetandgo.FirebaseDB;
+import com.meetandgo.meetandgo.FireBaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.activities.MainActivity;
 import com.meetandgo.meetandgo.data.ChatMessage;
@@ -47,12 +47,10 @@ public class ChatsFragment extends Fragment {
     Button mFinishButton;
 
     private static final String TAG = "ChatsFragment";
-    private View mView;
     private FirebaseListAdapter<ChatMessage> adapter;
-
-    //TODO: Current journey should be given by the previous activity when matching
     private Journey mCurrentJourney;
 
+    // Empty constructor needed for instantiate the new chats fragment.
     public ChatsFragment() {
     }
 
@@ -64,55 +62,56 @@ public class ChatsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_chats, container, false);
-        ButterKnife.bind(this, mView);
+        View view = inflater.inflate(R.layout.fragment_chats, container, false);
+        ButterKnife.bind(this, view);
 
         setUpEditText();
+        MainActivity activity = ((MainActivity) getActivity());
+        if (activity == null) return view;
+
         if (mCurrentJourney != null) {
-            updateButtonsStatus();
+            updateButtonsStatuses();
             updateClickListener();
             displayChatMessages();
-            ((MainActivity) getActivity()).setChatMenuItemVisibility(true);
+            activity.setChatMenuItemVisibility(true);
         } else {
-            ((MainActivity) getActivity()).setChatMenuItemVisibility(false);
+            activity.setChatMenuItemVisibility(false);
         }
-        return mView;
+        return view;
     }
 
-    private void updateButtonsStatus() {
-        Log.e(TAG,Boolean.toString(mCurrentJourney.isActive()));
-        Log.e(TAG,Boolean.toString(mCurrentJourney.isActive()));
-        if(mCurrentJourney.isActive() &&
-                (FirebaseDB.getCurrentUserUid().equals(mCurrentJourney.getUsers().get(0)))) {
+    private void updateButtonsStatuses() {
+        Log.e(TAG, Boolean.toString(mCurrentJourney.isActive()));
+        Log.e(TAG, Boolean.toString(mCurrentJourney.isActive()));
+        if (mCurrentJourney.isActive() &&
+                (FireBaseDB.getCurrentUserID().equals(mCurrentJourney.getUsers().get(0)))) {
             mLetsGoButton.setVisibility(View.VISIBLE);
             mFinishButton.setVisibility(View.GONE);
             setUpBeginJourney();
             setUpFinishJourney();
-        }
-        else
-        {
+        } else {
             mLetsGoButton.setVisibility(View.GONE);
             mFinishButton.setVisibility(View.GONE);
         }
     }
 
     /**
-     * Updates the click listener responsible for sending a message.
+     * Updates the click listener responsible for sending a message. This is called every time we
+     * change the journey of the chat fragment.
      */
     private void updateClickListener() {
         mSendMsgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String messageText = mTextInput.getText().toString();
-
                 if (messageText.equals("")) return;
 
-                ChatMessage message1 = new ChatMessage(messageText, FirebaseDB.getCurrentUser().getFullName(), FirebaseDB.getCurrentUserUid());
+                ChatMessage message1 = new ChatMessage(messageText, FireBaseDB.getCurrentUser().getFullName(), FireBaseDB.getCurrentUserID());
                 mListMessages.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
                 mListMessages.setStackFromBottom(true);
                 // Read the input field and push a new instance
-                // of ChatMessage to the Firebase database
-                FirebaseDB.addMessageToJourney(mCurrentJourney.getjID(), message1);
+                // of ChatMessage to the FireBase database
+                FireBaseDB.addMessageToJourney(mCurrentJourney.getJourneyID(), message1);
 
                 // Clear the input
                 mTextInput.setText("");
@@ -126,9 +125,10 @@ public class ChatsFragment extends Fragment {
 
     /**
      * Method for retrieving serialized data from other fragments
+     *
      * @param requestCode code on request
-     * @param resultCode code on result
-     * @param data data retrieved
+     * @param resultCode  code on result
+     * @param data        data retrieved
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -170,8 +170,6 @@ public class ChatsFragment extends Fragment {
         });
     }
 
-    //TODO: Get searchID from current Journey
-
     /**
      * Performs operations when a journey is started
      */
@@ -181,9 +179,7 @@ public class ChatsFragment extends Fragment {
             public void onClick(View view) {
                 hideKeyboard();
                 mLetsGoButton.setVisibility(View.GONE);
-                // TODO: Delete the search but we dont have it in this class, maybe have the searchID,
-                // that generated the Journey???
-                FirebaseDB.deleteSearch("");
+                FireBaseDB.deleteSearch(mCurrentJourney.getSearchID());
                 mFinishButton.setVisibility(View.VISIBLE);
 
             }
@@ -191,18 +187,19 @@ public class ChatsFragment extends Fragment {
     }
 
     /**
-     * Hides the users keyboard
+     * Hides the users keyboard when we are out of the scope
      */
     private void hideKeyboard() {
         View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+        if (view == null) return;
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm == null) return;
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
     }
 
     /**
-     * Does operations when a journey is finished
+     * When the journey finishes it will update the journey and
      */
     private void setUpFinishJourney() {
         mFinishButton.setOnClickListener(new View.OnClickListener() {
@@ -214,7 +211,7 @@ public class ChatsFragment extends Fragment {
                 activity.setSelectedFragmentByMenuItem(R.id.menu_item_journey_history);
                 JourneyHistory.journeyIDs.push(mCurrentJourney);
 
-                FirebaseDB.updateJourney(mCurrentJourney.getjID(),mCurrentJourney);
+                FireBaseDB.updateJourney(mCurrentJourney.getJourneyID(), mCurrentJourney);
 
                 SerializationUtils sUtils = new SerializationUtils();
                 sUtils.serializeJourneyHistory(getContext());
@@ -224,11 +221,12 @@ public class ChatsFragment extends Fragment {
     }
 
     /**
-     * Displays all chat messages for this journey
+     * Displays all chat messages for this journey, and populates the view using the firebase
+     * list adapter given by google. This adapter is used for the messages.
      */
     private void displayChatMessages() {
         adapter = new FirebaseListAdapter<ChatMessage>(getActivity(), ChatMessage.class,
-                R.layout.message, FirebaseDB.getJourneyMessagesReference(mCurrentJourney.getjID())) {
+                R.layout.message, FireBaseDB.getJourneyMessagesReference(mCurrentJourney.getJourneyID())) {
             @Override
             protected void populateView(View v, ChatMessage model, int position) {
                 // Get references to the views of message.xml
@@ -247,7 +245,7 @@ public class ChatsFragment extends Fragment {
                 messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", model.getTimestampCreatedLong()));
 
                 // Handle the case when the message if from the current user
-                if (model.getMessageUser().equals(FirebaseDB.getCurrentUser().getFullName())) {
+                if (model.getMessageUser().equals(FireBaseDB.getCurrentUser().getFullName())) {
                     colorLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.myMessageColor));
                     rightMarginLayout.setVisibility(View.GONE);
                     leftMarginLayout.setVisibility(View.VISIBLE);
@@ -272,22 +270,23 @@ public class ChatsFragment extends Fragment {
      */
     public void setJourney(Journey journey) {
         this.mCurrentJourney = journey;
-        if (mCurrentJourney != null && mSendMsgButton != null) {
-            updateButtonsStatus();
-            updateClickListener();
-            displayChatMessages();
-            ((MainActivity) getActivity()).setChatMenuItemVisibility(true);
-        }
+        if (mCurrentJourney == null) return;
+        if (mSendMsgButton == null) return;
+        updateButtonsStatuses();
+        updateClickListener();
+        displayChatMessages();
+        ((MainActivity) getActivity()).setChatMenuItemVisibility(true);
+
     }
 
     /**
-     *  Scrolls the chats to the bottom
+     * Scrolls the listview to the bottom, to always have the last message as the focused element
      */
     private void scrollListViewToBottom() {
         mListMessages.post(new Runnable() {
             @Override
             public void run() {
-                // Select the last row so it will scroll into view...
+                // Select the last row so it will scroll into view.
                 mListMessages.setSelection(adapter.getCount() - 1);
             }
         });

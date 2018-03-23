@@ -101,7 +101,7 @@ public class MatchingTest {
         String user_id = "This is strange, indeed!";
         Search userSearch = new Search(user_prefs,user_start,user_end, user_id, "My Start Street", "My End Street");
 
-        // Firebase searches
+        // FireBase searches
         Preferences prefs1 = new Preferences(Preferences.Gender.FEMALE, Preferences.Mode.ANY, Preferences.Gender.MALE);
         Loc start1 = new Loc(0.0,0.0);
         Loc end1 = new Loc(20.0,10.0);

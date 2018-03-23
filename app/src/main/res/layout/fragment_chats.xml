@@ -16,7 +16,7 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:text="@string/gobutton"
+        android:text="@string/go_button"
         android:textColor="@android:color/white" />
 
     <Button
@@ -27,7 +27,7 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:text="@string/finishbutton"
+        android:text="@string/finish_button"
         android:textColor="@android:color/white"
         android:visibility="gone" />
 

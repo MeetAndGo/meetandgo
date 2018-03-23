@@ -2,11 +2,11 @@ package com.meetandgo.meetandgo;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
- * For integration test with Firebase etc.
+ * For integration test with FireBase etc.
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */

@@ -15,7 +15,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
-import com.meetandgo.meetandgo.FirebaseDB;
+import com.meetandgo.meetandgo.FireBaseDB;
 import com.meetandgo.meetandgo.R;
 
 import java.util.Arrays;
@@ -38,12 +38,12 @@ public class BootActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boot);
-        FirebaseDB.initializeApp(this);
+        FireBaseDB.initializeApp(this);
         askForPermissions();
     }
 
-    /**F
-     * OnActivityResult needed to handle the login activity by firebase.
+    /**
+     * OnActivityResult needed to handle the login activity by FireBase.
      *
      * @param requestCode
      * @param resultCode
@@ -58,7 +58,6 @@ public class BootActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 startMainActivity();
             } else {
-                // TODO: Make a dialog letting the user know that the login failed
                 Log.d(TAG, "Authentication -> Sign in failed.");
             }
         }
@@ -125,7 +124,7 @@ public class BootActivity extends AppCompatActivity {
     private void runLoginLogic() {
         // If user is logged in the app will go directly to the MainActivity, if not the loginActivity
         // will be displayed
-        if (FirebaseDB.getCurrentUserUid() != null) startMainActivity();
+        if (FireBaseDB.getCurrentUserID() != null) startMainActivity();
         else startLoginActivity();
     }
 
@@ -133,7 +132,7 @@ public class BootActivity extends AppCompatActivity {
      * Starts the Login Logic in a different activity, the result of it can be checked onActivityResult
      */
     private void startLoginActivity() {
-        // An intent is created with the built-in Firebase UI
+        // An intent is created with the built-in FireBase UI
         Intent loginIntent = AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build();
         startActivityForResult(loginIntent, RC_SIGN_IN);
         overridePendingTransition(0, 0);

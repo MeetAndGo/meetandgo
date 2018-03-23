@@ -7,10 +7,10 @@ import org.junit.Test;
 import static junit.framework.Assert.assertTrue;
 
 /**
- * For integration test with Firebase database.
+ * For integration test with FireBase database.
  */
 
-public class FirebaseDBTest {
+public class FireBaseDBTest {
 
     @Test
     public void testInitialise(){
@@ -20,7 +20,7 @@ public class FirebaseDBTest {
     @Test
     public void testAddUserToDB() {
         User user_one = new User("User One", "one@user.com");
-        boolean test = FirebaseDB.addUser(user_one);
+        boolean test = FireBaseDB.addUser(user_one);
         assertTrue(test);
     }
 
@@ -28,16 +28,16 @@ public class FirebaseDBTest {
     public void testUserIsInDB() {
         User user_one = new User("User One", "one@user.com");
         User user_two = new User("User Two", "two@user.com");
-        FirebaseDB.addUser(user_one);
-        assertTrue(FirebaseDB.isUserInDB(user_one));
-        assertFalse(FirebaseDB.isUserInDB(user_two));
+        FireBaseDB.addUser(user_one);
+        assertTrue(FireBaseDB.isUserInDB(user_one));
+        assertFalse(FireBaseDB.isUserInDB(user_two));
     }
 
     @Test
     public void removeUserDB() {
         User user_one = new User("User One", "one@user.com");
-        FirebaseDB.addUser(user_one);
-        FirebaseDB.removeUser(user_one);
-        assertFalse(FirebaseDB.isUserInDB(user_one));
+        FireBaseDB.addUser(user_one);
+        FireBaseDB.removeUser(user_one);
+        assertFalse(FireBaseDB.isUserInDB(user_one));
     }*/
 }

@@ -45,7 +45,7 @@ public class FetchAddressIntentService extends IntentService {
      * result receiver. If unsuccessful, sends an error message instead.
      * Note: We define a {@link android.os.ResultReceiver} in * MainActivity to process content
      * sent from this service.
-     *
+     * <p>
      * This service calls this method from the default worker thread with the intent that started
      * the service. When this method returns, the service automatically stops.
      */
@@ -110,7 +110,7 @@ public class FetchAddressIntentService extends IntentService {
         }
 
         // Handle case where no address was found.
-        if (addresses == null || addresses.size()  == 0) {
+        if (addresses == null || addresses.size() == 0) {
             if (errorMessage.isEmpty()) {
                 errorMessage = getString(R.string.no_address_found);
                 Log.e(TAG, errorMessage);
@@ -120,7 +120,7 @@ public class FetchAddressIntentService extends IntentService {
             Address address = addresses.get(0);
             ArrayList<String> addressFragments = new ArrayList<>();
 
-            for(int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
                 addressFragments.add(address.getAddressLine(i));
             }
             Log.i(TAG, getString(R.string.address_found));

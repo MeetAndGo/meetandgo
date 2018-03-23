@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/rate_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="16dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:src="@drawable/ic_stars_black_48dp"
+            android:tint="@color/colorGrey" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:focusable="false"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:text="@string/menu_rate_users"
+            android:textAllCaps="true"
+            android:textColor="@color/colorGrey" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/delete_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="16dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:src="@drawable/ic_delete_black_48dp"
+            android:tint="@color/colorGrey" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:focusable="false"
+            android:lines="1"
+            android:scrollHorizontally="true"
+            android:text="@string/menu_delete"
+            android:textAllCaps="true"
+            android:textColor="@color/colorGrey" />
+    </LinearLayout>
+</LinearLayout>

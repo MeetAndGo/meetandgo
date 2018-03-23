@@ -35,7 +35,7 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
         boolean exists = false;
         for (int i = 0; i < mJourneys.size(); i++) {
             Journey j = mJourneys.get(i);
-            if (Objects.equals(j.getjID(), o.getjID())) {
+            if (Objects.equals(j.getJourneyID(), o.getJourneyID())) {
                 j.update(o);
                 notifyItemChanged(i);
                 exists = true;
@@ -55,16 +55,35 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
 
     }
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView fromTextView;
-        public TextView startTimeTextView;
-        public ImageView journeyImageView;
-        public TextView numberOfUsersTextView;
+    public ArrayList<Journey> getJourneys() {
+        return mJourneys;
+    }
 
-        public ViewHolder(View itemView) {
+    public void clean() {
+        mJourneys.clear();
+        notifyDataSetChanged();
+    }
+
+    public void deleteJourney(Journey journey) {
+        for (int i = 0; i < mJourneys.size(); i++) {
+            if (mJourneys.get(i).getJourneyID().equals(journey.getJourneyID())) {
+                mJourneys.remove(journey);
+                notifyItemRemoved(i);
+                return;
+            }
+        }
+    }
+
+    /* Provide a reference to the views for each data item
+    * Complex data items may need more than one view per item, and
+    you provide access to all the views for a data item in a view holder */
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView fromTextView;
+        private TextView startTimeTextView;
+        private ImageView journeyImageView;
+        private TextView numberOfUsersTextView;
+
+        private ViewHolder(View itemView) {
             super(itemView);
             fromTextView = itemView.findViewById(R.id.fromTextView);
             startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
@@ -72,24 +91,42 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
             numberOfUsersTextView = itemView.findViewById(R.id.numberOfPeopleTextView);
         }
 
-        public void bind(final Journey journey, final OnItemClickListener listener) {
+        private void bind(final Journey journey, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onItemClick(journey);
                 }
             });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    listener.onItemLongClick(journey);
+                    return true;
+                }
+            });
         }
     }
 
 
-    // Provide a suitable constructor (depends on the kind of dataset)
+    /**
+     * Provide a suitable constructor (depends on the kind of dataset)
+     *
+     * @param journeysList Arraylist of journeys
+     * @param listener     listener for when an item is called
+     */
     public JourneyHistoryAdapter(ArrayList<Journey> journeysList, OnItemClickListener listener) {
         mJourneys = journeysList;
         mListener = listener;
     }
 
-    // Create new views (invoked by the layout manager)
+    /**
+     * Create new views (invoked by the layout manager)
+     *
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public JourneyHistoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                                int viewType) {

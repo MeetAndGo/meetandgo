@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
@@ -31,9 +32,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,7 +47,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.meetandgo.meetandgo.Constants;
-import com.meetandgo.meetandgo.FirebaseDB;
+import com.meetandgo.meetandgo.FireBaseDB;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.activities.MatchingResultsActivity;
 import com.meetandgo.meetandgo.activities.PreferencesActivity;
@@ -56,27 +57,22 @@ import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.receivers.AddressResultReceiver;
 import com.meetandgo.meetandgo.services.FetchAddressIntentService;
+import com.meetandgo.meetandgo.utils.MapUtils;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.meetandgo.meetandgo.Constants.PREFERENCES_EXTRA;
-
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMyLocationClickListener {
 
     private static final String TAG = "MapsFragment";
     private static final int PREFERENCES_REQUEST_CODE = 1;
     private static final String STARTING_PREFERENCES = "STARTING_PREFERENCES";
-    private LatLng DEFAULT_LOCATION = new LatLng(53.341563, -6.253010);
-    private static final int DEFAULT_ZOOM = 13;
 
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
     private static final String KEY_MARKER_LOCATION = "marker_location";
-
-    private PermissionListener mLocationPermissionListener;
 
     private GoogleMap mMap;
     private boolean mLocationPermissionGranted = false;
@@ -89,18 +85,29 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private AddressResultReceiver mResultReceiver;
 
     private View mView;
-    @BindView(R.id.map) MapView mMapView;
-    @BindView(R.id.fab) FloatingActionButton mFab;
-    @BindView(R.id.imageViewMapCenter) ImageView mImageViewMapCenter;
-    @BindView(R.id.textViewStartLocation) TextView mTextViewStartLocation;
-    @BindView(R.id.textViewEndLocation) TextView mTextViewEndLocation;
+    @BindView(R.id.map)
+    MapView mMapView;
+    @BindView(R.id.fab)
+    FloatingActionButton mFab;
+    @BindView(R.id.imageViewMapCenter)
+    ImageView mImageViewMapCenter;
+    @BindView(R.id.textViewStartLocation)
+    TextView mTextViewStartLocation;
+    @BindView(R.id.textViewEndLocation)
+    TextView mTextViewEndLocation;
     private TextView mTextViewCurrentFocus;
-    @BindView(R.id.startLocationLayout) LinearLayout mStartLocationLayout;
-    @BindView(R.id.endLocationLayout) LinearLayout mEndLocationLayout;
-    @BindView(R.id.preferencesLayout) LinearLayout mPreferencesLayout;
-    @BindView(R.id.startLocationImage) ImageView mStartLocationImage;
-    @BindView(R.id.endLocationImage) ImageView mEndLocationImage;
-    @BindView(R.id.buttonSearch) Button mSearchButton;
+    @BindView(R.id.startLocationLayout)
+    LinearLayout mStartLocationLayout;
+    @BindView(R.id.endLocationLayout)
+    LinearLayout mEndLocationLayout;
+    @BindView(R.id.preferencesLayout)
+    LinearLayout mPreferencesLayout;
+    @BindView(R.id.startLocationImage)
+    ImageView mStartLocationImage;
+    @BindView(R.id.endLocationImage)
+    ImageView mEndLocationImage;
+    @BindView(R.id.buttonSearch)
+    Button mSearchButton;
 
     private OnCompleteListener mOnCompleteListenerMove;
     private OnCompleteListener mOnCompleteListenerAnimate;
@@ -115,8 +122,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     public static Fragment newInstance() {
-        MapsFragment fragment = new MapsFragment();
-        return fragment;
+        return new MapsFragment();
     }
 
     @Override
@@ -127,7 +133,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mLastKnownMarkerLocation = savedInstanceState.getParcelable(KEY_MARKER_LOCATION);
         } else {
-            mLastKnownMarkerLocation = convertLatLngToLocation(DEFAULT_LOCATION);
+            mLastKnownMarkerLocation =  MapUtils.convertLatLngToLocation(Constants.DEFAULT_LOCATION);
         }
         mResultReceiver = new AddressResultReceiver(getActivity(), new Handler());
         mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -139,7 +145,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * Sets up preferences for the current user
      */
     private void setUpPreferences() {
-        User currenUser = FirebaseDB.getCurrentUser();
+        User currenUser = FireBaseDB.getCurrentUser();
         Gson gson = new Gson();
         String json = mSharedPreferences.getString(STARTING_PREFERENCES, "");
         mPreferences = gson.fromJson(json, Preferences.class);
@@ -163,7 +169,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mStartLocationImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         mEndLocationImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorSoftSoftGrey));
 
-        setupBottomSheet(mView);
+        setupBottomSheet();
         setUpOnCompleteListeners();
 
         // SetUp the map fragment and all the methods needed for the map API to work
@@ -191,12 +197,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         // In order to use the location feature we need to ask for location permission
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
-        mMarkerDestination = mMap.addMarker(new MarkerOptions().position(DEFAULT_LOCATION).visible(false));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Constants.DEFAULT_LOCATION, Constants.DEFAULT_ZOOM));
+        mMarkerDestination = mMap.addMarker(new MarkerOptions().position(Constants.DEFAULT_LOCATION).visible(false));
         mMap.setOnMyLocationClickListener(this);
         mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setMapToolbarEnabled(false);
+
+        setUpMapListeners();
+        manageLocationPermission();
+        setupMapStyle();
+    }
+
+    /**
+     * Initializes and setups all the map listeners used.
+     */
+    private void setUpMapListeners() {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -205,7 +221,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         });
 
-
+        // When the camera is being moved we se the marker to the actual position in order to
+        // have the location of the center point.
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
@@ -217,6 +234,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
             }
         });
+        // Called when the camera starts moving from a static position
         mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
             @Override
             public void onCameraMoveStarted(int reason) {
@@ -225,7 +243,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 }
             }
         });
-
+        // Idle listener is used for when the camera is moved and gets back to an idle position
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
@@ -233,24 +251,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 mUserIsDragging = false;
                 LatLng cameraLatLng = mMap.getCameraPosition().target;
                 // Depending on the current view that is selected we set the location to either start or end location
-                getLocationName(convertLatLngToLocation(cameraLatLng));
-                if (mTextViewCurrentFocus.getId() == mTextViewStartLocation.getId()) {
-                    mStartLocation = convertLatLngToLocation(cameraLatLng);
-                } else {
-                    mEndLocation = convertLatLngToLocation(cameraLatLng);
-                }
-                setButtonState();
+                setCurrentFocusedTextViewLocation( MapUtils.convertLatLngToLocation(cameraLatLng));
 
             }
         });
-
-        manageLocationPermission();
     }
 
     /**
      * Checks the search information from the activity and turns the button to enable or disable
      */
-    private void setButtonState() {
+    private void setSearchButtonState() {
         if (mStartLocation == null || mEndLocation == null) {
             mSearchButton.setEnabled(false);
             mSearchButton.setTextColor(getActivity().getColor(R.color.colorGrey));
@@ -300,7 +310,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, requestCode + " " + resultCode);
         if (requestCode == PREFERENCES_REQUEST_CODE) {
-            mPreferences = (Preferences) data.getSerializableExtra(PREFERENCES_EXTRA);
+            mPreferences = (Preferences) data.getSerializableExtra(Constants.PREFERENCES_EXTRA);
             SharedPreferences.Editor prefsEditor = mSharedPreferences.edit();
             Gson gson = new Gson();
             String json = gson.toJson(mPreferences);
@@ -327,23 +337,32 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     /**
+     * Adds the style form the json file to the map, and customizes the map options
+     */
+    private void setupMapStyle() {
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style));
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
+    }
+
+    /**
      * Actions to be done when the map is clicked by the user
      *
-     * @param latLng
+     * @param latLng Latitude and longitude of the tap position on the map
      */
     private void onMapClick(LatLng latLng) {
         putMarkerOnLocation(latLng);
-        Location location = convertLatLngToLocation(latLng);
-        animateCameraToLocation(location);
-        getLocationName(location);
+        Location location =  MapUtils.convertLatLngToLocation(latLng);
+        MapUtils.animateCameraToLocation(mMap, location);
         // Depending on the current view that is selected we set the location to either start or end location
-        getLocationName(convertLatLngToLocation(latLng));
-        if (mTextViewCurrentFocus.getId() == mTextViewStartLocation.getId()) {
-            mStartLocation = convertLatLngToLocation(latLng);
-        } else {
-            mEndLocation = convertLatLngToLocation(latLng);
-        }
-        setButtonState();
+        setCurrentFocusedTextViewLocation( MapUtils.convertLatLngToLocation(latLng));
     }
 
     /**
@@ -353,8 +372,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      *
      * @return boolean indicating if the location was granted or not
      */
-    private boolean manageLocationPermission() {
-        mLocationPermissionListener = new PermissionListener() {
+    private void manageLocationPermission() {
+        PermissionListener locationPermissionListener = new PermissionListener() {
             @Override
             public void onPermissionGranted(PermissionGrantedResponse response) {
                 Log.d(TAG, "PermissionGranted -> " + response.getPermissionName());
@@ -378,9 +397,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         };
 
         Dexter.withActivity(getActivity()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(mLocationPermissionListener).check();
-
-        return mLocationPermissionGranted;
+                .withListener(locationPermissionListener).check();
     }
 
     /**
@@ -397,9 +414,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     /**
      * Setup the bottom sheet used for setting the preferences for the matching
      *
-     * @param view The fragment view needed for finding the view id of the bottom sheet
      */
-    private void setupBottomSheet(@NonNull View view) {
+    private void setupBottomSheet() {
+        // Setting up the start location layout listener, when clicked it will set the current focus
+        // to it
         mStartLocationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -408,7 +426,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 mEndLocationImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorSoftSoftGrey));
             }
         });
-
+        // Setting up the end location layout listener, when clicked it will set the current focus
+        // to it
         mEndLocationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -418,31 +437,34 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
             }
         });
-
+        // Start the preferences layout when the button is clicked
         mPreferencesLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startPreferencesActivity();
             }
         });
+        // Listener called when the search button is clicked
         mSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                clickSearchButton();
+            @Override
+            public void onClick(View view) {
+                onSearchButtonClick();
             }
         });
-        setButtonState();
+
+        setSearchButtonState();
     }
 
     /**
      * Actions performed upon clicking the search button
      */
-    private void clickSearchButton() {
+    private void onSearchButtonClick() {
         resultSearches.clear();
         Loc sLocation = new Loc(mStartLocation.getLatitude(), mStartLocation.getLongitude());
         Loc eLocation = new Loc(mEndLocation.getLatitude(), mEndLocation.getLongitude());
-        Search currentUserSearch = new Search(mPreferences, "" ,sLocation, eLocation, mTextViewStartLocation.getText().toString(), mTextViewEndLocation.getText().toString());
-        String searchKey = FirebaseDB.addNewSearch(currentUserSearch);
-        FirebaseDB.updateSearch(searchKey, currentUserSearch);
+        Search currentUserSearch = new Search(mPreferences, "", sLocation, eLocation, mTextViewStartLocation.getText().toString(), mTextViewEndLocation.getText().toString());
+        String searchKey = FireBaseDB.addNewSearch(currentUserSearch);
+        FireBaseDB.updateSearch(searchKey, currentUserSearch);
         startMatchingResultsActivity(currentUserSearch);
 
     }
@@ -456,7 +478,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         Intent matchingResultsIntent = new Intent(getActivity(), MatchingResultsActivity.class);
         Gson gson = new Gson();
         String json = gson.toJson(search);
-        matchingResultsIntent.putExtra("currentUserSearch", json);
+        matchingResultsIntent.putExtra(Constants.CURRENT_USER_SEARCH, json);
         startActivity(matchingResultsIntent);
     }
 
@@ -484,8 +506,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * Get the best and most recent location of the device, which may be null in rare
      * cases when a location is not available. Important: This runs on other thread, assigning
      * variables to it will give an error. Only set things on the OnComplete callback
-     *
-     * @return location The last device location available
      */
     private void getDeviceLocation(OnCompleteListener onCompleteListener) {
         // This OnCompleteListener waits for when the task is completed, it also assigns the
@@ -516,11 +536,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 mLastKnownLocation = (Location) task.getResult();
                 if (!task.isSuccessful() || mLastKnownLocation == null) {
                     Log.d(TAG, "Current location is null. Using defaults.");
-                    mLastKnownLocation = convertLatLngToLocation(DEFAULT_LOCATION);
+                    mLastKnownLocation =  MapUtils.convertLatLngToLocation(Constants.DEFAULT_LOCATION);
                 }
-                moveCameraToLocation(mLastKnownLocation);
+                MapUtils.moveCameraToLocation(mMap, mLastKnownLocation);
                 putMarkerOnLocation(new LatLng(mLastKnownLocation.getLatitude(),
                         mLastKnownLocation.getLongitude()));
+                setCurrentFocusedTextViewLocation(mLastKnownLocation);
             }
         };
 
@@ -530,48 +551,30 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 mLastKnownLocation = (Location) task.getResult();
                 if (!task.isSuccessful() || mLastKnownLocation == null) {
                     Log.d(TAG, "Current location is null. Using defaults.");
-                    mLastKnownLocation = convertLatLngToLocation(DEFAULT_LOCATION);
+                    mLastKnownLocation =  MapUtils.convertLatLngToLocation(Constants.DEFAULT_LOCATION);
                 }
-                animateCameraToLocation(mLastKnownLocation);
+                MapUtils.animateCameraToLocation(mMap, mLastKnownLocation);
                 putMarkerOnLocation(new LatLng(mLastKnownLocation.getLatitude(),
                         mLastKnownLocation.getLongitude()));
+                setCurrentFocusedTextViewLocation(mLastKnownLocation);
             }
         };
     }
 
     /**
-     * Converts Latitude and Longitude to Pixel values
-     * @param latLng Latitude and Longitude object
-     * @return Pixel point
+     * Sets the location string to the focused textview when the location string is found in the other
+     * thread
+     * @param location
      */
-    public Point convertLatLngToPixels(LatLng latLng) {
-        Projection projection = mMap.getProjection();
-        Point point = projection.toScreenLocation(latLng);
-        return point;
-    }
-
-    /**
-     * Converts pixel position to latitude and longitude
-     *
-     * @param point pixel position
-     * @return LatLng object
-     */
-    public LatLng convertPixelsToLatLng(Point point) {
-        Projection projection = mMap.getProjection();
-        return projection.fromScreenLocation(point);
-    }
-
-    /**
-     * Converts latitude and longitude to location object
-     *
-     * @param latLng LatLng object
-     * @return Location object
-     */
-    private Location convertLatLngToLocation(LatLng latLng) {
-        Location newLocation = new Location("");
-        newLocation.setLatitude(latLng.latitude);
-        newLocation.setLongitude(latLng.longitude);
-        return newLocation;
+    private void setCurrentFocusedTextViewLocation(Location location) {
+        getLocationName(location);
+        // Depending on the current view that is selected we set the location to either start or end location
+        if (mTextViewCurrentFocus.getId() == mTextViewStartLocation.getId()) {
+            mStartLocation = location;
+        } else {
+            mEndLocation = location;
+        }
+        setSearchButtonState();
     }
 
     /**
@@ -580,7 +583,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * @param latLng latitude and longitude to be set
      */
     private void putMarkerOnLocation(@NonNull LatLng latLng) {
-        mLastKnownMarkerLocation = convertLatLngToLocation(latLng);
+        mLastKnownMarkerLocation =  MapUtils.convertLatLngToLocation(latLng);
         mMarkerDestination.setPosition(latLng);
     }
 
@@ -589,29 +592,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      *
      * @param point pixel point
      */
-    private void putMarkerOnPoint(Point point) {
-        LatLng latLng = convertPixelsToLatLng(point);
+    public void putMarkerOnPoint(Point point) {
+        LatLng latLng = MapUtils.convertPixelsToLatLng(mMap, point);
         putMarkerOnLocation(latLng);
-    }
-
-    /**
-     * Animates the camera from current location to the new location
-     *
-     * @param location Location object the camera animates towards
-     */
-    private void animateCameraToLocation(Location location) {
-        LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM));
-    }
-
-    /**
-     * Move camera from current location to new location
-     *
-     * @param location Location object the camera moves to
-     */
-    private void moveCameraToLocation(Location location) {
-        LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, DEFAULT_ZOOM));
     }
 
     /**

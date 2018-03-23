@@ -1,7 +1,7 @@
 package com.meetandgo.meetandgo.data;
 
 /**
- * Loc class to upload latitude and longitude to firebase
+ * Loc class to upload latitude and longitude to FireBase
  */
 public class Loc {
 

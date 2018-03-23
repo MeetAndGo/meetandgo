@@ -87,13 +87,13 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView fromTextView;
-        public TextView toTextView;
-        public TextView startTimeTextView;
-        public ImageView walkImageView;
-        public TextView numberOfUsersTextView;
+        private TextView fromTextView;
+        private TextView toTextView;
+        private TextView startTimeTextView;
+        private ImageView walkImageView;
+        private TextView numberOfUsersTextView;
 
-        public ViewHolder(View itemView) {
+        private ViewHolder(View itemView) {
             super(itemView);
             fromTextView = itemView.findViewById(R.id.fromTextView);
             toTextView = itemView.findViewById(R.id.toTextView);
@@ -102,7 +102,7 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
             numberOfUsersTextView = itemView.findViewById(R.id.numberOfPeopleTextView);
         }
 
-        public void bind(final Search search, final OnItemClickListener listener) {
+        private void bind(final Search search, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     listener.onItemClick(search);
