@@ -61,16 +61,35 @@
                         android:orientation="horizontal"
                         android:weightSum="2">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/profile_image"
+                        <FrameLayout
+
                             android:layout_width="0dp"
-                            android:layout_height="100dp"
-                            android:layout_gravity="center"
+                            android:layout_height="80dp"
                             android:layout_weight="0.75"
-                            android:paddingBottom="4dp"
-                            android:src="@drawable/profile_pic"
-                            app:civ_border_color="@color/colorPrimary"
-                            app:civ_border_width="2dp" />
+                            android:paddingBottom="4dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/profile_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:src="@color/colorPrimary"
+                                app:civ_border_color="@color/colorPrimaryDark"
+                                app:civ_border_width="2dp" />
+
+                            <TextView
+                                android:id="@+id/initials"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center_vertical"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@android:color/white"
+                                android:textSize="30sp"
+                                android:textStyle="bold" />
+
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"

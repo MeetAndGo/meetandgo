@@ -46,8 +46,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="15dp"
-                    android:layout_marginBottom="6dp"
-                    android:text="Wiliam@gmail.com" />
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:scrollHorizontally="true"
+                    android:layout_marginBottom="6dp"/>
 
                 <TextView
                     android:id="@+id/startTimeTextView"
@@ -55,8 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="3dp"
-                    android:paddingLeft="15dp"
-                    android:text="Wiliam@gmail.com" />
+                    android:paddingLeft="15dp"/>
 
             </LinearLayout>
 
@@ -77,8 +78,7 @@
                     android:layout_height="match_parent"
                     android:textSize="15sp"
                     android:textAlignment="center"
-                    android:gravity="center"
-                    android:text="0" />
+                    android:gravity="center" />
             </LinearLayout>
 
         </LinearLayout>

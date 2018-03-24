@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     KonfettiView mKonfettiView;
 
     private TextView mTextViewUserName;
+    private TextView mTextViewInitials;
     private TextView mTextViewUserEmail;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -145,6 +146,13 @@ public class MainActivity extends AppCompatActivity {
         // UpdateUI based on the current user that is using the app
         mTextViewUserName.setText(currentUser.getFullName());
         mTextViewUserEmail.setText(currentUser.getEmail());
+        // Set Initials of the image
+        String initials = "";
+        for (String s : currentUser.getFullName().split(" ")) {
+            initials += s.charAt(0);
+        }
+        initials.substring(0, 2);
+        mTextViewInitials.setText(initials);
     }
 
     @Override
@@ -265,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
         View mHeaderLayout = mNavView.getHeaderView(0);
         mTextViewUserName = mHeaderLayout.findViewById(R.id.user_name);
         mTextViewUserEmail = mHeaderLayout.findViewById(R.id.user_email);
+        mTextViewInitials = mHeaderLayout.findViewById(R.id.initials);
 
         mHeaderLayout.setOnClickListener(new View.OnClickListener() {
             @Override

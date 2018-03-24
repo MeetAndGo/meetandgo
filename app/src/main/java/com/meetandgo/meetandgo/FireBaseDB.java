@@ -279,9 +279,9 @@ public class FireBaseDB {
     }
 
     /**
-     * Add message to the journey with the ID journeyID
+     * Add chat_message_item to the journey with the ID journeyID
      *
-     * @param journeyID ID of the journey the message is added to
+     * @param journeyID ID of the journey the chat_message_item is added to
      * @param message   to add to the journey
      * @return true if correctly added, false otherwise
      */

@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.database.FirebaseDatabase;
 import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FireBaseDB;
 import com.meetandgo.meetandgo.R;
@@ -29,7 +28,6 @@ import com.meetandgo.meetandgo.activities.MainActivity;
 import com.meetandgo.meetandgo.data.ChatMessage;
 import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.JourneyHistory;
-import com.meetandgo.meetandgo.utils.SerializationUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -97,7 +95,7 @@ public class ChatsFragment extends Fragment {
     }
 
     /**
-     * Updates the click listener responsible for sending a message. This is called every time we
+     * Updates the click listener responsible for sending a chat_message_item. This is called every time we
      * change the journey of the chat fragment.
      */
     private void updateClickListener() {
@@ -141,7 +139,7 @@ public class ChatsFragment extends Fragment {
     }
 
     /**
-     * Allows the editing of the current message you are typing
+     * Allows the editing of the current chat_message_item you are typing
      */
     private void setUpEditText() {
         mSendMsgButton.setBackgroundTintList(ContextCompat.getColorStateList(getActivity(), R.color.colorGrey));
@@ -226,10 +224,10 @@ public class ChatsFragment extends Fragment {
      */
     private void displayChatMessages() {
         adapter = new FirebaseListAdapter<ChatMessage>(getActivity(), ChatMessage.class,
-                R.layout.message, FireBaseDB.getJourneyMessagesReference(mCurrentJourney.getJourneyID())) {
+                R.layout.chat_message_item, FireBaseDB.getJourneyMessagesReference(mCurrentJourney.getJourneyID())) {
             @Override
             protected void populateView(View v, ChatMessage model, int position) {
-                // Get references to the views of message.xml
+                // Get references to the views of chat_message_item.xmle_item.xml
                 TextView messageText = v.findViewById(R.id.message_text);
                 TextView messageUser = v.findViewById(R.id.message_user);
                 TextView messageTime = v.findViewById(R.id.message_time);
@@ -244,7 +242,7 @@ public class ChatsFragment extends Fragment {
                 // Format the date before showing it
                 messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", model.getTimestampCreatedLong()));
 
-                // Handle the case when the message if from the current user
+                // Handle the case when the chat_message_item if from the current user
                 if (model.getMessageUser().equals(FireBaseDB.getCurrentUser().getFullName())) {
                     colorLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.myMessageColor));
                     rightMarginLayout.setVisibility(View.GONE);
@@ -280,7 +278,7 @@ public class ChatsFragment extends Fragment {
     }
 
     /**
-     * Scrolls the listview to the bottom, to always have the last message as the focused element
+     * Scrolls the listview to the bottom, to always have the last chat_message_item as the focused element
      */
     private void scrollListViewToBottom() {
         mListMessages.post(new Runnable() {

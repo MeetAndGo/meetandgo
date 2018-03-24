@@ -46,25 +46,28 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="15dp"
-                    android:layout_marginBottom="3dp"
-                    android:text="Wiliam@gmail.com" />
+                    android:ellipsize="end"
+                    android:lines="2"
+                    android:scrollHorizontally="true"
+                    android:layout_marginBottom="3dp" />
 
                 <TextView
                     android:id="@+id/toTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="2"
+                    android:scrollHorizontally="true"
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="3dp"
-                    android:paddingLeft="15dp"
-                    android:text="Wiliam@gmail.com" />
+                    android:paddingLeft="15dp" />
 
                 <TextView
                     android:id="@+id/startTimeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:text="Wiliam@gmail.com" />
+                    android:paddingLeft="15dp" />
             </LinearLayout>
 
             <LinearLayout

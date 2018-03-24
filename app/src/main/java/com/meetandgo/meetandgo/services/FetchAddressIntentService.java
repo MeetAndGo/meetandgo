@@ -42,7 +42,7 @@ public class FetchAddressIntentService extends IntentService {
 
     /**
      * Tries to get the location address using a Geocoder. If successful, sends an address to a
-     * result receiver. If unsuccessful, sends an error message instead.
+     * result receiver. If unsuccessful, sends an error chat_message_item instead.
      * Note: We define a {@link android.os.ResultReceiver} in * MainActivity to process content
      * sent from this service.
      * <p>
@@ -65,7 +65,7 @@ public class FetchAddressIntentService extends IntentService {
         Location location = intent.getParcelableExtra(Constants.LOCATION_DATA_EXTRA);
 
         // Make sure that the location data was really sent over through an extra. If it wasn't,
-        // send an error error message and return.
+        // send an error error chat_message_item and return.
         if (location == null) {
             errorMessage = getString(R.string.no_location_data_provided);
             Log.wtf(TAG, errorMessage);
@@ -130,7 +130,7 @@ public class FetchAddressIntentService extends IntentService {
     }
 
     /**
-     * Sends a resultCode and message to the receiver.
+     * Sends a resultCode and chat_message_item to the receiver.
      */
     private void deliverResultToReceiver(int resultCode, String message) {
         Bundle bundle = new Bundle();

@@ -28,7 +28,7 @@ public class AddressResultReceiver extends ResultReceiver {
         // Get the address from the resultData
         String addressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
 
-        // Show a toast message if an address was found.
+        // Show a toast chat_message_item if an address was found.
         if (resultCode == Constants.SUCCESS_RESULT) {
             ((MainActivity) mActivity).getMapsFragment().setAddressInView(addressOutput);
         }

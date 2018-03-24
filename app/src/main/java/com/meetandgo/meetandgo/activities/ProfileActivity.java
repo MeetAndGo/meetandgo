@@ -28,20 +28,14 @@ import butterknife.ButterKnife;
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
 
-    @BindView(R.id.user_name)
-    TextView mTextViewUserName;
-    @BindView(R.id.user_email)
-    TextView mTextViewUserEmail;
-    @BindView(R.id.number_of_ratings)
-    TextView mTextViewNumberOfRatings;
-    @BindView(R.id.rating)
-    RatingBar mRatingBarRating;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.number_of_trips)
-    TextView mNumberOfTrips;
-    @BindView(R.id.user_add_to_group)
-    TextView mAddToGroup;
+    @BindView(R.id.user_name) TextView mTextViewUserName;
+    @BindView(R.id.user_email) TextView mTextViewUserEmail;
+    @BindView(R.id.number_of_ratings) TextView mTextViewNumberOfRatings;
+    @BindView(R.id.rating) RatingBar mRatingBarRating;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.number_of_trips) TextView mNumberOfTrips;
+    @BindView(R.id.user_add_to_group) TextView mAddToGroup;
+    @BindView(R.id.initials) TextView mTextViewInitials;
 
     private ValueEventListener mUserValueEventListener;
 
@@ -87,6 +81,14 @@ public class ProfileActivity extends AppCompatActivity {
         if (currentUser == null) return;
         mTextViewUserName.setText(currentUser.getFullName());
         mTextViewUserEmail.setText(currentUser.getEmail());
+
+        // Set Initials of the image
+        String initials = "";
+        for (String s : currentUser.getFullName().split(" ")) {
+            initials += s.charAt(0);
+        }
+        initials.substring(0, 2);
+        mTextViewInitials.setText(initials);
         String gender = currentUser.getGender().toString();
 
         // Change string on the profile based on the gender
@@ -134,7 +136,7 @@ public class ProfileActivity extends AppCompatActivity {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(statusBarColor);
-        if(getSupportActionBar() == null) return;
+        if (getSupportActionBar() == null) return;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(R.string.profile);

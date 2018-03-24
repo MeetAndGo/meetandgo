@@ -1,15 +1,18 @@
 package com.meetandgo.meetandgo.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.ColorSpace;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -33,15 +36,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Cap;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.RoundCap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -60,7 +67,11 @@ import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.receivers.AddressResultReceiver;
 import com.meetandgo.meetandgo.services.FetchAddressIntentService;
+import com.meetandgo.meetandgo.utils.GoogleMap.GMapV2Direction;
+import com.meetandgo.meetandgo.utils.GoogleMap.GMapV2DirectionAsyncTask;
 import com.meetandgo.meetandgo.utils.MapUtils;
+
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 
@@ -84,33 +95,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private Marker mMarkerDestination;
     private Location mStartLocation;
     private Location mEndLocation;
+    private Polyline mMapPolyline;
+    private Circle mStartCircle;
+    private Circle mEndCircle;
 
     private AddressResultReceiver mResultReceiver;
 
     private View mView;
-    @BindView(R.id.map)
-    MapView mMapView;
-    @BindView(R.id.fab)
-    FloatingActionButton mFab;
-    @BindView(R.id.imageViewMapCenter)
-    ImageView mImageViewMapCenter;
-    @BindView(R.id.textViewStartLocation)
-    TextView mTextViewStartLocation;
-    @BindView(R.id.textViewEndLocation)
-    TextView mTextViewEndLocation;
+    @BindView(R.id.map) MapView mMapView;
+    @BindView(R.id.fab) FloatingActionButton mFab;
+    @BindView(R.id.imageViewMapCenter) ImageView mImageViewMapCenter;
+    @BindView(R.id.textViewStartLocation) TextView mTextViewStartLocation;
+    @BindView(R.id.textViewEndLocation) TextView mTextViewEndLocation;
     private TextView mTextViewCurrentFocus;
-    @BindView(R.id.startLocationLayout)
-    LinearLayout mStartLocationLayout;
-    @BindView(R.id.endLocationLayout)
-    LinearLayout mEndLocationLayout;
-    @BindView(R.id.preferencesLayout)
-    LinearLayout mPreferencesLayout;
-    @BindView(R.id.startLocationImage)
-    ImageView mStartLocationImage;
-    @BindView(R.id.endLocationImage)
-    ImageView mEndLocationImage;
-    @BindView(R.id.buttonSearch)
-    Button mSearchButton;
+    @BindView(R.id.startLocationLayout) LinearLayout mStartLocationLayout;
+    @BindView(R.id.endLocationLayout) LinearLayout mEndLocationLayout;
+    @BindView(R.id.preferencesLayout) LinearLayout mPreferencesLayout;
+    @BindView(R.id.startLocationImage) ImageView mStartLocationImage;
+    @BindView(R.id.endLocationImage) ImageView mEndLocationImage;
+    @BindView(R.id.buttonSearch) Button mSearchButton;
 
     private OnCompleteListener mOnCompleteListenerMove;
     private OnCompleteListener mOnCompleteListenerAnimate;
@@ -136,7 +139,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mLastKnownMarkerLocation = savedInstanceState.getParcelable(KEY_MARKER_LOCATION);
         } else {
-            mLastKnownMarkerLocation =  MapUtils.convertLatLngToLocation(Constants.DEFAULT_LOCATION);
+            mLastKnownMarkerLocation = MapUtils.convertLatLngToLocation(Constants.DEFAULT_LOCATION);
         }
         mResultReceiver = new AddressResultReceiver(getActivity(), new Handler());
         mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -254,7 +257,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 mUserIsDragging = false;
                 LatLng cameraLatLng = mMap.getCameraPosition().target;
                 // Depending on the current view that is selected we set the location to either start or end location
-                setCurrentFocusedTextViewLocation( MapUtils.convertLatLngToLocation(cameraLatLng));
+                setCurrentFocusedTextViewLocation(MapUtils.convertLatLngToLocation(cameraLatLng));
+                if (mStartLocation != null && mEndLocation != null) {
+                    route(MapUtils.convertLocationToLatLng(mStartLocation),
+                            MapUtils.convertLocationToLatLng(mEndLocation),
+                            mPreferences.getMode() == Preferences.Mode.WALK ? GMapV2Direction.MODE_WALKING : GMapV2Direction.MODE_DRIVING);
+                }
 
             }
         });
@@ -362,10 +370,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      */
     private void onMapClick(LatLng latLng) {
         putMarkerOnLocation(latLng);
-        Location location =  MapUtils.convertLatLngToLocation(latLng);
+        Location location = MapUtils.convertLatLngToLocation(latLng);
         MapUtils.animateCameraToLocation(mMap, location);
         // Depending on the current view that is selected we set the location to either start or end location
-        setCurrentFocusedTextViewLocation( MapUtils.convertLatLngToLocation(latLng));
+        setCurrentFocusedTextViewLocation(MapUtils.convertLatLngToLocation(latLng));
     }
 
     /**
@@ -416,7 +424,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     /**
      * Setup the bottom sheet used for setting the preferences for the matching
-     *
      */
     private void setupBottomSheet() {
         // Setting up the start location layout listener, when clicked it will set the current focus
@@ -540,7 +547,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 mLastKnownLocation = (Location) task.getResult();
                 if (!task.isSuccessful() || mLastKnownLocation == null) {
                     Log.d(TAG, "Current location is null. Using defaults.");
-                    mLastKnownLocation =  MapUtils.convertLatLngToLocation(Constants.DEFAULT_LOCATION);
+                    mLastKnownLocation = MapUtils.convertLatLngToLocation(Constants.DEFAULT_LOCATION);
                 }
                 MapUtils.moveCameraToLocation(mMap, mLastKnownLocation);
                 putMarkerOnLocation(new LatLng(mLastKnownLocation.getLatitude(),
@@ -555,7 +562,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 mLastKnownLocation = (Location) task.getResult();
                 if (!task.isSuccessful() || mLastKnownLocation == null) {
                     Log.d(TAG, "Current location is null. Using defaults.");
-                    mLastKnownLocation =  MapUtils.convertLatLngToLocation(Constants.DEFAULT_LOCATION);
+                    mLastKnownLocation = MapUtils.convertLatLngToLocation(Constants.DEFAULT_LOCATION);
                 }
                 MapUtils.animateCameraToLocation(mMap, mLastKnownLocation);
                 putMarkerOnLocation(new LatLng(mLastKnownLocation.getLatitude(),
@@ -568,6 +575,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     /**
      * Sets the location string to the focused textview when the location string is found in the other
      * thread
+     *
      * @param location
      */
     private void setCurrentFocusedTextViewLocation(Location location) {
@@ -578,7 +586,73 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         } else {
             mEndLocation = location;
         }
+
         setSearchButtonState();
+    }
+
+    /**
+     * Calls the thread that will look for the route and will draw it
+     * @param sourcePosition Start Position
+     * @param destPosition End Position
+     * @param mode Mode (Can be WALKING or DRIVING)
+     */
+    protected void route(final LatLng sourcePosition, final LatLng destPosition, String mode) {
+        @SuppressLint("HandlerLeak") final Handler handler = new Handler() {
+            public void handleMessage(Message msg) {
+                try {
+                    if (mMapPolyline != null) mMapPolyline.remove();
+                    if (mStartCircle != null) mStartCircle.remove();
+                    if (mEndCircle != null) mEndCircle.remove();
+                    Document doc = (Document) msg.obj;
+                    GMapV2Direction md = new GMapV2Direction();
+                    ArrayList<LatLng> directionPoint = md.getDirection(doc);
+                    drawRoute(directionPoint, sourcePosition, destPosition);
+
+
+                    md.getDurationText(doc);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        };
+
+        new GMapV2DirectionAsyncTask(handler, sourcePosition, destPosition, mode).execute();
+    }
+
+    /**
+     * Draws the line for the corresponding route based on the points returned by gogole
+     * @param directionPoint ArrayList of points
+     * @param sourcePosition Start Position
+     * @param destPosition End Position
+     */
+    private void drawRoute(ArrayList<LatLng> directionPoint, LatLng sourcePosition, LatLng destPosition) {
+        PolylineOptions rectLine = new PolylineOptions().width(15)
+                .color(ContextCompat.getColor(getActivity(), R.color.colorPrimarySoft))
+                .jointType(JointType.ROUND)
+                .zIndex(-100)
+                .startCap(new RoundCap())
+                .endCap(new RoundCap());
+        mMapPolyline = mMap.addPolyline(rectLine);
+
+        for (int i = 0; i < directionPoint.size(); i++) {
+            rectLine.add(directionPoint.get(i));
+        }
+
+        mStartCircle = mMap.addCircle(new CircleOptions()
+                .center(sourcePosition)
+                .radius(20)
+                .strokeWidth(5)
+                .strokeColor(ContextCompat.getColor(getActivity(), R.color.colorPrimarySoft))
+                .fillColor(ContextCompat.getColor(getActivity(), R.color.colorWhite)));
+
+
+        mEndCircle = mMap.addCircle(new CircleOptions()
+                .center(destPosition)
+                .radius(20)
+                .strokeWidth(5)
+                .strokeColor(ContextCompat.getColor(getActivity(), R.color.colorPrimarySoft))
+                .fillColor(ContextCompat.getColor(getActivity(), R.color.colorWhite)));
     }
 
     /**
@@ -587,7 +661,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * @param latLng latitude and longitude to be set
      */
     private void putMarkerOnLocation(@NonNull LatLng latLng) {
-        mLastKnownMarkerLocation =  MapUtils.convertLatLngToLocation(latLng);
+        mLastKnownMarkerLocation = MapUtils.convertLatLngToLocation(latLng);
         mMarkerDestination.setPosition(latLng);
     }
 

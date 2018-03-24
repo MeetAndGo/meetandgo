@@ -45,6 +45,18 @@ public final class MapUtils {
         newLocation.setLongitude(latLng.longitude);
         return newLocation;
     }
+
+    /**
+     * Converts a Location object into a LatLng object
+     *
+     * @param location Location
+     * @return LatLng object
+     */
+    public static LatLng convertLocationToLatLng(Location location) {
+        return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+
     /**
      * Animates the camera from current location to the new location
      *
@@ -55,6 +67,7 @@ public final class MapUtils {
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, Constants.DEFAULT_ZOOM));
     }
 
+
     /**
      * Move camera from current location to new location
      *
@@ -64,4 +77,21 @@ public final class MapUtils {
         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, Constants.DEFAULT_ZOOM));
     }
+
+    public static String getGooglePathURL(double sourcelat, double sourcelog, double destlat, double destlog) {
+        StringBuilder urlString = new StringBuilder();
+        urlString.append("http://maps.googleapis.com/maps/api/directions/json");
+        urlString.append("?origin=");// from
+        urlString.append(Double.toString(sourcelat));
+        urlString.append(",");
+        urlString.append(Double.toString(sourcelog));
+        urlString.append("&destination=");// to
+        urlString.append(Double.toString(destlat));
+        urlString.append(",");
+        urlString.append(Double.toString(destlog));
+        urlString.append("&sensor=false&mode=driving&alternatives=true");
+        urlString.append("&key=" + Constants.GOOGLE_MAPS_API_KEY);
+        return urlString.toString();
+    }
+
 }

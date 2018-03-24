@@ -20,4 +20,5 @@ public final class Constants {
     public static final LatLng DEFAULT_LOCATION = new LatLng(53.341563, -6.253010);;
     public static final float DEFAULT_ZOOM = 13;
     public static final String CURRENT_USER_SEARCH = "currentUserSearch";
+    public static final String GOOGLE_MAPS_API_KEY = "AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY";
 }
