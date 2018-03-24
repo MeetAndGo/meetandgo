@@ -3,7 +3,9 @@ package com.meetandgo.meetandgo;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,8 +54,6 @@ public class FireBaseDB {
 
         mPrefs = activity.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
     }
-
-    // TODO: Refactor
 
     /**
      * Initializes Database References that are then also synced with local storage
@@ -111,7 +111,10 @@ public class FireBaseDB {
         if (firebaseUser == null) return null;
 
         // Get Current user saved in the phone, if it doesn't exist use a new one created for this
-        User currentUser = getLocalStorageUser(firebaseUser);
+        User currentUser = getLocalStorageUser();
+        if (currentUser == null) {
+            currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
+        }
         final User[] user = {currentUser};
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
@@ -129,6 +132,11 @@ public class FireBaseDB {
         return user[0];
     }
 
+    /**
+     * Using the SharedPreferences of the phone, it saves the user on the
+     *
+     * @param user
+     */
     private static void saveUserInLocalStorage(User user) {
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
@@ -169,14 +177,11 @@ public class FireBaseDB {
     }
 
     @NonNull
-    private static User getLocalStorageUser(FirebaseUser firebaseUser) {
+    private static User getLocalStorageUser() {
         // Get Current user saved in the phone, if it doesn't exist use a new one created for this
         Gson gson = new Gson();
         String json = mPrefs.getString(Constants.CURRENT_USER, "");
         User currentUser = gson.fromJson(json, User.class);
-        if (currentUser == null) {
-            currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
-        }
         return currentUser;
     }
 
@@ -190,6 +195,7 @@ public class FireBaseDB {
         if (newUser != null) {
             String uid = getCurrentUserID();
             getUserDatabaseReference(uid).setValue(newUser);
+            getUserDatabaseReference(uid).child("userID").setValue(uid);
             return true;
         }
         return false;
@@ -206,6 +212,8 @@ public class FireBaseDB {
         if (newSearch != null) {
             DatabaseReference searchEntry = sSearchDatabase.push();
             searchEntry.setValue(newSearch);
+            // Update the search key element of the Search Object
+            searchEntry.child("searchID").setValue(searchEntry.getKey());
             return searchEntry.getKey();
         }
         return null;
@@ -223,46 +231,14 @@ public class FireBaseDB {
         if (journey != null) {
             DatabaseReference journeyEntry = sJourneyDatabase.push();
             journeyEntry.setValue(journey);
+            // Update the journey key element of the Journey Object
+            journeyEntry.child("journeyID").setValue(journeyEntry.getKey());
             return journeyEntry.getKey();
+
         }
         return null;
     }
 
-    /**
-     * Set the given journey to the given journey ID in firebaseDB
-     *
-     * @param journeyID ID that we want to link to the given journey
-     * @param journey   Journey object that will be updated
-     * @return
-     */
-    public static void updateJourney(String journeyID, Journey journey) {
-        if (!isFireBaseInitialized()) return;
-        if (journeyID != null && journey != null) {
-            DatabaseReference journeyEntry = sDatabase.getReference("journeys/" + journeyID);
-            journey.setJourneyID(journeyID);
-            journeyEntry.setValue(journey);
-            journeyEntry.getKey();
-        }
-    }
-
-    public static void updateJourneyID(String journeyID, Journey journey) {
-        if (!isFireBaseInitialized()) return;
-        if (journeyID != null && journey != null) {
-            DatabaseReference journeyEntry = sDatabase.getReference("journeys/" + journeyID + "/journeyID");
-            journeyEntry.setValue(journey.getJourneyID());
-        }
-    }
-
-
-    public static void updateSearch(String searchID, Search search) {
-        if (!isFireBaseInitialized()) return;
-        if (searchID != null && search != null) {
-            DatabaseReference searchEntry = sDatabase.getReference("search/" + searchID);
-            search.setSearchID(searchID);
-            searchEntry.setValue(search);
-            searchEntry.getKey();
-        }
-    }
 
     /**
      * Combine several users into one search and delete old searches
@@ -360,7 +336,8 @@ public class FireBaseDB {
     /**
      * Adds rating to user uid
      * Note: if several addRating() launched sequentially, risk of over writing the previous call
-     *  @param userID String corresponding to the user unique id that is rated
+     *
+     * @param userID String corresponding to the user unique id that is rated
      * @param rating The rating that is given
      */
     public static void addRating(final String userID, final float rating) {
@@ -516,6 +493,18 @@ public class FireBaseDB {
 
     }
 
+    public static void updateJourney(Journey journey) {
+        if (journey == null) return;
+        DatabaseReference journeyEntry = sJourneyDatabase.child(journey.getJourneyID());
+        journeyEntry.setValue(journey);
+    }
+
+    public static void updateSearch(Search search) {
+        if (search == null) return;
+        DatabaseReference searchEntry = sSearchDatabase.child(search.getSearchID());
+        searchEntry.setValue(search);
+    }
+
     public static void deleteJourneyFromUser(String userID, String journeyID) {
         User user = getCurrentUser();
         if (user == null) return;
@@ -523,36 +512,30 @@ public class FireBaseDB {
         updateUser(userID, user);
     }
 
+    /**
+     * Gets the user object based on the user id
+     *
+     * @param userID
+     * @param valueEventListener action that will be executed once its finished
+     */
     public static void getUser(String userID, ValueEventListener valueEventListener) {
         getUserDatabaseReference(userID).addListenerForSingleValueEvent(valueEventListener);
     }
 
+    /**
+     * Gets one property of a user
+     *
+     * @param userID             ID of the user
+     * @param property           Property that you want to get from the user
+     * @param valueEventListener Action that will be executed on finish
+     */
+    public static void getUserProperty(String userID, String property, ValueEventListener valueEventListener) {
+        getUserDatabaseReference(userID).child(property).addListenerForSingleValueEvent(valueEventListener);
+    }
 
-    // TODO: Fix this function
-//    /**
-//     * Increment the userID number of journey after a journey is completed
-//     * (by clicking on the journey is over button in the chat fragment)
-//     *
-//     * @param userID user ID with a new journey completed
-//     */
-//    public static void incrementUserNumberOfJourney(String userID) {
-//        final DatabaseReference tempUserRef = sDatabase.getReference("users/" + userID +"/numOfTrips/");
-//
-//        Log.d(TAG, "in IncrementNumJourneys");
-//
-//        ValueEventListener valueEventListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot snapshot) {
-//                int tempNumberOfJourney = snapshot.getValue(int.class);
-//                tempUserRef.setValue(tempNumberOfJourney + 1);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//            }
-//        };
-//        tempUserRef.addListenerForSingleValueEvent(valueEventListener);
-//
-//    }
+    public static void removeUserFromLocalStorage() {
+        mPrefs.edit().remove(Constants.CURRENT_USER).commit();
+    }
+
+
 }
-

@@ -101,9 +101,9 @@ public class JourneyHistoryFragment extends Fragment implements View.OnCreateCon
         mNewUserValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                if (user == null) return;
-                addUserToRatingAdapter(user);
+                String userName = (String) dataSnapshot.getValue();
+                if (userName == null) return;
+                addUserToRatingAdapter(userName);
 
             }
 
@@ -128,7 +128,7 @@ public class JourneyHistoryFragment extends Fragment implements View.OnCreateCon
             }
         });
 
-        mRatingAdapter = new RatingItemAdapter(new ArrayList<User>());
+        mRatingAdapter = new RatingItemAdapter(new ArrayList<String>());
         mLinearLayoutManager = new LinearLayoutManager(getContext());
     }
 
@@ -200,7 +200,7 @@ public class JourneyHistoryFragment extends Fragment implements View.OnCreateCon
                 mRatingAdapter.clean();
                 for (String userID : journey.getUsers()) {
                     if (!userID.equals(FireBaseDB.getCurrentUserID())) {
-                        FireBaseDB.getUser(userID, mNewUserValueEventListener);
+                        FireBaseDB.getUserProperty(userID, "fullName", mNewUserValueEventListener);
                     }
                 }
                 mMenuDialog.dismiss();
@@ -258,11 +258,11 @@ public class JourneyHistoryFragment extends Fragment implements View.OnCreateCon
     /**
      * Adds the user to the list of users in the material dialog adapter
      *
-     * @param user User loaded
+     * @param userName User loaded
      */
-    private void addUserToRatingAdapter(User user) {
+    private void addUserToRatingAdapter(String userName) {
         // We add the user to the list adapter of the Recycler View
-        mRatingAdapter.addUser(user);
+        mRatingAdapter.addUser(userName);
         // When all the users are loaded we run the dialog
         if (mRatingAdapter.getItemCount() == mClickedJourney.getUsers().size() - 1) {
             openRatingDialog();

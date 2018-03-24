@@ -18,25 +18,28 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginLeft="16dp"
         android:layout_weight="1"
         android:clickable="false"
         android:ellipsize="end"
         android:focusable="false"
         android:lines="1"
-        android:textSize="18dp"
+        android:paddingRight="5dp"
         android:scrollHorizontally="true"
-        android:textColor="@color/colorGrey" />
+        android:textColor="@color/colorGrey"
+        android:textSize="18dp" />
 
     <me.zhanghai.android.materialratingbar.MaterialRatingBar
         android:id="@+id/rating"
         android:layout_width="140dp"
         android:layout_height="30dp"
         android:layout_gravity="left"
+        android:layout_marginRight="16dp"
         android:layout_weight="1"
         android:numStars="5"
         android:stepSize="1"
-        app:mrb_progressTint="@color/colorPrimaryDark"
         app:mrb_progressBackgroundTint="@color/colorPrimaryDark"
+        app:mrb_progressTint="@color/colorPrimaryDark"
         app:mrb_secondaryProgressTint="@color/colorPrimary" />
 
 </LinearLayout>

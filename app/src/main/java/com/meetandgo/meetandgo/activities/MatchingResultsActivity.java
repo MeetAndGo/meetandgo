@@ -204,7 +204,6 @@ public class MatchingResultsActivity extends AppCompatActivity {
             journeyKey = FireBaseDB.addNewJourney(journey);
         }
         journey.setJourneyID(journeyKey);
-        FireBaseDB.updateJourneyID(journeyKey, journey);
         return journey;
     }
 
@@ -216,7 +215,7 @@ public class MatchingResultsActivity extends AppCompatActivity {
         joinedSearch.addUser(mCurrentUserSearch.getUserID());
         joinedSearch.setJourneyID(newJourney.getJourneyID());
         FireBaseDB.deleteSearch(mCurrentUserSearch.getSearchID());
-        FireBaseDB.updateSearch(joinedSearch.getSearchID(), joinedSearch);
+        FireBaseDB.updateSearch(joinedSearch);
     }
 
 

@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.database.FirebaseDatabase;
 import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FireBaseDB;
 import com.meetandgo.meetandgo.R;
@@ -171,22 +172,6 @@ public class ChatsFragment extends Fragment {
     }
 
     /**
-     * Performs operations when a journey is started
-     */
-    private void setUpBeginJourney() {
-        mLetsGoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hideKeyboard();
-                mLetsGoButton.setVisibility(View.GONE);
-                FireBaseDB.deleteSearch(mCurrentJourney.getSearchID());
-                mFinishButton.setVisibility(View.VISIBLE);
-
-            }
-        });
-    }
-
-    /**
      * Hides the users keyboard when we are out of the scope
      */
     private void hideKeyboard() {
@@ -206,15 +191,30 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mCurrentJourney.deactivateJourney();
-
                 MainActivity activity = (MainActivity) getActivity();
                 activity.setSelectedFragmentByMenuItem(R.id.menu_item_journey_history);
                 JourneyHistory.journeyIDs.push(mCurrentJourney);
+                FireBaseDB.updateJourney(mCurrentJourney);
+                ((MainActivity)getActivity()).runKonfettiAnimation();
+                //SerializationUtils sUtils = new SerializationUtils();
+                //sUtils.serializeJourneyHistory(getContext());
 
-                FireBaseDB.updateJourney(mCurrentJourney.getJourneyID(), mCurrentJourney);
+            }
+        });
+    }
 
-                SerializationUtils sUtils = new SerializationUtils();
-                sUtils.serializeJourneyHistory(getContext());
+    /**
+     * Performs operations when a journey is started
+     */
+    private void setUpBeginJourney() {
+        mLetsGoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideKeyboard();
+                mLetsGoButton.setVisibility(View.GONE);
+                FireBaseDB.deleteSearch(mCurrentJourney.getSearchID());
+                mFinishButton.setVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).runKonfettiAnimation();
 
             }
         });

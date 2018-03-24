@@ -10,6 +10,16 @@ import java.util.ArrayList;
  * Class to save the information of the user
  */
 public class User {
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    private String userID;
     private String fullName;
     private String email;
     private double rating;
@@ -20,6 +30,7 @@ public class User {
     private ArrayList<String> journeyIDs;
 
     public User() {
+        this.userID = "";
         this.fullName = "";
         this.email = "";
         this.rating = 0.0;
@@ -31,6 +42,7 @@ public class User {
     }
 
     public User(String fullName, String email) {
+        this.userID = "";
         this.fullName = fullName;
         this.email = email;
         this.rating = 0.0;

@@ -12,9 +12,9 @@ import com.meetandgo.meetandgo.data.User;
 import java.util.ArrayList;
 
 public class RatingItemAdapter extends RecyclerView.Adapter<RatingItemAdapter.ViewHolder> {
-    private ArrayList<User> mUsers;
+    private ArrayList<String> mUsers;
 
-    public RatingItemAdapter(ArrayList<User> users) {
+    public RatingItemAdapter(ArrayList<String> users) {
         mUsers = users;
     }
 
@@ -26,8 +26,8 @@ public class RatingItemAdapter extends RecyclerView.Adapter<RatingItemAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        User search = mUsers.get(position);
-        holder.userNameTextView.setText(search.getFullName());
+        String userName = mUsers.get(position);
+        holder.userNameTextView.setText(userName);
 
     }
 
@@ -36,7 +36,7 @@ public class RatingItemAdapter extends RecyclerView.Adapter<RatingItemAdapter.Vi
         return mUsers.size();
     }
 
-    public void addUser(User user) {
+    public void addUser(String user) {
         mUsers.add(user);
         notifyItemInserted(mUsers.size());
     }

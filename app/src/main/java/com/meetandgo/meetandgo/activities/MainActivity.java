@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
         // Add current user to the database
         FireBaseDB.isUserInDB(FireBaseDB.getCurrentUserID(), mUserValueEventListener);
 
+
         // UpdateUI based on the current user that is using the app
         mTextViewUserName.setText(currentUser.getFullName());
         mTextViewUserEmail.setText(currentUser.getEmail());
@@ -384,6 +385,7 @@ public class MainActivity extends AppCompatActivity {
     private void signOut() {
         AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
             public void onComplete(@NonNull Task<Void> task) {
+                FireBaseDB.removeUserFromLocalStorage();
                 startBootActivity();
             }
         });

@@ -39,6 +39,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -462,9 +465,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         resultSearches.clear();
         Loc sLocation = new Loc(mStartLocation.getLatitude(), mStartLocation.getLongitude());
         Loc eLocation = new Loc(mEndLocation.getLatitude(), mEndLocation.getLongitude());
-        Search currentUserSearch = new Search(mPreferences, "", sLocation, eLocation, mTextViewStartLocation.getText().toString(), mTextViewEndLocation.getText().toString());
-        String searchKey = FireBaseDB.addNewSearch(currentUserSearch);
-        FireBaseDB.updateSearch(searchKey, currentUserSearch);
+        final Search currentUserSearch = new Search(mPreferences, "", sLocation, eLocation, mTextViewStartLocation.getText().toString(), mTextViewEndLocation.getText().toString());
+
+        String searchID = FireBaseDB.addNewSearch(currentUserSearch);
+        currentUserSearch.setSearchID(searchID);
         startMatchingResultsActivity(currentUserSearch);
 
     }
