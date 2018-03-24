@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.meetandgo.meetandgo.R;
@@ -92,14 +93,16 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
         private TextView startTimeTextView;
         private ImageView walkImageView;
         private TextView numberOfUsersTextView;
+        private LinearLayout linearLayoutBackground;
 
         private ViewHolder(View itemView) {
             super(itemView);
             fromTextView = itemView.findViewById(R.id.fromTextView);
             toTextView = itemView.findViewById(R.id.toTextView);
             startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
-            walkImageView = itemView.findViewById(R.id.walkImageView);
+            walkImageView = itemView.findViewById(R.id.journeyImageView);
             numberOfUsersTextView = itemView.findViewById(R.id.numberOfPeopleTextView);
+            linearLayoutBackground = itemView.findViewById(R.id.linearLayoutBackground);
         }
 
         private void bind(final Search search, final OnItemClickListener listener) {

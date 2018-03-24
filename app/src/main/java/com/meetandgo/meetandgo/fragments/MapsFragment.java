@@ -590,12 +590,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         setSearchButtonState();
     }
 
-    /**
-     * Calls the thread that will look for the route and will draw it
-     * @param sourcePosition Start Position
-     * @param destPosition End Position
-     * @param mode Mode (Can be WALKING or DRIVING)
-     */
     protected void route(final LatLng sourcePosition, final LatLng destPosition, String mode) {
         @SuppressLint("HandlerLeak") final Handler handler = new Handler() {
             public void handleMessage(Message msg) {
@@ -606,9 +600,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                     Document doc = (Document) msg.obj;
                     GMapV2Direction md = new GMapV2Direction();
                     ArrayList<LatLng> directionPoint = md.getDirection(doc);
-                    drawRoute(directionPoint, sourcePosition, destPosition);
-
-
+                    drawPath(directionPoint, sourcePosition, destPosition);
                     md.getDurationText(doc);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -621,19 +613,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     /**
-     * Draws the line for the corresponding route based on the points returned by gogole
-     * @param directionPoint ArrayList of points
-     * @param sourcePosition Start Position
-     * @param destPosition End Position
+     * Draws the path and the starting and ending point of the path
+     * @param directionPoint List of points for the path
+     * @param sourcePosition Starting point
+     * @param destPosition End Point
      */
-    private void drawRoute(ArrayList<LatLng> directionPoint, LatLng sourcePosition, LatLng destPosition) {
+    private void drawPath(ArrayList<LatLng> directionPoint, LatLng sourcePosition, LatLng destPosition) {
         PolylineOptions rectLine = new PolylineOptions().width(15)
                 .color(ContextCompat.getColor(getActivity(), R.color.colorPrimarySoft))
                 .jointType(JointType.ROUND)
                 .zIndex(-100)
                 .startCap(new RoundCap())
-                .endCap(new RoundCap());
-        mMapPolyline = mMap.addPolyline(rectLine);
+                .startCap(new RoundCap());
 
         for (int i = 0; i < directionPoint.size(); i++) {
             rectLine.add(directionPoint.get(i));
@@ -653,6 +644,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 .strokeWidth(5)
                 .strokeColor(ContextCompat.getColor(getActivity(), R.color.colorPrimarySoft))
                 .fillColor(ContextCompat.getColor(getActivity(), R.color.colorWhite)));
+
+
+        mMapPolyline = mMap.addPolyline(rectLine);
     }
 
     /**

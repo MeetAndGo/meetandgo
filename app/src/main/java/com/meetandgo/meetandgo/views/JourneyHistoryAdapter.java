@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.meetandgo.meetandgo.R;
@@ -81,6 +82,7 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
         private TextView fromTextView;
         private TextView startTimeTextView;
         private ImageView journeyImageView;
+        private LinearLayout linearLayoutBackground;
         private TextView numberOfUsersTextView;
 
         private ViewHolder(View itemView) {
@@ -88,6 +90,7 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
             fromTextView = itemView.findViewById(R.id.fromTextView);
             startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
             journeyImageView = itemView.findViewById(R.id.journeyImageView);
+            linearLayoutBackground = itemView.findViewById(R.id.linearLayoutBackground);
             numberOfUsersTextView = itemView.findViewById(R.id.numberOfPeopleTextView);
         }
 
@@ -151,9 +154,9 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
             holder.journeyImageView.setImageResource(R.drawable.ic_directions_walk_black_48dp);
         }
         if (j.isActive()) {
-            holder.journeyImageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.activeJourney));
+            holder.linearLayoutBackground.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.activeJourney));
         } else {
-            holder.journeyImageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.inactiveJourney));
+            holder.linearLayoutBackground.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.inactiveJourney));
         }
         // Bind the holder for having the click functionality
         holder.bind(mJourneys.get(position), mListener);
