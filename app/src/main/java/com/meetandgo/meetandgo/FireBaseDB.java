@@ -414,11 +414,6 @@ public class FireBaseDB {
                 Search searchResult = dataSnapshot.getValue(Search.class);
                 if (searchResult == null) return;
                 if (!searchResult.getUserID().equals(search.getUserID())) {
-                    /*Log.d(TAG, "S-Lng: " + searchResult.getStartLocation().getLng());
-                    Log.d(TAG, "S-Lat: " + searchResult.getStartLocation().getLat());
-                    Log.d(TAG, "E-Lng: " + searchResult.getEndLocation().getLng());
-                    Log.d(TAG, "E-Lat: " + searchResult.getEndLocation().getLat());
-                    Log.d(TAG, "Previous Search ID: " + prevChildKey);*/
                     searches.add(searchResult);
                     bus.post(searchResult);
                 }

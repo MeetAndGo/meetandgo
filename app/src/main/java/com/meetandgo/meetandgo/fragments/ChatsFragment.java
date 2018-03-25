@@ -69,10 +69,7 @@ public class ChatsFragment extends Fragment {
         if (activity == null) return view;
 
         if (mCurrentJourney != null) {
-            updateButtonsStatuses();
-            updateClickListener();
-            displayChatMessages();
-            activity.setChatMenuItemVisibility(true);
+            setUpJourney(mCurrentJourney);
         } else {
             activity.setChatMenuItemVisibility(false);
         }
@@ -270,11 +267,16 @@ public class ChatsFragment extends Fragment {
         this.mCurrentJourney = journey;
         if (mCurrentJourney == null) return;
         if (mSendMsgButton == null) return;
+        setUpJourney(journey);
+
+
+    }
+
+    private void setUpJourney(Journey journey) {
         updateButtonsStatuses();
         updateClickListener();
         displayChatMessages();
         ((MainActivity) getActivity()).setChatMenuItemVisibility(true);
-
     }
 
     /**

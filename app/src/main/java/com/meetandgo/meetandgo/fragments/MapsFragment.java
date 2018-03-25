@@ -624,7 +624,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 .jointType(JointType.ROUND)
                 .zIndex(-100)
                 .startCap(new RoundCap())
-                .startCap(new RoundCap());
+                .endCap(new RoundCap());
 
         for (int i = 0; i < directionPoint.size(); i++) {
             rectLine.add(directionPoint.get(i));

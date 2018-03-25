@@ -93,8 +93,10 @@ public class MainActivity extends AppCompatActivity {
             String json = getIntent().getStringExtra(Constants.JOURNEY_EXTRA);
             Gson gson = new Gson();
             Journey journey = gson.fromJson(json, Journey.class);
-            setSelectedFragmentByMenuItem(R.id.menu_item_chat);
-            ((ChatsFragment) mChatsFragment).setJourney(journey);
+            if (journey != null) {
+                setSelectedFragmentByMenuItem(R.id.menu_item_chat);
+                ((ChatsFragment) mChatsFragment).setJourney(journey);
+            }
 
         }
     }
