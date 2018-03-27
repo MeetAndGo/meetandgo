@@ -587,7 +587,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             mEndLocation = location;
         }
 
-        setSearchButtonState();
+        //setSearchButtonState();
     }
 
     protected void route(final LatLng sourcePosition, final LatLng destPosition, String mode) {
@@ -676,6 +676,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      */
     public void setAddressInView(String address) {
         if (mTextViewCurrentFocus == null) return;
+        setSearchButtonState();
         mTextViewCurrentFocus.setText(address);
     }
 
