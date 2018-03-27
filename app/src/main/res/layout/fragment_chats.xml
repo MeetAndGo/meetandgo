@@ -4,44 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.meetandgo.meetandgo.activities.ChatActivity">
 
-
-    <Button
-        android:id="@+id/button_lets_go"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/colorPrimary"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:text="@string/go_button"
-        android:textColor="@android:color/white"
-        android:visibility="visible"/>
-
-    <Button
-        android:id="@+id/button_finish"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/green_complete"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:text="@string/finish_button"
-        android:textColor="@android:color/white"
-        android:visibility="gone" />
-
-    <ListView
-        android:id="@+id/list_of_messages"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="00dp"
-        android:paddingBottom="60dp"
+        android:orientation="vertical">
 
-        android:background="#EEEEEE"
-        android:divider="@android:color/transparent"
-        android:transcriptMode="alwaysScroll"
-        android:stackFromBottom="true"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/button_lets_go"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorPrimary"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="@string/go_button"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/button_finish"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/green_complete"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:text="@string/finish_button"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <ListView
+            android:id="@+id/list_of_messages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#EEEEEE"
+            android:divider="@android:color/transparent"
+            android:paddingBottom="60dp"
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll" />
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/message_layout"
@@ -53,11 +64,11 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="0dp"
-            android:paddingLeft="5dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
             app:cardCornerRadius="20dp"
-            app:cardElevation="1dp"
-            android:layout_weight="1">
+            app:cardElevation="1dp">
 
             <EditText
                 android:id="@+id/input"
@@ -76,8 +87,8 @@
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/msg_button"
             android:layout_width="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
             android:src="@drawable/ic_exit_to_app_black_48dp"
             android:tint="@android:color/white"
@@ -86,7 +97,6 @@
             app:fabSize="mini" />
 
     </LinearLayout>
-
 </FrameLayout>
 
 

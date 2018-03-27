@@ -86,6 +86,7 @@ public class ChatsFragment extends Fragment {
             setUpFinishJourney();
         } else {
             mLetsGoButton.setVisibility(View.GONE);
+
             mFinishButton.setVisibility(View.GONE);
         }
     }
