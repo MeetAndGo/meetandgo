@@ -48,7 +48,7 @@ public class MatchingResultsActivity extends AppCompatActivity {
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     private MatchingResultsAdapter mAdapter;
-    private ArrayList<Search> orderedSearches = new ArrayList<>();
+    private ArrayList<Search> mOrderedSearches = new ArrayList<>();
     private Search mCurrentUserSearch;
     private ArrayList<Search> mSearches = new ArrayList<>();
 
@@ -76,10 +76,12 @@ public class MatchingResultsActivity extends AppCompatActivity {
      */
     private void setUpUI() {
         setUpRecyclerView();
-
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mBus = new Bus(ThreadEnforcer.MAIN);
+                mBus.register(this);
+
                 FireBaseDB.retrieveSearchesBySearch(mBus, mCurrentUserSearch);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
@@ -111,7 +113,7 @@ public class MatchingResultsActivity extends AppCompatActivity {
             public void onItemLongClick(Object object) {
             }
         };
-        mAdapter = new MatchingResultsAdapter(orderedSearches, listener);
+        mAdapter = new MatchingResultsAdapter(mOrderedSearches, listener);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -235,13 +237,13 @@ public class MatchingResultsActivity extends AppCompatActivity {
      */
     @Subscribe
     public void nextMethod(Search search) {
-        // If already exists on the list we dont add it.
-        for (Search s : mSearches) {
-            if (s.getSearchID().equals(search.getSearchID())) return;
-        }
-        mSearches.add(search);
-        orderedSearches = SearchUtil.calculateSearch(mSearches, mCurrentUserSearch);
-        mAdapter.setListOfSearches(orderedSearches);
+            // If already exists on the list we dont add it.
+            for (Search s : mSearches) {
+                    if (s.getSearchID().equals(search.getSearchID())) return;
+            }
+            mSearches.add(search);
+            mOrderedSearches = SearchUtil.calculateSearch(mSearches, mCurrentUserSearch);
+            mAdapter.setListOfSearches(mOrderedSearches);
     }
 
     /**

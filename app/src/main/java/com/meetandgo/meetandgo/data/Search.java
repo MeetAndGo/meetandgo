@@ -50,6 +50,7 @@ public class Search implements Serializable {
         this.endLocation = endLocation;
         this.timeCreated = null;
         this.journeyID = "";
+        this.searchID = "";
     }
 
     public String getUserID() {

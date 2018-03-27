@@ -1,5 +1,6 @@
 package com.meetandgo.meetandgo.views;
 
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -70,6 +71,7 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
      *
      * @param searches The new updated searches to be replaced with.
      */
+    @UiThread
     public void setListOfSearches(ArrayList<Search> searches) {
         this.mSearches = searches;
         notifyDataSetChanged();

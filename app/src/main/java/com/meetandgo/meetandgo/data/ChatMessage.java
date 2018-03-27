@@ -16,13 +16,16 @@ public class ChatMessage {
     public ChatMessage(String messageText, String messageUser, String userID) {
         this.messageText = messageText;
         this.messageUser = messageUser;
+        if (messageUser.contains(" "))
+            this.messageUser = messageUser.substring(0, messageUser.indexOf(" "));
         this.userID = userID;
 
         // Initialize to current time
         this.timestampCreated = FireBaseDB.getServerTime();
     }
 
-    public ChatMessage(){}
+    public ChatMessage() {
+    }
 
     public String getMessageText() {
         return messageText;
@@ -48,12 +51,12 @@ public class ChatMessage {
         this.userID = userID;
     }
 
-    public HashMap<String, Object> getTimestampCreated(){
+    public HashMap<String, Object> getTimestampCreated() {
         return timestampCreated;
     }
 
     @Exclude
-    public long getTimestampCreatedLong(){
-        return (long)timestampCreated.get("timestamp");
+    public long getTimestampCreatedLong() {
+        return (long) timestampCreated.get("timestamp");
     }
 }

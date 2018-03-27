@@ -78,7 +78,6 @@ public class ChatsFragment extends Fragment {
 
     private void updateButtonsStatuses() {
         Log.e(TAG, Boolean.toString(mCurrentJourney.isActive()));
-        Log.e(TAG, Boolean.toString(mCurrentJourney.isActive()));
         if (mCurrentJourney.isActive() &&
                 (FireBaseDB.getCurrentUserID().equals(mCurrentJourney.getUsers().get(0)))) {
             mLetsGoButton.setVisibility(View.VISIBLE);
@@ -190,7 +189,7 @@ public class ChatsFragment extends Fragment {
                 activity.setSelectedFragmentByMenuItem(R.id.menu_item_journey_history);
                 JourneyHistory.journeyIDs.push(mCurrentJourney);
                 FireBaseDB.updateJourney(mCurrentJourney);
-                ((MainActivity)getActivity()).runKonfettiAnimation();
+                ((MainActivity) getActivity()).runKonfettiAnimation();
                 //SerializationUtils sUtils = new SerializationUtils();
                 //sUtils.serializeJourneyHistory(getContext());
 
@@ -209,7 +208,7 @@ public class ChatsFragment extends Fragment {
                 mLetsGoButton.setVisibility(View.GONE);
                 FireBaseDB.deleteSearch(mCurrentJourney.getSearchID());
                 mFinishButton.setVisibility(View.VISIBLE);
-                ((MainActivity)getActivity()).runKonfettiAnimation();
+                ((MainActivity) getActivity()).runKonfettiAnimation();
 
             }
         });

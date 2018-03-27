@@ -87,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
         for (String s : currentUser.getFullName().split(" ")) {
             initials += s.charAt(0);
         }
-        initials.substring(0, 2);
+        initials = initials.substring(0, 2);
         mTextViewInitials.setText(initials);
         String gender = currentUser.getGender().toString();
 

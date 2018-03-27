@@ -413,6 +413,7 @@ public class FireBaseDB {
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Search searchResult = dataSnapshot.getValue(Search.class);
                 if (searchResult == null) return;
+                if (searchResult.getSearchID() == null) return;
                 if (!searchResult.getUserID().equals(search.getUserID())) {
                     searches.add(searchResult);
                     bus.post(searchResult);
@@ -421,6 +422,13 @@ public class FireBaseDB {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Search searchResult = dataSnapshot.getValue(Search.class);
+                if (searchResult == null) return;
+                if (searchResult.getSearchID() == null) return;
+                if (!searchResult.getUserID().equals(search.getUserID())) {
+                    searches.add(searchResult);
+                    bus.post(searchResult);
+                }
             }
 
             @Override
