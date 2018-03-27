@@ -73,8 +73,6 @@ public class JourneyHistoryFragment extends Fragment implements View.OnCreateCon
 
         mBus = new Bus(ThreadEnforcer.MAIN);
         mBus.register(this);
-
-
         setUpEventListener();
         setUpUI();
         return view;
@@ -148,7 +146,9 @@ public class JourneyHistoryFragment extends Fragment implements View.OnCreateCon
             @Override
             public void onItemClick(Object object) {
                 Journey journey = (Journey) object;
+                saveLastActiveChat(journey);
                 startChatFragment(journey);
+
             }
 
             @Override
@@ -161,6 +161,10 @@ public class JourneyHistoryFragment extends Fragment implements View.OnCreateCon
         // specify an adapter (see also next example)
         mAdapter = new JourneyHistoryAdapter(mJourneyHistory, mOnItemClickListener);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void saveLastActiveChat(Journey journey) {
+        ((MainActivity) getActivity()).saveLastActiveChat(journey);
     }
 
     /**

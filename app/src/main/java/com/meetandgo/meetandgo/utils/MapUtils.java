@@ -94,4 +94,13 @@ public final class MapUtils {
         return urlString.toString();
     }
 
+    /**
+     * Convert meters to latlong
+     * @return lat long difference
+     * @param meters
+     */
+    public static double metersToLatLng(double meters) {
+        return meters * 0.0000089;
+    }
+
 }

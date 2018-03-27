@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set the maps fragment as a default fragment on Start
         setSelectedFragmentByMenuItem(R.id.menu_item_map);
+
     }
 
     /**
@@ -287,7 +288,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         // SetUp the MDrawerToogle for the toolbar
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                hideKeyboard();
+            }
+        };
+        
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -482,6 +489,22 @@ public class MainActivity extends AppCompatActivity {
                 super.onBackPressed();
             }
         }
+
+    }
+
+    public void saveLastActiveChat(Journey journey) {
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(journey);
+        prefsEditor.putString(Constants.CURRENT_JOURNEY, json);
+        prefsEditor.apply();
+    }
+
+    public Journey getLastActiveChat() {
+        // Get Current user saved in the phone, if it doesn't exist use a new one created for this
+        Gson gson = new Gson();
+        String json = mPrefs.getString(Constants.CURRENT_JOURNEY, "");
+        return gson.fromJson(json, Journey.class);
 
     }
 }

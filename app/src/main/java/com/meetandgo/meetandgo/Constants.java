@@ -13,7 +13,7 @@ public final class Constants {
     public static final String JOURNEY_EXTRA = "JOURNEY_EXTRA";
     public static final String CURRENT_USER = "CurrentUser";
     public static final String SHARED_PREFERENCES_NAME = "SHARED_PREFERENCES";
-    public static final double SEARCH_RADIUS = 10.0;
+    public static final double SEARCH_RADIUS = 1000.0;
     public static final int MAX_SEARCH_LIST_SIZE = 5;
     public static final int JOURNEY_REQUEST_CODE = 1 ;
     public static final String JOURNEY_ACTIVITY_EXTRA = "JOURNEY_ACTIVITY_EXTRA" ;
@@ -21,4 +21,5 @@ public final class Constants {
     public static final float DEFAULT_ZOOM = 13;
     public static final String CURRENT_USER_SEARCH = "currentUserSearch";
     public static final String GOOGLE_MAPS_API_KEY = "AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY";
+    public static final String CURRENT_JOURNEY = "CURRENT_JOURNEY";
 }

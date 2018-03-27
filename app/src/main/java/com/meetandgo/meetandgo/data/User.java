@@ -11,13 +11,6 @@ import java.util.ArrayList;
  */
 public class User {
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
 
     private String userID;
     private String fullName;
@@ -113,6 +106,13 @@ public class User {
 
     public void setJourneyIDs(ArrayList<String> journeyIDs) { this.journeyIDs = journeyIDs; }
 
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
     @Exclude
     public void addJourneyID(String journeyID) {
         journeyIDs.add(journeyID);

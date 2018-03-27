@@ -22,6 +22,7 @@ import com.meetandgo.meetandgo.data.Journey;
 import com.meetandgo.meetandgo.data.Loc;
 import com.meetandgo.meetandgo.data.Search;
 import com.meetandgo.meetandgo.data.User;
+import com.meetandgo.meetandgo.utils.MapUtils;
 import com.squareup.otto.Bus;
 
 import java.text.DecimalFormat;
@@ -349,9 +350,6 @@ public class FireBaseDB {
                 double userRating = ((userToRate.getRating() * (userToRate.getNumOfRatings() - 1))
                         + rating) / userToRate.getNumOfRatings();
                 userToRate.setRating(userRating);
-                //trim the rating number to 2 decimal values
-                DecimalFormat df = new DecimalFormat("#.##");
-                userToRate.setRating(Double.parseDouble(df.format(userToRate.getRating())));
                 getUserDatabaseReference(userID).setValue(userToRate);
             }
 
@@ -406,9 +404,11 @@ public class FireBaseDB {
         final Loc startLocation = search.getStartLocation();
         final Loc endLocation = search.getEndLocation();
 
+        double coef = MapUtils.metersToLatLng(Constants.SEARCH_RADIUS);
+
         //TODO: make method to change from number to meters to e.g. restrict to 500 meters
-        sSearchDatabase.orderByChild("startLocation/lat").startAt(startLocation.getLat() - Constants.SEARCH_RADIUS)
-                .endAt(startLocation.getLat() + Constants.SEARCH_RADIUS).addChildEventListener(new ChildEventListener() {
+        sSearchDatabase.orderByChild("startLocation/lat").startAt(startLocation.getLat() - coef)
+                .endAt(startLocation.getLat() + coef).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Search searchResult = dataSnapshot.getValue(Search.class);
@@ -541,4 +541,22 @@ public class FireBaseDB {
     }
 
 
+    public static void addUserToJourney(String journeyKey, final String userID) {
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Journey journey = dataSnapshot.getValue(Journey.class);
+                if (journey != null) {
+                    journey.addUser(userID);
+                    updateJourney(journey);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        sJourneyDatabase.child(journeyKey).addListenerForSingleValueEvent(valueEventListener);
+    }
 }

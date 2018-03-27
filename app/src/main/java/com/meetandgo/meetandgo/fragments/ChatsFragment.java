@@ -239,8 +239,10 @@ public class ChatsFragment extends Fragment {
                 // Format the date before showing it
                 messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", model.getTimestampCreatedLong()));
 
+                String fullName = FireBaseDB.getCurrentUser().getFullName();
+                boolean sameUser = model.getMessageUser().equals(fullName.substring(0, fullName.indexOf(" ")));
                 // Handle the case when the chat_message_item if from the current user
-                if (model.getMessageUser().equals(FireBaseDB.getCurrentUser().getFullName())) {
+                if (sameUser) {
                     colorLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.myMessageColor));
                     rightMarginLayout.setVisibility(View.GONE);
                     leftMarginLayout.setVisibility(View.VISIBLE);

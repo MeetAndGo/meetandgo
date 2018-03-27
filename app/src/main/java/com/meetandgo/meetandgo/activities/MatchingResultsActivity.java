@@ -17,6 +17,7 @@ import android.view.WindowManager;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.firebase.client.Firebase;
 import com.google.gson.Gson;
 import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FireBaseDB;
@@ -200,8 +201,10 @@ public class MatchingResultsActivity extends AppCompatActivity {
         String journeyKey;
         Journey journey = new Journey(joinedSearch.getSearchID(), joinedSearch.getStartLocation(), joinedSearch.getStartLocationString(),
                 new Date().getTime(), users);
-        if (joinedSearch.hasJourney()) {
+        // If there is more than two users, and the journey has already been created
+        if (joinedSearch.hasJourneyID()) {
             journeyKey = joinedSearch.getJourneyID();
+            FireBaseDB.addUserToJourney(journeyKey, FireBaseDB.getCurrentUserID());
         } else {
             journeyKey = FireBaseDB.addNewJourney(journey);
         }

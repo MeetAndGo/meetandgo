@@ -129,7 +129,7 @@ public class Search implements Serializable {
     }
 
     @Exclude
-    public boolean hasJourney(){
+    public boolean hasJourneyID(){
         return !journeyID.equals("");
     }
 }
