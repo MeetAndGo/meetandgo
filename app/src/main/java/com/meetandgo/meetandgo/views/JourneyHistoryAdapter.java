@@ -27,92 +27,6 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
     private OnItemClickListener mListener;
 
     /**
-     * Add journey to journey history list by notifying the fragment that a new journey has been
-     * added
-     *
-     * @param o The journey to be added
-     */
-    public void add(Journey o) {
-        boolean exists = false;
-        for (int i = 0; i < mJourneys.size(); i++) {
-            Journey j = mJourneys.get(i);
-            if (Objects.equals(j.getJourneyID(), o.getJourneyID())) {
-                j.update(o);
-                notifyItemChanged(i);
-                exists = true;
-            }
-        }
-        if (!exists) {
-            mJourneys.add(o);
-            notifyItemInserted(mJourneys.size() - 1);
-        }
-        orderJourneyList();
-
-    }
-
-    private void orderJourneyList() {
-        Collections.sort(mJourneys, new CustomComparator());
-        Collections.reverse(mJourneys);
-
-    }
-
-    public ArrayList<Journey> getJourneys() {
-        return mJourneys;
-    }
-
-    public void clean() {
-        mJourneys.clear();
-        notifyDataSetChanged();
-    }
-
-    public void deleteJourney(Journey journey) {
-        for (int i = 0; i < mJourneys.size(); i++) {
-            if (mJourneys.get(i).getJourneyID().equals(journey.getJourneyID())) {
-                mJourneys.remove(journey);
-                notifyItemRemoved(i);
-                return;
-            }
-        }
-    }
-
-    /* Provide a reference to the views for each data item
-    * Complex data items may need more than one view per item, and
-    you provide access to all the views for a data item in a view holder */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView fromTextView;
-        private TextView startTimeTextView;
-        private ImageView journeyImageView;
-        private LinearLayout linearLayoutBackground;
-        private TextView numberOfUsersTextView;
-
-        private ViewHolder(View itemView) {
-            super(itemView);
-            fromTextView = itemView.findViewById(R.id.fromTextView);
-            startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
-            journeyImageView = itemView.findViewById(R.id.journeyImageView);
-            linearLayoutBackground = itemView.findViewById(R.id.linearLayoutBackground);
-            numberOfUsersTextView = itemView.findViewById(R.id.numberOfPeopleTextView);
-        }
-
-        private void bind(final Journey journey, final OnItemClickListener listener) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(journey);
-                }
-            });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    listener.onItemLongClick(journey);
-                    return true;
-                }
-            });
-        }
-    }
-
-
-    /**
      * Provide a suitable constructor (depends on the kind of dataset)
      *
      * @param journeysList Arraylist of journeys
@@ -137,7 +51,9 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
         return new ViewHolder(v);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    /**
+     * Replace the contents of a view (invoked by the layout manager)
+     */
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -175,4 +91,89 @@ public class JourneyHistoryAdapter extends RecyclerView.Adapter<JourneyHistoryAd
             return Long.compare(j1.getStartTime(), j2.getStartTime());
         }
     }
+
+    /**
+     * Add journey to journey history list by notifying the fragment that a new journey has been
+     * added
+     *
+     * @param o The journey to be added
+     */
+    public void add(Journey o) {
+        boolean exists = false;
+        for (int i = 0; i < mJourneys.size(); i++) {
+            Journey j = mJourneys.get(i);
+            if (Objects.equals(j.getJourneyID(), o.getJourneyID())) {
+                j.update(o);
+                notifyItemChanged(i);
+                exists = true;
+            }
+        }
+        if (!exists) {
+            mJourneys.add(o);
+            notifyItemInserted(mJourneys.size() - 1);
+        }
+        orderJourneyList();
+    }
+
+    /**
+     * Orders journey list based on the custom comparator. In this case we order by date
+     */
+    private void orderJourneyList() {
+        Collections.sort(mJourneys, new CustomComparator());
+        Collections.reverse(mJourneys);
+    }
+
+    public ArrayList<Journey> getJourneys() {
+        return mJourneys;
+    }
+
+    public void deleteJourney(Journey journey) {
+        for (int i = 0; i < mJourneys.size(); i++) {
+            if (mJourneys.get(i).getJourneyID().equals(journey.getJourneyID())) {
+                mJourneys.remove(journey);
+                notifyItemRemoved(i);
+                return;
+            }
+        }
+    }
+
+
+
+    /**
+     * Provide a reference to the views for each data item
+     * Complex data items may need more than one view per item, and
+     * you provide access to all the views for a data item in a view holder */
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView fromTextView;
+        private TextView startTimeTextView;
+        private ImageView journeyImageView;
+        private LinearLayout linearLayoutBackground;
+        private TextView numberOfUsersTextView;
+
+        private ViewHolder(View itemView) {
+            super(itemView);
+            fromTextView = itemView.findViewById(R.id.fromTextView);
+            startTimeTextView = itemView.findViewById(R.id.startTimeTextView);
+            journeyImageView = itemView.findViewById(R.id.journeyImageView);
+            linearLayoutBackground = itemView.findViewById(R.id.linearLayoutBackground);
+            numberOfUsersTextView = itemView.findViewById(R.id.numberOfPeopleTextView);
+        }
+
+        private void bind(final Journey journey, final OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(journey);
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    listener.onItemLongClick(journey);
+                    return true;
+                }
+            });
+        }
+    }
+
 }

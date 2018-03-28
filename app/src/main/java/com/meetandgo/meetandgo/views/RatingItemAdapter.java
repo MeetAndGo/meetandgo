@@ -11,6 +11,9 @@ import com.meetandgo.meetandgo.data.User;
 
 import java.util.ArrayList;
 
+/**
+ * RecyclerView adapter for the rating item view in the material popup
+ */
 public class RatingItemAdapter extends RecyclerView.Adapter<RatingItemAdapter.ViewHolder> {
     private ArrayList<String> mUsers;
 

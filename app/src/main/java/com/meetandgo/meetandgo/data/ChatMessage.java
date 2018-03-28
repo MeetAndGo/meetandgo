@@ -1,6 +1,7 @@
 package com.meetandgo.meetandgo.data;
 
 import com.google.firebase.database.Exclude;
+import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FireBaseDB;
 
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public class ChatMessage {
     public ChatMessage(String messageText, String messageUser, String userID) {
         this.messageText = messageText;
         this.messageUser = messageUser;
+        // Get only the first name of the user instead of all the users
         if (messageUser.contains(" "))
             this.messageUser = messageUser.substring(0, messageUser.indexOf(" "));
         this.userID = userID;
@@ -61,6 +63,6 @@ public class ChatMessage {
 
     @Exclude
     public long getTimestampCreatedLong() {
-        return (long) timestampCreated.get("timestamp");
+        return (long) timestampCreated.get(Constants.TIMESTAMP);
     }
 }

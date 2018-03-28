@@ -3,9 +3,7 @@ package com.meetandgo.meetandgo;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +23,6 @@ import com.meetandgo.meetandgo.data.User;
 import com.meetandgo.meetandgo.utils.MapUtils;
 import com.squareup.otto.Bus;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -142,7 +139,7 @@ public class FireBaseDB {
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(user);
-        prefsEditor.putString(Constants.CURRENT_USER, json);
+        prefsEditor.putString(Constants.CURRENT_USER_EXTRA, json);
         prefsEditor.apply();
     }
 
@@ -181,7 +178,7 @@ public class FireBaseDB {
     private static User getLocalStorageUser() {
         // Get Current user saved in the phone, if it doesn't exist use a new one created for this
         Gson gson = new Gson();
-        String json = mPrefs.getString(Constants.CURRENT_USER, "");
+        String json = mPrefs.getString(Constants.CURRENT_USER_EXTRA, "");
         User currentUser = gson.fromJson(json, User.class);
         return currentUser;
     }
@@ -249,11 +246,10 @@ public class FireBaseDB {
      * @param deleteID search to delete
      * @return boolean, return true if addition of user to search successful
      */
-    //TODO: this needs to be tested as soon as the matching is over
     public static boolean addUserToSearch(String searchID, String userID, String deleteID) {
         if (!isFireBaseInitialized()) return false;
         if (searchID != null && userID != null && deleteID != null) {
-            DatabaseReference databaseReference = sDatabase.getReference("search/" + searchID + "/additionalUsers/");
+            DatabaseReference databaseReference = sDatabase.getReference("search/" + searchID + "/additionalUserIDs/");
             databaseReference.push().setValue(userID);
             //delete search with deleteID
             DatabaseReference searchReference = sDatabase.getReference("search/" + deleteID);
@@ -385,7 +381,7 @@ public class FireBaseDB {
      */
     public static HashMap<String, Object> getServerTime() {
         HashMap<String, Object> timestampNow = new HashMap<>();
-        timestampNow.put("timestamp", ServerValue.TIMESTAMP);
+        timestampNow.put(Constants.TIMESTAMP, ServerValue.TIMESTAMP);
         return timestampNow;
     }
 
@@ -406,7 +402,6 @@ public class FireBaseDB {
 
         double coef = MapUtils.metersToLatLng(Constants.SEARCH_RADIUS);
 
-        //TODO: make method to change from number to meters to e.g. restrict to 500 meters
         sSearchDatabase.orderByChild("startLocation/lat").startAt(startLocation.getLat() - coef)
                 .endAt(startLocation.getLat() + coef).addChildEventListener(new ChildEventListener() {
             @Override
@@ -537,10 +532,14 @@ public class FireBaseDB {
     }
 
     public static void removeUserFromLocalStorage() {
-        mPrefs.edit().remove(Constants.CURRENT_USER).commit();
+        mPrefs.edit().remove(Constants.CURRENT_USER_EXTRA).commit();
     }
 
-
+    /**
+     *
+     * @param journeyKey
+     * @param userID
+     */
     public static void addUserToJourney(String journeyKey, final String userID) {
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override

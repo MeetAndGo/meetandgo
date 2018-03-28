@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.ColorSpace;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
@@ -36,7 +35,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Cap;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.JointType;
@@ -319,16 +317,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, requestCode + " " + resultCode);
         if (requestCode == PREFERENCES_REQUEST_CODE) {
             mPreferences = (Preferences) data.getSerializableExtra(Constants.PREFERENCES_EXTRA);
             SharedPreferences.Editor prefsEditor = mSharedPreferences.edit();
             Gson gson = new Gson();
             String json = gson.toJson(mPreferences);
-            Log.d(TAG, json);
             prefsEditor.putString(STARTING_PREFERENCES, json);
             prefsEditor.apply();
-            Log.d(TAG, mSharedPreferences.getString(STARTING_PREFERENCES, ""));
 
         }
     }
@@ -489,7 +484,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         Intent matchingResultsIntent = new Intent(getActivity(), MatchingResultsActivity.class);
         Gson gson = new Gson();
         String json = gson.toJson(search);
-        matchingResultsIntent.putExtra(Constants.CURRENT_USER_SEARCH, json);
+        matchingResultsIntent.putExtra(Constants.CURRENT_USER_SEARCH_EXTRA, json);
         startActivity(matchingResultsIntent);
     }
 

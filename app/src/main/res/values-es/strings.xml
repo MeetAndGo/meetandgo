@@ -4,41 +4,66 @@
     <string name="facebook_application_id" translatable="false">605444806469252</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb41ff94088e78fd635592a4f5d0674a35</string>
     <string name="sign_out">Sign Out</string>
-    <string name="google_maps_key">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
-    <string name="menu_option_map">Nuevo trayecto</string>
-    <string name="menu_option_chats">Cayate la boca</string>
+    <string name="google_maps_key" translatable="false">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
+    <string name="title_activity_preferences">Preferences</string>
+    <string name="menu_option_map">Start New Journey</string>
+    <string name="menu_option_chats">Chats</string>
     <string name="menu_option_commute">Daily Commute</string>
-    <string name="menu_option_history">Historial</string>
+    <string name="menu_option_history">History of Journeys</string>
+    <string name="menu_option_sign_out">Sign Out</string>
 
-    <string-array name="gender_array" >
-        <item>Any</item>
-        <item>Male</item>
-        <item>Female</item>
-    </string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 
-    <string name="drawer_open">Abrir navegación</string>
-    <string name="drawer_close">Cerrar Navegación</string>
-    <string name="menu_option_sign_out">Cerrar sesión</string>
-
-    <!-- TODO: Remove or change this placeholfromTextViewtext -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_journey_start">Hello journey start</string>
-    <string name="hello_chats">Hello Chats</string>
-    <string name="hello_commute">Hello Commute</string>
-    <string name="hello_journey_history">Hello journey history</string>
-    <string name="gender_array" />
-    <string name="any">ANY</string>
-    <string name="gender_male">MALE</string>
-    <string name="gender_female">FEMALE</string>
+    <string name="dialog_needed_location_permission">This app needs location permission to work.</string>
+    <string name="allow_permission">Allow</string>
+    <string name="deny_permission">Deny</string>
+    <string name="no_location_data_provided">Location was not provided.</string>
+    <string name="service_not_available">Location Service not available.</string>
+    <string name="invalid_lat_long_used">Invalid LastLng</string>
+    <string name="no_address_found">Address not found.</string>
+    <string name="address_found">Address found.</string>
+    <string name="gender_selection">Gender Selection</string>
+    <string name="any">Any</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="mode_selection">Mode Selection</string>
     <string name="mode_walk">Walk</string>
     <string name="mode_car">Car</string>
-    <string name="mode_taxi" />
+    <string name="mode_taxi">Taxi</string>
     <string name="start_location">Start Location</string>
-    <string name="end_location">Destination</string>
+    <string name="end_location">Where are you going?</string>
     <string name="search_button">Search</string>
-    <string name="null_text">null</string>
-    <string name="stars" />
+    <string name="preferences_button">Preferences</string>
+    <string name="null_text" translatable="false">null</string>
+    <string name="stars">Stars</string>
     <string name="num_of_votes">Votes</string>
+    <string name="profile">Profile</string>
+    <string name="number_of_trips">%d Trips</string>
+    <string name="change_password">Change Password</string>
+    <string name="number_of_ratings">%d Ratings</string>
+    <string name="go_button">Let\'s Go!</string>
+    <string name="finish_button">Journey is over!</string>
+    <string name="gender_message">What preferredGender do you MOST feel like?</string>
+    <string name="confirm">Confirm</string>
+    <string name="other">other</string>
+    <string name="matching_results">Matching Results</string>
+    <string name="loc_not_found">Location not found.</string>
     <string name="confirmation_message">Are you sure you want to join this Journey?</string>
+    <string name="refresh">Refresh</string>
+    <string name="menu_rate_users">Rate journey users</string>
+    <string name="menu_delete">Delete journey</string>
+
+    <string-array name="gender_array">
+        <item name="gender_any">Any</item>
+        <item name="gender_male">Male</item>
+        <item name="gender_female">Female</item>
+    </string-array>
+
+    <string-array name="gender_array_select">
+        <item name="gender_any">Other</item>
+        <item name="gender_male">Male</item>
+        <item name="gender_female">Female</item>
+    </string-array>
 
 </resources>

@@ -17,7 +17,6 @@ import android.view.WindowManager;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.firebase.client.Firebase;
 import com.google.gson.Gson;
 import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FireBaseDB;
@@ -42,12 +41,16 @@ import static com.meetandgo.meetandgo.fragments.JourneyHistoryFragment.mBus;
 public class MatchingResultsActivity extends AppCompatActivity {
 
     private static final String TAG = MatchingResultsActivity.class.getSimpleName();
+
+    // Views
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
+
+    // Recycler View Components
     private MatchingResultsAdapter mAdapter;
     private ArrayList<Search> mOrderedSearches = new ArrayList<>();
     private Search mCurrentUserSearch;
@@ -64,8 +67,9 @@ public class MatchingResultsActivity extends AppCompatActivity {
         mBus = new Bus(ThreadEnforcer.MAIN);
         mBus.register(this);
 
+        // Get search from the calling activity - Matching results activity will always start from a
+        // maps fragment
         mCurrentUserSearch = getSearchFromCallingActivity();
-        //Log.d(TAG, mCurrentUserSearch.getUserID());
         setUpUI();
 
         FireBaseDB.retrieveSearchesBySearch(mBus, mCurrentUserSearch);
@@ -125,7 +129,7 @@ public class MatchingResultsActivity extends AppCompatActivity {
      * @return Search object that was sent to this activity
      */
     private Search getSearchFromCallingActivity() {
-        String json = getIntent().getStringExtra(Constants.CURRENT_USER_SEARCH);
+        String json = getIntent().getStringExtra(Constants.CURRENT_USER_SEARCH_EXTRA);
         Gson gson = new Gson();
         return gson.fromJson(json, Search.class);
     }
@@ -153,7 +157,7 @@ public class MatchingResultsActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json = gson.toJson(journey);
         mainActivityIntent.putExtra(Constants.JOURNEY_EXTRA, json);
-        mainActivityIntent.putExtra(Constants.JOURNEY_ACTIVITY_EXTRA, "journey_activity");
+        mainActivityIntent.putExtra(Constants.JOURNEY_ACTIVITY_EXTRA, Constants.JOURNEY_ACTIVITY_EXTRA);
         startActivity(mainActivityIntent);
         finish();
     }
@@ -240,13 +244,13 @@ public class MatchingResultsActivity extends AppCompatActivity {
      */
     @Subscribe
     public void nextMethod(Search search) {
-            // If already exists on the list we dont add it.
-            for (Search s : mSearches) {
-                    if (s.getSearchID().equals(search.getSearchID())) return;
-            }
-            mSearches.add(search);
-            mOrderedSearches = SearchUtil.calculateSearch(mSearches, mCurrentUserSearch);
-            mAdapter.setListOfSearches(mOrderedSearches);
+        // If already exists on the list we dont add it.
+        for (Search s : mSearches) {
+            if (s.getSearchID().equals(search.getSearchID())) return;
+        }
+        mSearches.add(search);
+        mOrderedSearches = SearchUtil.calculateSearch(mSearches, mCurrentUserSearch);
+        mAdapter.setListOfSearches(mOrderedSearches);
     }
 
     /**

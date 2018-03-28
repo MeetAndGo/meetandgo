@@ -10,12 +10,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.data.Preferences;
 import com.meetandgo.meetandgo.data.Search;
 
 import java.util.ArrayList;
 
+/**
+ * Matching Results adapter for the RecyclerView corresponding to the matching results view
+ */
 public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResultsAdapter.ViewHolder> {
 
     private static final String TAG = "MatchingResultsAdapter";
@@ -49,7 +53,7 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
         holder.fromTextView.setText(search.getStartLocationString());
         holder.toTextView.setText(search.getEndLocationString());
         holder.numberOfUsersTextView.setText(String.valueOf(search.getAdditionalUsers().size() + 1));
-        holder.startTimeTextView.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", (Long) search.getTimeCreated().get("timestamp")));
+        holder.startTimeTextView.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", (Long) search.getTimeCreated().get(Constants.TIMESTAMP)));
 
         if (search.getUserPreferences().getMode() == Preferences.Mode.TAXI) {
             holder.walkImageView.setImageResource(R.drawable.ic_local_taxi_black_48dp);
@@ -60,7 +64,9 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
 
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+    /**
+     * Return the size of your dataset (invoked by the layout manager)
+     */
     @Override
     public int getItemCount() {
         return mSearches.size();
@@ -109,7 +115,8 @@ public class MatchingResultsAdapter extends RecyclerView.Adapter<MatchingResults
 
         private void bind(final Search search, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     listener.onItemClick(search);
                 }
             });

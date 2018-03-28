@@ -20,7 +20,12 @@ import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
+/**
+ * AsyncTask running in the background thread for getting the json file with the points on the path.
+ * Get and parses the documents returning from the path search in the google maps api
+ * https://github.com/KAPLANDROID/Shortest-Path-Direction-on-Google-Maps-v2-for-Android/blob/master/KaplanDroidShortestPathDirection/src/com/kaplandroid/shortestpathdirection/googlemaps/GMapV2Direction.java
+ * @author KAPLANDROID
+ */
 public class GMapV2DirectionAsyncTask extends AsyncTask<String, Void, Document> {
 
     private final static String TAG = GMapV2DirectionAsyncTask.class.getSimpleName();
@@ -42,7 +47,6 @@ public class GMapV2DirectionAsyncTask extends AsyncTask<String, Void, Document> 
                 + "origin=" + start.latitude + "," + start.longitude
                 + "&destination=" + end.latitude + "," + end.longitude
                 + "&sensor=false&units=metric&mode=" + mode;
-        Log.d("url", url);
         try {
             HttpClient httpClient = new DefaultHttpClient();
             HttpContext localContext = new BasicHttpContext();

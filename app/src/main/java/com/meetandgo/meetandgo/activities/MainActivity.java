@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
+    // Views
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.navigation)
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTextViewUserEmail;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    // Fragments
     private Fragment mCurrentFragment;
     private Fragment mMapFragment;
     private Fragment mChatsFragment;
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         mToolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.toolbarColor));
         String comingFromJourney = getIntent().getStringExtra(Constants.JOURNEY_ACTIVITY_EXTRA);
-        if (comingFromJourney != null && comingFromJourney.equals("journey_activity")) {
+        if (comingFromJourney != null && comingFromJourney.equals(Constants.JOURNEY_ACTIVITY_EXTRA)) {
             // Get the journey from the intent
             String json = getIntent().getStringExtra(Constants.JOURNEY_EXTRA);
             Gson gson = new Gson();
@@ -97,20 +99,20 @@ public class MainActivity extends AppCompatActivity {
                 setSelectedFragmentByMenuItem(R.id.menu_item_chat);
                 ((ChatsFragment) mChatsFragment).setJourney(journey);
             }
-
+        }else{
+            setSelectedFragmentByMenuItem(R.id.menu_item_map);
         }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Get the local preferences of this app
         mPrefs = getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+        // Set content view of the activity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setSupportActionBar(mToolbar);
 
-        // Get the debug KeyHash for facebook login (Not useful on release version)
-        getDebugKeyHash();
         setUpMenuFragments();
         FireBaseDB.initializeApp(this);
 
@@ -228,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(user);
-        prefsEditor.putString(Constants.CURRENT_USER, json);
+        prefsEditor.putString(Constants.CURRENT_USER_EXTRA, json);
         prefsEditor.apply();
     }
 
@@ -258,10 +260,11 @@ public class MainActivity extends AppCompatActivity {
      * Sets up all the different elements of the UI
      */
     private void setupUI() {
+        setSupportActionBar(mToolbar);
+
         mNavView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                Log.d(TAG, "MenuItemClicked -> MenuItem: " + menuItem.getTitle());
                 boolean result = setSelectedFragmentByMenuItem(menuItem.getItemId());
                 mDrawerLayout.closeDrawers();
                 return result;
@@ -294,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
                 hideKeyboard();
             }
         };
-        
+
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -429,10 +432,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public Toast getToast() {
-        return mToast;
-    }
-
     public MapsFragment getMapsFragment() {
         return (MapsFragment) mMapFragment;
     }
@@ -458,6 +457,10 @@ public class MainActivity extends AppCompatActivity {
         nav_Menu.findItem(R.id.menu_item_chat).setVisible(b);
     }
 
+    /**
+     * It creates a new animation for the konfetti view and runs it. The animation is predefined, it will
+     * always run the same one.
+     */
     public void runKonfettiAnimation() {
         mKonfettiView.build()
                 .addColors(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary),
@@ -478,9 +481,11 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
+        // If the drawer is opened we will close
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
+            // From chatsfragment go to journey history and from journey go to map.
             if (mCurrentFragment.getTag() == mChatsFragment.getClass().getName()) {
                 setSelectedFragmentByMenuItem(R.id.menu_item_journey_history);
             } else if (mCurrentFragment.getTag() == mJourneyHistoryFragment.getClass().getName()) {
@@ -492,18 +497,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Saves the last opened chat by the user so we can use it and set the chat messages correctly.
+     *
+     * @param journey Journey that will be saved
+     */
     public void saveLastActiveChat(Journey journey) {
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(journey);
-        prefsEditor.putString(Constants.CURRENT_JOURNEY, json);
+        prefsEditor.putString(Constants.CURRENT_JOURNEY_EXTRA, json);
         prefsEditor.apply();
     }
 
+    /**
+     * Goes to the user preferences and get the last active chat, unwraps it from the json file and
+     * creates a journey.
+     *
+     * @return Last active journey chat
+     */
     public Journey getLastActiveChat() {
         // Get Current user saved in the phone, if it doesn't exist use a new one created for this
         Gson gson = new Gson();
-        String json = mPrefs.getString(Constants.CURRENT_JOURNEY, "");
+        String json = mPrefs.getString(Constants.CURRENT_JOURNEY_EXTRA, "");
         return gson.fromJson(json, Journey.class);
 
     }

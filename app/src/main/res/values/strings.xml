@@ -15,12 +15,6 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
-    <!-- TODO: Remove or change this placeholfromTextViewtext -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_journey_start">Hello journey start</string>
-    <string name="hello_chats">Hello Chats</string>
-    <string name="hello_commute">Hello Commute</string>
-    <string name="hello_journey_history">Hello journey history</string>
     <string name="dialog_needed_location_permission">This app needs location permission to work.</string>
     <string name="allow_permission">Allow</string>
     <string name="deny_permission">Deny</string>
@@ -50,7 +44,7 @@
     <string name="number_of_ratings">%d Ratings</string>
     <string name="go_button">Let\'s Go!</string>
     <string name="finish_button">Journey is over!</string>
-    <string name="gender_message">What preferredGender do you MOST feel like?</string>
+    <string name="gender_message">What preferred Gender do you MOST feel like?</string>
     <string name="confirm">Confirm</string>
     <string name="other">other</string>
     <string name="matching_results">Matching Results</string>

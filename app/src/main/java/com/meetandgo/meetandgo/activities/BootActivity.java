@@ -15,19 +15,22 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FireBaseDB;
 import com.meetandgo.meetandgo.R;
 
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Boot Activity runs when the app is first initialized, from here it goes to the login activity
+ * if the user is not logged or to the MainActivity if the user is saved.
+ */
 public class BootActivity extends AppCompatActivity {
 
     private static final String TAG = "BootActivity";
-    private static final int RC_SIGN_IN = 123;
-    private static final int MAX_NUMBER_OF_PERMISSION_DIALOG = 1;
 
-    private List<AuthUI.IdpConfig> providers = Arrays.asList(
+    private List<AuthUI.IdpConfig> mProviders = Arrays.asList(
             new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
             new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
             new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
@@ -53,7 +56,7 @@ public class BootActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // If the activity was called using the request code RC_SIGN_IN
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == Constants.RC_SIGN_IN) {
             // We start the main activity if the user was correctly logged in
             if (resultCode == RESULT_OK) {
                 startMainActivity();
@@ -82,7 +85,7 @@ public class BootActivity extends AppCompatActivity {
             public void onPermissionDenied(PermissionDeniedResponse response) {
                 Log.d(TAG, "PermissionDenied -> " + response.getPermissionName());
                 // We first check if a dialog can be shown insisting the user for permission
-                if (mAskPermissionCounter < MAX_NUMBER_OF_PERMISSION_DIALOG) dialog.show();
+                if (mAskPermissionCounter < Constants.MAX_NUMBER_OF_PERMISSION_DIALOG) dialog.show();
                 else runLoginLogic();
             }
 
@@ -106,6 +109,7 @@ public class BootActivity extends AppCompatActivity {
      * @return AlertDialog
      */
     private AlertDialog setUpPermissionDialog() {
+        // Create a dialog with the AlertDialog Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         DialogInterface.OnClickListener dialogOnClickListener = new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -133,8 +137,8 @@ public class BootActivity extends AppCompatActivity {
      */
     private void startLoginActivity() {
         // An intent is created with the built-in FireBase UI
-        Intent loginIntent = AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build();
-        startActivityForResult(loginIntent, RC_SIGN_IN);
+        Intent loginIntent = AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(mProviders).build();
+        startActivityForResult(loginIntent, Constants.RC_SIGN_IN);
         overridePendingTransition(0, 0);
     }
 

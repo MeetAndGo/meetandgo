@@ -28,14 +28,22 @@ import butterknife.ButterKnife;
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
 
-    @BindView(R.id.user_name) TextView mTextViewUserName;
-    @BindView(R.id.user_email) TextView mTextViewUserEmail;
-    @BindView(R.id.number_of_ratings) TextView mTextViewNumberOfRatings;
-    @BindView(R.id.rating) RatingBar mRatingBarRating;
-    @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.number_of_trips) TextView mNumberOfTrips;
-    @BindView(R.id.user_add_to_group) TextView mAddToGroup;
-    @BindView(R.id.initials) TextView mTextViewInitials;
+    @BindView(R.id.user_name)
+    TextView mTextViewUserName;
+    @BindView(R.id.user_email)
+    TextView mTextViewUserEmail;
+    @BindView(R.id.number_of_ratings)
+    TextView mTextViewNumberOfRatings;
+    @BindView(R.id.rating)
+    RatingBar mRatingBarRating;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.number_of_trips)
+    TextView mNumberOfTrips;
+    @BindView(R.id.user_add_to_group)
+    TextView mAddToGroup;
+    @BindView(R.id.initials)
+    TextView mTextViewInitials;
 
     private ValueEventListener mUserValueEventListener;
 
@@ -54,7 +62,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the
+     * Sets up the user and the UI related with the user information
      */
     private void setUpUser() {
         final User currentUser = FireBaseDB.getCurrentUser();

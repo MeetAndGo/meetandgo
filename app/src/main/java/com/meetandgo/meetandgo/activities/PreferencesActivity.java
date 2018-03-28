@@ -41,12 +41,7 @@ public class PreferencesActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mToolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.toolbarColor));
-        int statusBarColor = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark);
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(statusBarColor);
+        setUpToolbar();
     }
 
     @Override
@@ -63,8 +58,6 @@ public class PreferencesActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         preferencesFragment = new PreferencesFragment();
         getFragmentManager().beginTransaction().replace(R.id.content_frame, preferencesFragment).commit();
-
-
     }
 
     @Override
@@ -148,23 +141,23 @@ public class PreferencesActivity extends AppCompatActivity {
     }
 
     /**
-     * Save Preferences from fragment into preference object
+     * Save Preferences from fragment into preference object that can be use from other activities.
      */
     private void savePreferences() {
 
         ListPreference pref = (ListPreference) preferencesFragment.findPreference("genderType");
-        if (pref.getEntry().equals("Male")) {
+        if (pref.getValue().equals("2")) {
             mPreferences.setPreferredGender(Preferences.Gender.MALE);
-        } else if (pref.getEntry().equals("Female")) {
+        } else if (pref.getValue().equals("3")) {
             mPreferences.setPreferredGender(Preferences.Gender.FEMALE);
         } else {
             mPreferences.setPreferredGender(Preferences.Gender.ANY);
         }
 
         pref = (ListPreference) preferencesFragment.findPreference("journeyType");
-        if (pref.getEntry().equals("Walk")) {
+        if (pref.getValue().equals("2")) {
             mPreferences.setMode(Preferences.Mode.WALK);
-        } else if (pref.getEntry().equals("Taxi")) {
+        } else if (pref.getValue().equals("3")) {
             mPreferences.setMode(Preferences.Mode.TAXI);
         } else {
             mPreferences.setMode(Preferences.Mode.ANY);
@@ -178,6 +171,16 @@ public class PreferencesActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+
+    private void setUpToolbar() {
+        mToolbar.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.toolbarColor));
+        int statusBarColor = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark);
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(statusBarColor);
     }
 
 
