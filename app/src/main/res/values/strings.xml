@@ -52,6 +52,8 @@
     <string name="refresh">Refresh</string>
     <string name="menu_rate_users">Rate journey users</string>
     <string name="menu_delete">Delete journey</string>
+    <string name="ok">Ok</string>
+    <string name="internet_is_down">This app needs internet connection to work.</string>
 
     <string-array name="gender_array">
         <item name="gender_any">Any</item>

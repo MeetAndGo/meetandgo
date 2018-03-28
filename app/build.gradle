@@ -8,7 +8,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 26
         versionCode 1
-        versionName "0.01"
+        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -19,8 +19,7 @@ android {
         }
     }
 
-    lintOptions{
-
+    lintOptions {
         disable 'MissingTranslation'
     }
 }
@@ -37,8 +36,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:11.4.2'
     implementation 'com.google.android.gms:play-services-location:11.4.2'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
-
-
 
     /* =============================================================================== */
     /* = FIREBASE ==================================================================== */
@@ -77,7 +74,6 @@ dependencies {
         exclude module: 'support-annotations'
         exclude module: 'recyclerview-v7'
     }
-
 
     /* =============================================================================== */
     /* = LIBRARIES =================================================================== */
