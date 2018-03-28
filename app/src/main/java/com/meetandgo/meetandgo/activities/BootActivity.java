@@ -1,13 +1,20 @@
 package com.meetandgo.meetandgo.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.firebase.ui.auth.AuthUI;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -18,6 +25,9 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.meetandgo.meetandgo.Constants;
 import com.meetandgo.meetandgo.FireBaseDB;
 import com.meetandgo.meetandgo.R;
+import com.meetandgo.meetandgo.data.Journey;
+import com.meetandgo.meetandgo.data.Preferences;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,11 +56,28 @@ public class BootActivity extends AppCompatActivity {
     }
 
     /**
+     * Creates and shows a dialog when the internet is down
+     */
+    private void showInternetDialog() {
+        new MaterialDialog.Builder(this)
+                .content(R.string.internet_is_down)
+                .positiveText(android.R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        finish();
+
+                    }
+                })
+                .show();
+    }
+
+    /**
      * OnActivityResult needed to handle the login activity by FireBase.
      *
      * @param requestCode
      * @param resultCode
-     * @param data Intent with that data that comes back from the activity that was called
+     * @param data        Intent with that data that comes back from the activity that was called
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -85,7 +112,8 @@ public class BootActivity extends AppCompatActivity {
             public void onPermissionDenied(PermissionDeniedResponse response) {
                 Log.d(TAG, "PermissionDenied -> " + response.getPermissionName());
                 // We first check if a dialog can be shown insisting the user for permission
-                if (mAskPermissionCounter < Constants.MAX_NUMBER_OF_PERMISSION_DIALOG) dialog.show();
+                if (mAskPermissionCounter < Constants.MAX_NUMBER_OF_PERMISSION_DIALOG)
+                    dialog.show();
                 else runLoginLogic();
             }
 
@@ -128,8 +156,13 @@ public class BootActivity extends AppCompatActivity {
     private void runLoginLogic() {
         // If user is logged in the app will go directly to the MainActivity, if not the loginActivity
         // will be displayed
-        if (FireBaseDB.getCurrentUserID() != null) startMainActivity();
-        else startLoginActivity();
+        if (FireBaseDB.getCurrentUserID() != null) {
+            startMainActivity();
+        } else {
+            // Show a dialog if internet connection is down
+            if (isOnline()) startLoginActivity();
+            else showInternetDialog();
+        }
     }
 
     /**
@@ -151,6 +184,20 @@ public class BootActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Returns if there is internet connection
+     *
+     * @return boolean
+     */
+    public boolean isOnline() {
+        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+
+        if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
+            return false;
+        }
+        return true;
+    }
 
 
 }
