@@ -15,7 +15,6 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
-    <string name="dialog_needed_location_permission">This app needs location permission to work.</string>
     <string name="allow_permission">Allow</string>
     <string name="deny_permission">Deny</string>
     <string name="no_location_data_provided">Location was not provided.</string>
@@ -65,5 +64,6 @@
         <item name="gender_male">Male</item>
         <item name="gender_female">Female</item>
     </string-array>
+    <string name="dialog_needed_location_permission">Thi</string>
 
 </resources>

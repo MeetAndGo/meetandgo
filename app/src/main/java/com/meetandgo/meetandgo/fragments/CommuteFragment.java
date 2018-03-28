@@ -15,7 +15,8 @@ public class CommuteFragment extends Fragment {
 
     private static final String TAG = "CommuteFragment";
 
-    public CommuteFragment() {}
+    public CommuteFragment() {
+    }
 
     public static Fragment newInstance() {
         CommuteFragment fragment = new CommuteFragment();
@@ -28,5 +29,4 @@ public class CommuteFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_commute, container, false);
     }
-
 }

@@ -3,67 +3,70 @@
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">605444806469252</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb41ff94088e78fd635592a4f5d0674a35</string>
-    <string name="sign_out">Sign Out</string>
+    <string name="sign_out">Se déconnecter</string>
     <string name="google_maps_key" translatable="false">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
-    <string name="title_activity_preferences">Preferences</string>
-    <string name="menu_option_map">Start New Journey</string>
-    <string name="menu_option_chats">Chats</string>
-    <string name="menu_option_commute">Daily Commute</string>
-    <string name="menu_option_history">History of Journeys</string>
-    <string name="menu_option_sign_out">Sign Out</string>
+    <string name="title_activity_preferences">Préférences</string>
+    <string name="menu_option_map">Démarrer un trajet</string>
+    <string name="menu_option_chats">Chat</string>
+    <string name="menu_option_commute">Trajet quotidien</string>
+    <string name="menu_option_history">Historique des trajets</string>
+    <string name="menu_option_sign_out">Se déconnecter</string>
 
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_open">Ouvrir le menu de navigation</string>
+    <string name="drawer_close">Fermer le menu de navigation</string>
 
-    <string name="dialog_needed_location_permission">This app needs location permission to work.</string>
-    <string name="allow_permission">Allow</string>
-    <string name="deny_permission">Deny</string>
-    <string name="no_location_data_provided">Location was not provided.</string>
-    <string name="service_not_available">Location Service not available.</string>
-    <string name="invalid_lat_long_used">Invalid LastLng</string>
-    <string name="no_address_found">Address not found.</string>
-    <string name="address_found">Address found.</string>
-    <string name="gender_selection">Gender Selection</string>
-    <string name="any">Any</string>
-    <string name="gender_male">Male</string>
-    <string name="gender_female">Female</string>
-    <string name="mode_selection">Mode Selection</string>
-    <string name="mode_walk">Walk</string>
-    <string name="mode_car">Car</string>
+    <string name="dialog_needed_location_permission">Accès internet requis.</string>
+    <string name="allow_permission">Accepter</string>
+    <string name="deny_permission">Refuser</string>
+    <string name="no_location_data_provided">Position non donnée.</string>
+    <string name="service_not_available">Le service de localisation est indisponible.</string>
+    <string name="invalid_lat_long_used">LastLng invalide</string>
+    <string name="no_address_found">Adresse non trouvée.</string>
+    <string name="address_found">Adresse trouvée.</string>
+    <string name="gender_selection">Choisir genre</string>
+    <string name="any">Autre</string>
+    <string name="gender_male">Homme</string>
+    <string name="gender_female">Femme</string>
+    <string name="mode_selection">Choisir mode de déplacement</string>
+    <string name="mode_walk">Marche</string>
+    <string name="mode_car">Voiture</string>
     <string name="mode_taxi">Taxi</string>
-    <string name="start_location">Start Location</string>
-    <string name="end_location">Where are you going?</string>
-    <string name="search_button">Search</string>
-    <string name="preferences_button">Preferences</string>
+    <string name="start_location">Départ</string>
+    <string name="end_location">Destination</string>
+    <string name="search_button">Rechercher</string>
+    <string name="preferences_button">Préférences</string>
     <string name="null_text" translatable="false">null</string>
-    <string name="stars">Stars</string>
+    <string name="stars">Etoiles</string>
     <string name="num_of_votes">Votes</string>
     <string name="profile">Profile</string>
-    <string name="number_of_trips">%d Trips</string>
-    <string name="change_password">Change Password</string>
-    <string name="number_of_ratings">%d Ratings</string>
-    <string name="go_button">Let\'s Go!</string>
-    <string name="finish_button">Journey is over!</string>
-    <string name="gender_message">What preferredGender do you MOST feel like?</string>
-    <string name="confirm">Confirm</string>
-    <string name="other">other</string>
-    <string name="matching_results">Matching Results</string>
-    <string name="loc_not_found">Location not found.</string>
-    <string name="confirmation_message">Are you sure you want to join this Journey?</string>
-    <string name="refresh">Refresh</string>
-    <string name="menu_rate_users">Rate journey users</string>
-    <string name="menu_delete">Delete journey</string>
+    <string name="number_of_trips">%d trajets</string>
+    <string name="change_password">Changer mot de passe</string>
+    <string name="number_of_ratings">%d avis</string>
+    <string name="go_button">Allons-y !</string>
+    <string name="finish_button">Le trajet est terminé !</string>
+    <string name="gender_message">Quel est votre genre ?</string>
+    <string name="confirm">Confirmer</string>
+    <string name="other">Autre</string>
+    <string name="matching_results">Résultats de recherche</string>
+    <string name="loc_not_found">Position non trouvée.</string>
+    <string name="confirmation_message">Voulez-vous rejoindre le trajet sélectionné ?</string>
+    <string name="refresh">Actualiser</string>
+    <string name="menu_rate_users">Noter vos compagnons de voyage</string>
+    <string name="menu_delete">Supprimer ce trajet</string>
 
     <string-array name="gender_array">
-        <item name="gender_any">Any</item>
-        <item name="gender_male">Male</item>
-        <item name="gender_female">Female</item>
+        <item name="gender_any">Autre</item>
+        <item name="gender_male">Homme</item>
+        <item name="gender_female">Femme</item>
     </string-array>
 
     <string-array name="gender_array_select">
-        <item name="gender_any">Other</item>
-        <item name="gender_male">Male</item>
-        <item name="gender_female">Female</item>
+        <item name="gender_any">Autre</item>
+        <item name="gender_male">Homme</item>
+        <item name="gender_female">Femme</item>
     </string-array>
+
+    <string name="gobutton">Allons-y !</string>
+    <string name="finishbutton">Le trajet est terminée !</string>
 
 </resources>

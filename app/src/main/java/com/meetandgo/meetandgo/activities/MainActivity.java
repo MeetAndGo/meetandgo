@@ -453,8 +453,8 @@ public class MainActivity extends AppCompatActivity {
      * @param b
      */
     public void setChatMenuItemVisibility(boolean b) {
-        Menu nav_Menu = mNavView.getMenu();
-        nav_Menu.findItem(R.id.menu_item_chat).setVisible(b);
+        Menu navMenu = mNavView.getMenu();
+        navMenu.findItem(R.id.menu_item_chat).setVisible(b);
     }
 
     /**

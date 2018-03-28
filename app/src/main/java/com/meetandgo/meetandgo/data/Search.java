@@ -82,8 +82,8 @@ public class Search implements Serializable {
         return timeCreated;
     }
 
-    public void setTimeCreated(HashMap<String, Object> time_created) {
-        this.timeCreated = time_created;
+    public void setTimeCreated(HashMap<String, Object> timeCreated) {
+        this.timeCreated = timeCreated;
     }
 
     public String getStartLocationString() {
