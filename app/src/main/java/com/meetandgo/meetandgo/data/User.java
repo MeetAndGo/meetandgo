@@ -7,10 +7,11 @@ import com.google.firebase.database.Exclude;
 import java.util.ArrayList;
 
 /**
- * Class to save the information of the user
+ * Stored in FirebaseDB
+ * Hold information that is displayed on the profile screen
  */
-public class User {
 
+public class User {
 
     private String userID;
     private String fullName;
@@ -102,9 +103,13 @@ public class User {
         this.gender = gender;
     }
 
-    public ArrayList<String> getJourneyIDs() { return journeyIDs; }
+    public ArrayList<String> getJourneyIDs() {
+        return journeyIDs;
+    }
 
-    public void setJourneyIDs(ArrayList<String> journeyIDs) { this.journeyIDs = journeyIDs; }
+    public void setJourneyIDs(ArrayList<String> journeyIDs) {
+        this.journeyIDs = journeyIDs;
+    }
 
     public String getUserID() {
         return userID;
@@ -113,6 +118,7 @@ public class User {
     public void setUserID(String userID) {
         this.userID = userID;
     }
+
     @Exclude
     public void addJourneyID(String journeyID) {
         journeyIDs.add(journeyID);

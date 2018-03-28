@@ -27,7 +27,6 @@ import com.meetandgo.meetandgo.R;
 import com.meetandgo.meetandgo.activities.MainActivity;
 import com.meetandgo.meetandgo.data.ChatMessage;
 import com.meetandgo.meetandgo.data.Journey;
-import com.meetandgo.meetandgo.data.JourneyHistory;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -167,7 +166,7 @@ public class ChatsFragment extends Fragment {
     }
 
     /**
-     * Hides the users keyboard when we are out of the scope
+     * Hides the user's keyboard when side menu is opened
      */
     private void hideKeyboard() {
         View view = getActivity().getCurrentFocus();
@@ -188,11 +187,8 @@ public class ChatsFragment extends Fragment {
                 mCurrentJourney.deactivateJourney();
                 MainActivity activity = (MainActivity) getActivity();
                 activity.setSelectedFragmentByMenuItem(R.id.menu_item_journey_history);
-                JourneyHistory.journeyIDs.push(mCurrentJourney);
                 FireBaseDB.updateJourney(mCurrentJourney);
                 ((MainActivity) getActivity()).runKonfettiAnimation();
-                //SerializationUtils sUtils = new SerializationUtils();
-                //sUtils.serializeJourneyHistory(getContext());
 
             }
         });

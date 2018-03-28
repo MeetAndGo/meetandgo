@@ -5,13 +5,17 @@ import com.meetandgo.meetandgo.FireBaseDB;
 
 import java.util.HashMap;
 
+/**
+ * Stores details about a single message for the chat management
+ * Enables messaging between users, all messages are stored in a history object
+ */
+
 public class ChatMessage {
 
     private String messageText;
     private String messageUser;
     private HashMap<String, Object> timestampCreated;
     private String userID;
-    private Long time;
 
     public ChatMessage(String messageText, String messageUser, String userID) {
         this.messageText = messageText;

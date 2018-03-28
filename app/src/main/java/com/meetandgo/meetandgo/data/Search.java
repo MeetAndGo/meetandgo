@@ -8,14 +8,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Class of a user search, to store in FireBase
+ * Stored in FirebaseDB
+ * Enables system to compute the matching system algorithm and enables user selection
  */
+
 public class Search implements Serializable {
 
     private String searchID;
     private String userID;
-    //additional users are those added to combine search between several users
-    private ArrayList<String> additionalUsers = new ArrayList<>();
+    private ArrayList<String> additionalUserIDs = new ArrayList<>();
     private Preferences userPreferences;
     private Loc startLocation = new Loc();
     private Loc endLocation = new Loc();
@@ -31,7 +32,7 @@ public class Search implements Serializable {
         this.startLocationString = startLocationString;
         this.endLocationString = endLocationString;
         this.userID = FireBaseDB.getCurrentUserID();
-        this.additionalUsers = new ArrayList<>();
+        this.additionalUserIDs = new ArrayList<>();
         this.userPreferences = preferences;
         this.startLocation = startLocation;
         this.endLocation = endLocation;
@@ -44,7 +45,7 @@ public class Search implements Serializable {
         this.userID = userID;
         this.startLocationString = startLocationString;
         this.endLocationString = endLocationString;
-        this.additionalUsers = new ArrayList<>();
+        this.additionalUserIDs = new ArrayList<>();
         this.userPreferences = preferences;
         this.startLocation = startLocation;
         this.endLocation = endLocation;
@@ -84,6 +85,7 @@ public class Search implements Serializable {
     public void setTimeCreated(HashMap<String, Object> time_created) {
         this.timeCreated = time_created;
     }
+
     public String getStartLocationString() {
         return startLocationString;
     }
@@ -101,11 +103,11 @@ public class Search implements Serializable {
     }
 
     public ArrayList<String> getAdditionalUsers() {
-        return additionalUsers;
+        return additionalUserIDs;
     }
 
     public void setAdditionalUsers(ArrayList<String> additionalUsers) {
-        this.additionalUsers = additionalUsers;
+        this.additionalUserIDs = additionalUsers;
     }
 
     public String getSearchID() {
@@ -117,7 +119,7 @@ public class Search implements Serializable {
     }
 
     public void addUser(String userId) {
-        this.additionalUsers.add(userId);
+        this.additionalUserIDs.add(userId);
     }
 
     public String getJourneyID() {
@@ -129,7 +131,7 @@ public class Search implements Serializable {
     }
 
     @Exclude
-    public boolean hasJourneyID(){
+    public boolean hasJourneyID() {
         return !journeyID.equals("");
     }
 }

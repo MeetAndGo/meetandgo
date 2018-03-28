@@ -3,6 +3,11 @@ package com.meetandgo.meetandgo.data;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Stored in FirebaseDB
+ * Contains a group of matched users and the group chat
+ */
+
 public class Journey {
 
     private String journeyID;
@@ -24,7 +29,7 @@ public class Journey {
         this.startTime = -1;
         this.users = new ArrayList<>();
         this.messages = new HashMap<>();
-        this.active =true;
+        this.active = true;
         this.mode = Preferences.Mode.WALK;
     }
 
@@ -36,35 +41,35 @@ public class Journey {
         this.startTime = startTime;
         this.users = users;
         this.messages = new HashMap<>();
-        this.active =true;
+        this.active = true;
     }
 
-    public void deactivateJourney(){
-        this.active =false;
-
+    public void deactivateJourney() {
+        this.active = false;
     }
+
     public String getJourneyID() {
         return journeyID;
     }
 
-    public void setJourneyID(String journey_id) {
-        this.journeyID = journey_id;
+    public void setJourneyID(String journeyID) {
+        this.journeyID = journeyID;
     }
 
     public Loc getStartLocation() {
         return startLocation;
     }
 
-    public void setStartLocation(Loc start_location) {
-        this.startLocation = start_location;
+    public void setStartLocation(Loc startLocation) {
+        this.startLocation = startLocation;
     }
 
     public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long start_time) {
-        this.startTime = start_time;
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
     }
 
     public ArrayList<String> getUsers() {
@@ -75,12 +80,16 @@ public class Journey {
         this.users = users;
     }
 
-    public HashMap<String, ChatMessage> getMessages() { return messages; }
+    public HashMap<String, ChatMessage> getMessages() {
+        return messages;
+    }
 
-    public void setMessages(HashMap<String, ChatMessage> messages) { this.messages = messages; }
+    public void setMessages(HashMap<String, ChatMessage> messages) {
+        this.messages = messages;
+    }
 
-    public void addUser(String uId) {
-        users.add(uId);
+    public void addUser(String uID) {
+        users.add(uID);
     }
 
     public boolean isActive() {
@@ -118,14 +127,14 @@ public class Journey {
     /**
      * Updates the journey data with a passed in journey object
      *
-     * @param o new journey object
+     * @param journey new journey object
      */
-    public void update(Journey o) {
-        startLocation = o.getStartLocation();
-        startTime = o.getStartTime();
-        users = o.getUsers();
-        messages = o.getMessages();
-        active = o.isActive();
+    public void update(Journey journey) {
+        startLocation = journey.getStartLocation();
+        startTime = journey.getStartTime();
+        users = journey.getUsers();
+        messages = journey.getMessages();
+        active = journey.isActive();
     }
 
 }

@@ -1,28 +1,29 @@
 package com.meetandgo.meetandgo.data;
 
-import com.google.firebase.database.Exclude;
-
 import java.io.Serializable;
 
 /**
  * Class to save the preferences that the user sets for the journey search
  */
+
 public class Preferences implements Serializable {
 
     public enum Gender {ANY, MALE, FEMALE}
+
     public enum Mode {ANY, WALK, TAXI}
 
     private Gender preferredGender = Gender.ANY;
     private Gender userGender = Gender.ANY;
     private Mode mode = Mode.ANY;
 
-    public Preferences(){}
+    public Preferences() {
+    }
 
-    public Preferences(User currentUser){
+    public Preferences(User currentUser) {
         this.userGender = currentUser.getGender();
     }
 
-    public Preferences(Gender preferredGender, Mode mode, Gender userGender){
+    public Preferences(Gender preferredGender, Mode mode, Gender userGender) {
         this.preferredGender = preferredGender;
         this.mode = mode;
         this.userGender = userGender;
@@ -52,17 +53,6 @@ public class Preferences implements Serializable {
         this.mode = mode;
     }
 
-    // We exclude the methods from the database that are not useful for defining the preferences object
-    @Exclude
-    public boolean isCompleted(){
-        if (preferredGender == null) return false;
-        if (mode == null) return false;
-        //if(startLocation.getLatitude() == 0 && startLocation.getLongitude() == 0 &&
-               // endLocation.getLongitude() == 0 && endLocation.getLatitude() ==0) return false;
-
-        return true;
-    }
-
     /**
      * Checks if modes match
      *
@@ -70,15 +60,8 @@ public class Preferences implements Serializable {
      * @param m2 preferred mode of user 2
      * @return true if mode ok false otherwise
      */
-    public static boolean checkMode(Mode m1, Mode m2)
-    {
-        if (m1 == Mode.ANY || m2 == Mode.ANY || m1 == m2)
-        {
-            return true;
-        }
-        else{
-            return false;
-        }
+    public static boolean checkMode(Mode m1, Mode m2) {
+        return m1 == Mode.ANY || m2 == Mode.ANY || m1 == m2;
     }
 
     /**
@@ -91,19 +74,11 @@ public class Preferences implements Serializable {
      * @return true if gender match preferences, false otherwise
      */
     public static boolean checkGender(Gender prefGender1, Gender prefGender2,
-                                       Gender userGender1, Gender userGender2)
-    {
-        if (prefGender1 == Gender.ANY && prefGender2 == Gender.ANY) {
-            return true;
-        } else if (prefGender1 == Gender.ANY && prefGender2 == userGender1) {
-            return true;
-        } else if (prefGender1 == userGender2 && prefGender2 == Gender.ANY) {
-            return true;
-        } else if (prefGender1 == userGender2 && prefGender2 == userGender1) {
-            return true;
-        } else{
-            return false;
-        }
+                                      Gender userGender1, Gender userGender2) {
+        return prefGender1 == Gender.ANY && prefGender2 == Gender.ANY
+                || prefGender1 == Gender.ANY && prefGender2 == userGender1
+                || prefGender1 == userGender2 && prefGender2 == Gender.ANY
+                || prefGender1 == userGender2 && prefGender2 == userGender1;
     }
 
     /**

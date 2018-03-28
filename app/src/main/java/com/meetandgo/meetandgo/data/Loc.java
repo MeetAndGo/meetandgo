@@ -1,19 +1,20 @@
 package com.meetandgo.meetandgo.data;
 
 /**
- * Loc class to upload latitude and longitude to FireBase
+ * Uploads latitude and longitude to FireBase
  */
+
 public class Loc {
 
-    private double lat ;
-    private double lng ;
+    private double lat;
+    private double lng;
 
     public Loc() {
         this.lat = 0;
         this.lng = 0;
     }
 
-    public Loc(double lat, double lng){
+    public Loc(double lat, double lng) {
         this.lat = lat;
         this.lng = lng;
     }
@@ -34,8 +35,7 @@ public class Loc {
         this.lng = lng;
     }
 
-
-    public String toString(){
+    public String toString() {
         return String.format("Lat: %s, Long: %s", getLat(), getLng());
     }
 
