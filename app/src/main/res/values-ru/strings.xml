@@ -56,10 +56,10 @@
     <string name="matching_results">Результаты</string>
     <string name="loc_not_found">Место не найдено</string>
 
-    <string name="confirmation_message">Are you sure you want to join this Journey?</string>
-    <string name="refresh">Refresh</string>
-    <string name="menu_rate_users">Rate journey users</string>
-    <string name="menu_delete">Delete journey</string>
+    <string name="confirmation_message">Уверены что хотите участвовать в этой поездке</string>
+    <string name="refresh">Перезагрузить</string>
+    <string name="menu_rate_users">Дать рэйтинг попутчикам</string>
+    <string name="menu_delete">Удалить поездку</string>
 
     <string-array name="gender_array_select">
         <item name="gender_any">Other</item>
