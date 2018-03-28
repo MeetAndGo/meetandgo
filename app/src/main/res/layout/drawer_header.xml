@@ -67,23 +67,5 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/emailHeaderText" />
 
-        <!--<me.zhanghai.android.materialratingbar.MaterialRatingBar
-            android:id="@+id/rating"
-            android:layout_width="158dp"
-            android:layout_height="26dp"
-            android:layout_marginStart="-6dp"
-            android:isIndicator="true"
-            android:numStars="5"
-            android:stepSize="0.1" />
-
-        <TextView
-            android:id="@+id/number_of_ratings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@android:color/white"
-            android:textSize="12dp"
-            andrfromTextViewtext="null" />-->
-
     </LinearLayout>
 </FrameLayout>

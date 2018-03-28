@@ -7,12 +7,15 @@ import com.meetandgo.meetandgo.data.Search;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * Utilities to manage matching calculations
+ */
 public final class SearchUtil {
 
     private static final String TAG = "SearchUtil"; //SearchUtil.class.getSimpleName();
 
     /**
-     * Calculates the Matching Score
+     * Calculates the Matching Score for each input search
      *
      * @param userStart   Location of User
      * @param userEnd     Destination of User
@@ -47,7 +50,7 @@ public final class SearchUtil {
         int count = 0;
         int validIndexes = 0;
         for (Search search : searches) {
-            //PROCESS SEARCH
+            //Process search
             if (!search.getUserID().equals(currentUserSearch.getUserID())) {
                 boolean isEqual = false;
                 for (int i = 0; i < search.getAdditionalUsers().size(); i++) {
@@ -65,7 +68,7 @@ public final class SearchUtil {
                     //Calculate Score
                     double score = calculateScore(currentUserSearch.getStartLocation(),
                             currentUserSearch.getEndLocation(), search.getStartLocation(), search.getEndLocation());
-                    //ADD TO RESULTS ORDER if Preference okay
+                    //Add to results if preferences match
                     resultOrder[count][0] = score;
                     resultOrder[count][1] = count;
                     validIndexes++;
@@ -86,7 +89,6 @@ public final class SearchUtil {
         int resultCount = 0;
         for (int i = sortedResults.length - validIndexes; i < sortedResults.length && resultCount < Constants.MAX_SEARCH_LIST_SIZE; i++, resultCount++) {
             list.add(searches.get((int) sortedResults[i][1]));
-            //Log.d(TAG, String.valueOf(resultCount));
         }
         return list;
     }

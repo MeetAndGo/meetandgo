@@ -1,7 +1,7 @@
 package com.meetandgo.meetandgo.utils;
 
 /**
- * Created by gilmarma on 3/7/2018.
+ * Utilities to perform tasks on data structures
  */
 
 public final class DataStructureUtils {

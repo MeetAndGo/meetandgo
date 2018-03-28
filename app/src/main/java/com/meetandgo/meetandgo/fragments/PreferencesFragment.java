@@ -2,11 +2,12 @@ package com.meetandgo.meetandgo.fragments;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.util.Log;
 
 import com.meetandgo.meetandgo.R;
 
-
+/**
+ * Sets up preferences screen
+ */
 public class PreferencesFragment extends PreferenceFragment{
 
     private static final String TAG = "PreferencesFragment";

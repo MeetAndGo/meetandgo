@@ -31,6 +31,9 @@ import com.meetandgo.meetandgo.data.Journey;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Handles screen to display chat messages
+ */
 public class ChatsFragment extends Fragment {
 
     @BindView(R.id.msg_button)
@@ -127,7 +130,6 @@ public class ChatsFragment extends Fragment {
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, requestCode + " " + resultCode);
         if (requestCode == Constants.JOURNEY_REQUEST_CODE) {
             mCurrentJourney = (Journey) data.getSerializableExtra(Constants.JOURNEY_EXTRA);
 

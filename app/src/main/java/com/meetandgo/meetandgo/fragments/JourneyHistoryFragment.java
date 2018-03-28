@@ -34,6 +34,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
+/**
+ * Screen that displays all journeys associated with the current user, active and inactive.
+ */
 public class JourneyHistoryFragment extends Fragment implements View.OnCreateContextMenuListener {
 
     private static final String TAG = JourneyHistoryFragment.class.getSimpleName();
@@ -44,10 +47,10 @@ public class JourneyHistoryFragment extends Fragment implements View.OnCreateCon
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     private LinearLayoutManager mLayoutManager;
+    private LinearLayoutManager mLinearLayoutManager;
     private JourneyHistoryAdapter mAdapter;
     private ArrayList<Journey> mJourneyHistory = new ArrayList<>();
     private Journey mClickedJourney;
-    public static Bus mBus;
     private User mUser;
     private ValueEventListener mValueEventListener;
     private ValueEventListener mNewUserValueEventListener;
@@ -56,8 +59,7 @@ public class JourneyHistoryFragment extends Fragment implements View.OnCreateCon
     private MaterialDialog mMenuDialog;
     private MaterialDialog mRatingDialog;
     private RatingItemAdapter mRatingAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
-
+    public static Bus mBus;
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -163,6 +165,11 @@ public class JourneyHistoryFragment extends Fragment implements View.OnCreateCon
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    /**
+     * Stores the journey object corresponding to the last opened chat
+     *
+     * @param journey last clicked journey
+     */
     private void saveLastActiveChat(Journey journey) {
         ((MainActivity) getActivity()).saveLastActiveChat(journey);
     }

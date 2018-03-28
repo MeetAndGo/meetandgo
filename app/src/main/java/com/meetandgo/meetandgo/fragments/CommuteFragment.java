@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 
 import com.meetandgo.meetandgo.R;
 
+/**
+ * Meant to implement the commute mode screen
+ */
 public class CommuteFragment extends Fragment {
 
     private static final String TAG = "CommuteFragment";

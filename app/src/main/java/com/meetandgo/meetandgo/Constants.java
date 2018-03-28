@@ -2,6 +2,9 @@ package com.meetandgo.meetandgo;
 
 import com.google.android.gms.maps.model.LatLng;
 
+/**
+ * Set of constants
+ */
 public final class Constants {
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;

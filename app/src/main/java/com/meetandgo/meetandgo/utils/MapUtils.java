@@ -9,6 +9,9 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 import com.meetandgo.meetandgo.Constants;
 
+/**
+ * Utilities to manage map and location tasks.
+ */
 public final class MapUtils {
     /**
      * Converts Latitude and Longitude to Pixel values
@@ -78,6 +81,14 @@ public final class MapUtils {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, Constants.DEFAULT_ZOOM));
     }
 
+    /**
+     * Converts the initial and final location to URL in order to fetch the JSON data
+     * @param sourcelat Starting latitude
+     * @param sourcelog Starting longitude
+     * @param destlat Destination latitude
+     * @param destlog Destination longitude
+     * @return URL with direction path information
+     */
     public static String getGooglePathURL(double sourcelat, double sourcelog, double destlat, double destlog) {
         StringBuilder urlString = new StringBuilder();
         urlString.append("http://maps.googleapis.com/maps/api/directions/json");
