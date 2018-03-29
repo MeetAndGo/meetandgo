@@ -52,7 +52,7 @@
     <string name="confirmation_message">Voulez-vous rejoindre le trajet sélectionné ?</string>
     <string name="refresh">Actualiser</string>
     <string name="menu_rate_users">Donnez votre avis</string>
-    <string name="menu_delete">Supprimer ce trajet</string>
+    <string name="menu_delete">Supprimez ce trajet</string>
 
     <string-array name="gender_array">
         <item name="gender_any">Autre</item>

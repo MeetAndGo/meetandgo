@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">Meet And Go</string>
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">605444806469252</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb41ff94088e78fd635592a4f5d0674a35</string>
+    <string name="sign_out">Abmelden</string>
+    <string name="google_maps_key" translatable="false">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
+    <string name="title_activity_preferences">Präferenzen</string>
+    <string name="menu_option_map">Neue Reise starten</string>
+    <string name="menu_option_chats">Chats</string>
+    <string name="menu_option_commute">Pendlerstrecke</string>
+    <string name="menu_option_history">Reiseverlauf</string>
+    <string name="menu_option_sign_out">Abmelden</string>
+
+    <string name="drawer_open">Menü öffnen</string>
+    <string name="drawer_close">Menü schließen</string>
+
+    <string name="allow_permission">Erlauben</string>
+    <string name="deny_permission">Nicht erlauben</string>
+    <string name="no_location_data_provided">Kein Ort eigegeben</string>
+    <string name="service_not_available">Standortservice nicht verfügbar</string>
+    <string name="invalid_lat_long_used">Ungültiger Ort</string>
+    <string name="no_address_found">Adresse nicht gefunden</string>
+    <string name="address_found">Adresse gefunden</string>
+    <string name="gender_selection">Geschlecht</string>
+    <string name="any">Alles</string>
+    <string name="gender_male">Männlich</string>
+    <string name="gender_female">Weiblich</string>
+    <string name="mode_selection">Art der Reise</string>
+    <string name="mode_walk">Zu Fuß</string>
+    <string name="mode_car">Auto</string>
+    <string name="mode_taxi">Taxi</string>
+    <string name="start_location">Startpunkt</string>
+    <string name="end_location">Wohin geht\'s?</string>
+    <string name="search_button">Suchen</string>
+    <string name="preferences_button">Präferenzen</string>
+    <string name="null_text" translatable="false">null</string>
+    <string name="stars">Sterne</string>
+    <string name="num_of_votes">Stimmen</string>
+    <string name="profile">Profil</string>
+    <string name="number_of_trips">%d Reisen</string>
+    <string name="change_password">Passwort ändern</string>
+    <string name="number_of_ratings">%d Ratings</string>
+    <string name="go_button">Los geht\'s!</string>
+    <string name="finish_button">Reise beendet!</string>
+    <string name="gender_message">Was ist dein Geschlecht?</string>
+    <string name="confirm">Bestätigen</string>
+    <string name="other">Andere</string>
+    <string name="matching_results">passende Ergebnisse</string>
+    <string name="loc_not_found">Ort nicht gefunden.</string>
+    <string name="confirmation_message">Bist du sicher, dass du dieser Reise beitreten willst?</string>
+    <string name="refresh">Aktualisieren</string>
+    <string name="menu_rate_users">Bewerte Reisepartner</string>
+    <string name="menu_delete">Reise löschen</string>
+    <string name="ok">Ok</string>
+    <string name="internet_is_down">Diese App benötigt eine Netzwerkverbindung</string>
+
+    <string-array name="gender_array">
+        <item name="gender_any">Any</item>
+        <item name="gender_male">Male</item>
+        <item name="gender_female">Female</item>
+    </string-array>
+
+    <string-array name="gender_array_select">
+        <item name="gender_any">Other</item>
+        <item name="gender_male">Male</item>
+        <item name="gender_female">Female</item>
+    </string-array>
+    <string name="dialog_needed_location_permission">Diese App benötigt Zugriff auf deinen Standort</string>
+
+</resources>

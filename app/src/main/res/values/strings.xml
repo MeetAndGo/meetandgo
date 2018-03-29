@@ -66,6 +66,6 @@
         <item name="gender_male">Male</item>
         <item name="gender_female">Female</item>
     </string-array>
-    <string name="dialog_needed_location_permission">Thi</string>
+    <string name="dialog_needed_location_permission">This app needs location permission to work.</string>
 
 </resources>
