@@ -51,7 +51,7 @@
     <string name="loc_not_found">Position non trouvée.</string>
     <string name="confirmation_message">Voulez-vous rejoindre le trajet sélectionné ?</string>
     <string name="refresh">Actualiser</string>
-    <string name="menu_rate_users">Noter vos compagnons de voyage</string>
+    <string name="menu_rate_users">Donnez votre avis</string>
     <string name="menu_delete">Supprimer ce trajet</string>
 
     <string-array name="gender_array">
