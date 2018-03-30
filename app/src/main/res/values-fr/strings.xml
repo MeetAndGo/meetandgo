@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">Meet And Go</string>
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
-    <string name="facebook_application_id" translatable="false">605444806469252</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fb41ff94088e78fd635592a4f5d0674a35</string>
     <string name="sign_out">Se déconnecter</string>
-    <string name="google_maps_key" translatable="false">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
     <string name="title_activity_preferences">Préférences</string>
     <string name="menu_option_map">Démarrer un trajet</string>
     <string name="menu_option_chats">Chat</string>
@@ -35,7 +32,6 @@
     <string name="end_location">Destination</string>
     <string name="search_button">Rechercher</string>
     <string name="preferences_button">Préférences</string>
-    <string name="null_text" translatable="false">null</string>
     <string name="stars">Etoiles</string>
     <string name="num_of_votes">Votes</string>
     <string name="profile">Profile</string>
@@ -65,8 +61,5 @@
         <item name="gender_male">Homme</item>
         <item name="gender_female">Femme</item>
     </string-array>
-
-    <string name="gobutton">Allons-y !</string>
-    <string name="finishbutton">Le trajet est terminée !</string>
 
 </resources>

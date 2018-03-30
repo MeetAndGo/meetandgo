@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name">Meet And Go</string>
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
-    <string name="facebook_application_id" translatable="false">605444806469252</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fb41ff94088e78fd635592a4f5d0674a35</string>
-    <string name="google_maps_key" translatable="false">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
 
     <string-array name="gender_array" >
         <item>Any</item>
@@ -42,7 +39,6 @@
     <string name="end_location">Цель</string>
     <string name="search_button">Поиск</string>
     <string name="preferences_button">Настройки</string>
-    <string name="null_text">null</string>
     <string name="num_of_votes">Голосов</string>
     <string name="profile">Профиль</string>
     <string name="number_of_trips">%d Поездки</string>

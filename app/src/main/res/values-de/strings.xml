@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">Meet And Go</string>
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
-    <string name="facebook_application_id" translatable="false">605444806469252</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fb41ff94088e78fd635592a4f5d0674a35</string>
     <string name="sign_out">Abmelden</string>
-    <string name="google_maps_key" translatable="false">AIzaSyAjb05BjiPsCwg-VcicFb5Ff4gNICO_YbY</string>
     <string name="title_activity_preferences">Präferenzen</string>
     <string name="menu_option_map">Neue Reise starten</string>
     <string name="menu_option_chats">Chats</string>
@@ -34,7 +31,6 @@
     <string name="end_location">Wohin geht\'s?</string>
     <string name="search_button">Suchen</string>
     <string name="preferences_button">Präferenzen</string>
-    <string name="null_text" translatable="false">null</string>
     <string name="stars">Sterne</string>
     <string name="num_of_votes">Stimmen</string>
     <string name="profile">Profil</string>

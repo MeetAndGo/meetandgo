@@ -170,7 +170,8 @@ public class BootActivity extends AppCompatActivity {
      */
     private void startLoginActivity() {
         // An intent is created with the built-in FireBase UI
-        Intent loginIntent = AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(mProviders).build();
+        Intent loginIntent = AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(mProviders)
+                .setLogo(R.mipmap.ic_launcher).build();
         startActivityForResult(loginIntent, Constants.RC_SIGN_IN);
         overridePendingTransition(0, 0);
     }
