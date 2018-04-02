@@ -6,7 +6,7 @@ android {
         config {
             keyAlias 'group7'
             keyPassword 'group7'
-            storeFile file('M:/ManuGil/TCD/Advanced Software Engineering/meetandgo/keystore.jks')
+            storeFile project.file('keystore.jks')
             storePassword 'group7'
         }
     }
