@@ -9,7 +9,7 @@ Project for Advanced Software Engineering at TCD
 Google Play Store: https://play.google.com/store/apps/details?id=com.meetandgo.meetandgo
 Release .apk is inside of the app/release folder.
 
-### Group 7
+### Team 
 - Georgij Sidorov
 - Irene Hernandez
 - Johanna Barbier
